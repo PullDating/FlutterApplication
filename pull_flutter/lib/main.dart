@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pull_common/match_cards.dart';
 import 'package:pull_common/pull_common.dart';
 import 'package:pull_flutter/model/routes.dart';
 import 'package:pull_flutter/model/settings.dart';
@@ -26,9 +28,14 @@ class PullApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Pull',
       theme: ThemeData(
-        brightness: useDarkTheme ? Brightness.dark : Brightness.light,
-        primarySwatch: Colors.deepPurple,
-      ),
+          brightness: useDarkTheme ? Brightness.dark : Brightness.light,
+          primarySwatch: Colors.deepPurple,
+          textTheme: GoogleFonts.nunitoTextTheme(),
+          appBarTheme: AppBarTheme(
+              backgroundColor: Colors.white,
+              titleTextStyle: GoogleFonts.nunito(fontWeight: FontWeight.bold, color: Colors.purpleAccent, fontSize: 24),
+              centerTitle: true),
+          extensions: const [MatchCardsTheme()]),
       routeInformationParser: _router.routeInformationParser,
       routerDelegate: _router.routerDelegate,
     );

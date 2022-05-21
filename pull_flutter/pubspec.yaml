@@ -20,6 +20,7 @@ dependencies:
   go_router: ^3.1.0
   hive: ^2.2.1
   hive_flutter: ^1.1.0
+  google_fonts: ^3.0.0
 
 dev_dependencies:
   flutter_test:
@@ -28,3 +29,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/

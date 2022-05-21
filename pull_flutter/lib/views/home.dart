@@ -1,48 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pull_flutter/views/tabs/card_swipe_tab.dart';
+import 'package:pull_flutter/views/tabs/chats_tab.dart';
 
-class PullHomePage extends StatefulWidget {
-  const PullHomePage({Key? key, required this.title}) : super(key: key);
+class PullHomePage extends ConsumerStatefulWidget {
+  const PullHomePage({Key? key, required this.title, required this.path}) : super(key: key);
 
   final String title;
+  final String path;
 
   @override
-  State<PullHomePage> createState() => _PullHomePageState();
+  ConsumerState<PullHomePage> createState() => _PullHomePageState();
 }
 
-class _PullHomePageState extends State<PullHomePage> {
-  int _counter = 0;
+class _PullHomePageState extends ConsumerState<PullHomePage>
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  final tabs = <String, WidgetBuilder>{
+    'cards': (BuildContext context) {
+      return const CardSwipeTab();
+    },
+    'chats': (BuildContext context) {
+      return const ChatsTab();
+    }
+  };
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.fastOutSlowIn,
+        child: tabs[widget.path]!(context),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(label: 'Cards', icon: Icon(Icons.people_outline_sharp)),
+          BottomNavigationBarItem(label: 'Chats', icon: Icon(Icons.chat))
+        ],
+      ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

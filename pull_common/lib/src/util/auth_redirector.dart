@@ -4,15 +4,19 @@ import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:pull_common/pull_common.dart';
 
-class LoadingPage extends ConsumerWidget {
-  const LoadingPage({super.key});
+class AuthRedirector extends ConsumerWidget {
+  const AuthRedirector({super.key, this.authUrl = '/login', this.homeUrl = '/home', this.child});
+
+  final String authUrl;
+  final String homeUrl;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<AsyncValue<Box>>(settingsFutureProvider, (previous, next) {
       final storedAuthToken = ref.watch(storedAuthTokenProvider);
-      next.whenData((value) => context.go(storedAuthToken == null ? '/login' : '/home'));
+      next.whenData((value) => context.go(storedAuthToken == null ? authUrl : homeUrl));
     });
-    return const Material(child: Center(child: CircularProgressIndicator()));
+    return Material(child: Center(child: child ?? CircularProgressIndicator()));
   }
 }
