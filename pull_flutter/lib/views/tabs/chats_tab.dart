@@ -6,16 +6,18 @@ class ChatsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ListView(
-      children: [
-        for (var i = 0; i < 10; i++)
-          ListTile(
-            title: Text("Person $i"),
-            leading: CircleAvatar(
-              child: Text(i.toString()),
-            ),
-          )
-      ],
+    return Material(
+      child: ListView(
+        children: [
+          for (var i = 0; i < 10; i++)
+            ListTile(
+              title: Text("Person $i"),
+              leading: CircleAvatar(
+                child: Text(i.toString()),
+              ),
+            )
+        ],
+      ),
     );
   }
 }

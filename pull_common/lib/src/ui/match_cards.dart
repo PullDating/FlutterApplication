@@ -127,6 +127,7 @@ class MatchCard extends StatelessWidget {
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
+                color: Theme.of(context).canvasColor,
                 borderRadius: BorderRadius.circular(14),
                 image: DecorationImage(
                   image: AssetImage(match.media[0].toString()),
