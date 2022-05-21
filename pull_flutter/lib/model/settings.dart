@@ -4,5 +4,5 @@ import 'package:pull_flutter/model/config/constants.dart';
 
 /// Whether to use the dark theme
 final useDarkThemeProvider = Provider<bool>((ref) {
-  return ref.watch(settingsProvider)?.get(kSettingsUseDarkTheme);
+  return ref.watch(settingsProvider)?.get(kSettingsUseDarkTheme) ?? false;
 });
