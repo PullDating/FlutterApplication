@@ -10,6 +10,11 @@ final matchStreamProvider = StreamProvider<Iterable<Match>>((ref) async* {
   yield* ref.watch(matchStreamControllerProvider).stream;
 });
 
+final activeRefreshProvider = StateProvider((ref) => false);
+
 final matchStreamRefreshProvider = Provider((ref) => () {
-      ref.read(repositoryProvider).nextMatches();
+      if (!ref.read(activeRefreshProvider)) {
+        ref.read(activeRefreshProvider.state).state = true;
+        ref.read(repositoryProvider).nextMatches();
+      }
     });

@@ -67,7 +67,6 @@ class _MatchCardsState extends ConsumerState<MatchCards> {
   @override
   void initState() {
     super.initState();
-    print('insi');
     _controller = SwipableStackController()..addListener(_listenController);
 
     pageSize = ref.read(matchPageSizeProvider);
@@ -78,14 +77,16 @@ class _MatchCardsState extends ConsumerState<MatchCards> {
     /// Listen for new match suggestions and update the list
     ref.listenOnce<AsyncValue<Iterable<Match>>>(matchStreamProvider, (previous, next) {
       next.whenData((value) {
+        if (!mounted) {
+          return;
+        }
         setState(() {
           expectedCard = bufferIndex = (lastSwipeIndex + 3) % matches.length;
           for (final m in value) {
             matches[bufferIndex++] = m;
             bufferIndex = bufferIndex % matches.length;
           }
-          for (var i = 0; i < pageSize - 1; i++) {
-            print(bufferIndex);
+          for (var i = 0; i < pageSize - 3; i++) {
             matches[bufferIndex++] = null;
             bufferIndex = bufferIndex % matches.length;
           }
@@ -155,6 +156,9 @@ class _MatchCardsState extends ConsumerState<MatchCards> {
                   // If the match has not yet loaded, wait 200 ms and then try again
                   () async {
                     await Future.delayed(const Duration(milliseconds: 200));
+                    if (!mounted) {
+                      return;
+                    }
                     setState(() {});
                   }();
                   return Card(child: Center(child: CircularProgressIndicator()));

@@ -63,6 +63,7 @@ class PullRepository {
     final pageSize = _read(matchPageSizeProvider);
     final matchList = (json.decode(await _get(nextMatchesUri.replace(query: 'page_size=$pageSize'))) as List)
         .map((e) => Match.fromJson(e));
+    _read(activeRefreshProvider.notifier).state = false;
     _read(matchStreamControllerProvider).add(matchList);
   }
 }
