@@ -5,6 +5,7 @@ import 'package:pull_common/src/model/exception/response_exception.dart';
 import 'package:pull_common/src/model/provider/auth.dart';
 import 'package:riverpod/riverpod.dart';
 
+/// Using a [Provider] for access to [http.Client] allows easy overriding during tests, if necessary
 final httpClientProvider = Provider<http.Client>((_) => http.Client());
 
 /// Repository for the Pull API

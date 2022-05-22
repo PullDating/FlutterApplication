@@ -4,7 +4,7 @@ import 'package:isar/isar.dart';
 part 'match.freezed.dart';
 part 'match.g.dart';
 
-/// A potential match or matched user. Contains only public profile information
+/// A potential match or matched user. To contain only public profile information
 @freezed
 @Collection()
 class Match with _$Match {

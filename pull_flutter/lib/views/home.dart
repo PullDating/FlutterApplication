@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:pull_flutter/views/tabs/card_swipe_tab.dart';
 import 'package:pull_flutter/views/tabs/chats_tab.dart';
 
+/// Main home page of this app, containing a bottom navigation bar and switchable content
 class PullHomePage extends ConsumerStatefulWidget {
   const PullHomePage({Key? key, required this.title, required this.path}) : super(key: key);
 
@@ -36,6 +37,7 @@ class _PullHomePageState extends ConsumerState<PullHomePage>
         switchOutCurve: Curves.fastOutSlowIn,
         child: tabs[widget.path]!,
         transitionBuilder: (_widget, animation) {
+          /// If this is the incoming widget, we need to animate it in. Otherwise we need to animate it out.
           if (_widget == tabs[widget.path]!) {
             return FadeTransition(
               opacity: Tween<double>(begin: 0, end: 1).animate(animation),

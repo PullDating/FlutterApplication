@@ -9,6 +9,7 @@ class LoginPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final natState = ref.watch(networkAuthTokenProvider.state);
+    final settings = ref.watch(settingsProvider);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -18,7 +19,7 @@ class LoginPage extends ConsumerWidget {
               const Text("Login"),
               ElevatedButton(
                   onPressed: () {
-                    natState.state = 'demo token';
+                    settings!.put(kSettingsApiToken, natState.state = 'demo token');
                     context.go('/home/cards');
                   },
                   child: const Text("Login"))

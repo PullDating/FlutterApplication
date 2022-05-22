@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+/// Tab displaying a list of all of your matches/conversations
 class ChatsTab extends ConsumerWidget {
   const ChatsTab({super.key});
 

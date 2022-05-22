@@ -3,12 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:pull_common/src/model/entity/match.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
+/// A [ThemeExtension] that allows theming the [MatchCards] widget
 class MatchCardsTheme extends ThemeExtension<MatchCardsTheme> {
   const MatchCardsTheme(
       {this.rewindColor = Colors.orange, this.swipeLeftColor = Colors.red, this.swipeRightColor = Colors.green});
 
+  /// The color of the rewind button
   final Color rewindColor;
+
+  /// The color of the left swipe button
   final Color swipeLeftColor;
+
+  /// The color of the right swipe button
   final Color swipeRightColor;
 
   @override
@@ -30,6 +36,8 @@ class MatchCardsTheme extends ThemeExtension<MatchCardsTheme> {
   }
 }
 
+/// Displays a swipeable stack of cards built from a list of [Match]es, along with an overlay of button
+/// actions.
 class MatchCards extends StatefulWidget {
   const MatchCards(this.potentialMatches, {Key? key}) : super(key: key);
 
@@ -110,6 +118,7 @@ class _MatchCardsState extends State<MatchCards> {
   }
 }
 
+/// A single decorated [Match] card for use in the [MatchCards] widget
 class MatchCard extends StatelessWidget {
   const MatchCard({
     required this.match,
@@ -186,6 +195,8 @@ class MatchCard extends StatelessWidget {
   }
 }
 
+/// A row of action buttons that overlays the [MatchCards] along the bottom
+/// Contains buttons for rewind, swipe left, and swipe right
 class BottomButtonsRow extends StatelessWidget {
   const BottomButtonsRow({
     required this.onRewindTap,

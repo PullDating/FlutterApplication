@@ -12,5 +12,7 @@ final networkAuthTokenProvider = StateProvider<String?>((_) => null);
 
 /// Attempts to obtain the stored token first, falling back to obtaining a token from the network
 final authTokenProvider = Provider<String?>((ref) {
-  return ref.watch(storedAuthTokenProvider) ?? ref.watch(networkAuthTokenProvider);
+  final storedAuthToken = ref.watch(storedAuthTokenProvider);
+  final networkAuthToken = ref.watch(networkAuthTokenProvider);
+  return storedAuthToken ?? networkAuthToken;
 });

@@ -15,6 +15,8 @@ final appRoutes = <GoRoute>[
     path: '/login',
     builder: (BuildContext context, GoRouterState state) => const LoginPage(),
   ),
+
+  /// The homepage route has its own sub-routes for different pages accessed via bottom nav bar
   GoRoute(
     path: '/home/:page',
     builder: (BuildContext context, GoRouterState state) {
