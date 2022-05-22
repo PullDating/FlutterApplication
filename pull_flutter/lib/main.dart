@@ -9,7 +9,10 @@ import 'package:pull_flutter/model/routes.dart';
 import 'package:pull_flutter/model/settings.dart';
 
 void main() {
-  runApp(ProviderScope(child: PullApp()));
+  runApp(ProviderScope(
+    overrides: [matchStreamRefreshOverride],
+    child: PullApp(),
+  ));
 }
 
 class PullApp extends ConsumerWidget {

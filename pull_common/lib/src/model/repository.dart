@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:pull_common/src/model/api_uris.dart';
 import 'package:pull_common/src/model/entity/auth_request.dart';
 import 'package:pull_common/src/model/exception/response_exception.dart';
 import 'package:pull_common/src/model/provider/auth.dart';
+import 'package:pull_common/src/model/provider/config.dart';
+import 'package:pull_common/src/model/provider/match_stream.dart';
 import 'package:riverpod/riverpod.dart';
+
+import 'entity/match.dart';
 
 /// Using a [Provider] for access to [http.Client] allows easy overriding during tests, if necessary
 final httpClientProvider = Provider<http.Client>((_) => http.Client());
@@ -50,6 +56,14 @@ class PullRepository {
   Future<String> authenticate(AuthRequest authRequest) async {
     final token = await _post(authUri, body: authRequest.toJson());
     return _read(networkAuthTokenProvider.notifier).state = token;
+  }
+
+  /// List the next potential matches in the card stack
+  void nextMatches() async {
+    final pageSize = _read(matchPageSizeProvider);
+    final matchList = (json.decode(await _get(nextMatchesUri.replace(query: 'page_size=$pageSize'))) as List)
+        .map((e) => Match.fromJson(e));
+    _read(matchStreamControllerProvider).add(matchList);
   }
 }
 

@@ -972,7 +972,7 @@ _$_Match _$$_MatchFromJson(Map<String, dynamic> json) => _$_Match(
       displayName: json['displayName'] as String,
       bio: json['bio'] as String? ?? '',
       media: (json['media'] as List<dynamic>?)
-              ?.map((e) => Uri.parse(e as String))
+              ?.map((e) => Media.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       pronouns: json['pronouns'] as String?,
@@ -987,7 +987,7 @@ Map<String, dynamic> _$$_MatchToJson(_$_Match instance) => <String, dynamic>{
       'id': instance.id,
       'displayName': instance.displayName,
       'bio': instance.bio,
-      'media': instance.media.map((e) => e.toString()).toList(),
+      'media': instance.media,
       'pronouns': instance.pronouns,
       'gender': instance.gender,
       'interests': instance.interests,

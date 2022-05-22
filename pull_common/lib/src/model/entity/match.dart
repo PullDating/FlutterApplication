@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
+import 'package:pull_common/src/model/entity/media.dart';
 
 part 'match.freezed.dart';
 part 'match.g.dart';
@@ -12,7 +13,7 @@ class Match with _$Match {
       {required int id,
       required String displayName,
       @Default('') String bio,
-      @Default([]) List<Uri> media,
+      @Default([]) List<Media> media,
       String? pronouns,
       String? gender,
       @Default([]) List<String> interests}) = _Match;

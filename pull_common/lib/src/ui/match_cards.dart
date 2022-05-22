@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pull_common/src/model/entity/match.dart';
+import 'package:pull_common/src/model/provider/config.dart';
+import 'package:pull_common/src/model/provider/match_stream.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
 /// A [ThemeExtension] that allows theming the [MatchCards] widget
@@ -38,17 +41,24 @@ class MatchCardsTheme extends ThemeExtension<MatchCardsTheme> {
 
 /// Displays a swipeable stack of cards built from a list of [Match]es, along with an overlay of button
 /// actions.
-class MatchCards extends StatefulWidget {
-  const MatchCards(this.potentialMatches, {Key? key}) : super(key: key);
-
-  final List<Match> potentialMatches;
+class MatchCards extends ConsumerStatefulWidget {
+  const MatchCards({Key? key}) : super(key: key);
 
   @override
   _MatchCardsState createState() => _MatchCardsState();
 }
 
-class _MatchCardsState extends State<MatchCards> {
+class _MatchCardsState extends ConsumerState<MatchCards> {
   late final SwipableStackController _controller;
+  late final List<Match?> matches;
+  late final int pageSize;
+
+  /// [MatchCards] uses a circular buffer to store the list of suggested matches. [bufferIndex] keeps track of our
+  /// current position in it
+  int bufferIndex = 0;
+
+  int lastSwipeIndex = -3;
+  int expectedCard = 0;
 
   void _listenController() {
     setState(() {});
@@ -57,7 +67,33 @@ class _MatchCardsState extends State<MatchCards> {
   @override
   void initState() {
     super.initState();
+    print('insi');
     _controller = SwipableStackController()..addListener(_listenController);
+
+    pageSize = ref.read(matchPageSizeProvider);
+
+    /// Create the match list as 2x the page size
+    matches = List.filled(pageSize * 2, null);
+
+    /// Listen for new match suggestions and update the list
+    ref.listenOnce<AsyncValue<Iterable<Match>>>(matchStreamProvider, (previous, next) {
+      next.whenData((value) {
+        setState(() {
+          expectedCard = bufferIndex = (lastSwipeIndex + 3) % matches.length;
+          for (final m in value) {
+            matches[bufferIndex++] = m;
+            bufferIndex = bufferIndex % matches.length;
+          }
+          for (var i = 0; i < pageSize - 1; i++) {
+            print(bufferIndex);
+            matches[bufferIndex++] = null;
+            bufferIndex = bufferIndex % matches.length;
+          }
+        });
+      });
+    });
+
+    ref.read(matchStreamRefreshProvider)();
   }
 
   @override
@@ -70,6 +106,13 @@ class _MatchCardsState extends State<MatchCards> {
 
   @override
   Widget build(BuildContext context) {
+    if (matches[expectedCard] == null) {
+      return Material(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     return Stack(
       children: [
         Positioned.fill(
@@ -80,6 +123,11 @@ class _MatchCardsState extends State<MatchCards> {
               stackClipBehaviour: Clip.none,
               allowVerticalSwipe: false,
               onWillMoveNext: (index, swipeDirection) {
+                final itemIndex = index % matches.length;
+                final match = matches[itemIndex];
+                if (match == null) {
+                  return false;
+                }
                 switch (swipeDirection) {
                   case SwipeDirection.left:
                   case SwipeDirection.right:
@@ -90,17 +138,29 @@ class _MatchCardsState extends State<MatchCards> {
                 }
               },
               onSwipeCompleted: (index, direction) {
-                if (kDebugMode) {
-                  print('$index, $direction');
+                final itemIndex = index % matches.length;
+                // If we're getting close to the end of the current data, refresh with new data
+                if (itemIndex == pageSize - 3 || itemIndex == matches.length - 3) {
+                  lastSwipeIndex = itemIndex;
+                  ref.read(matchStreamRefreshProvider)();
                 }
               },
               horizontalSwipeThreshold: 0.8,
               // Set max value to ignore vertical threshold.
               verticalSwipeThreshold: 1,
               builder: (context, properties) {
-                final itemIndex = properties.index % widget.potentialMatches.length;
+                final itemIndex = properties.index % matches.length;
+                final match = matches[itemIndex];
+                if (match == null) {
+                  // If the match has not yet loaded, wait 200 ms and then try again
+                  () async {
+                    await Future.delayed(const Duration(milliseconds: 200));
+                    setState(() {});
+                  }();
+                  return Card(child: Center(child: CircularProgressIndicator()));
+                }
                 return MatchCard(
-                  match: widget.potentialMatches[itemIndex],
+                  match: match,
                 );
               },
             ),
@@ -139,7 +199,7 @@ class MatchCard extends StatelessWidget {
                 color: Theme.of(context).canvasColor,
                 borderRadius: BorderRadius.circular(14),
                 image: DecorationImage(
-                  image: AssetImage(match.media[0].toString()),
+                  image: AssetImage(match.media[0].uri.toString()),
                   fit: BoxFit.cover,
                 ),
                 boxShadow: [

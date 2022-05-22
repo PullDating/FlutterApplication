@@ -23,7 +23,7 @@ mixin _$Match {
   int get id => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   String get bio => throw _privateConstructorUsedError;
-  List<Uri> get media => throw _privateConstructorUsedError;
+  List<Media> get media => throw _privateConstructorUsedError;
   String? get pronouns => throw _privateConstructorUsedError;
   String? get gender => throw _privateConstructorUsedError;
   List<String> get interests => throw _privateConstructorUsedError;
@@ -41,7 +41,7 @@ abstract class $MatchCopyWith<$Res> {
       {int id,
       String displayName,
       String bio,
-      List<Uri> media,
+      List<Media> media,
       String? pronouns,
       String? gender,
       List<String> interests});
@@ -81,7 +81,7 @@ class _$MatchCopyWithImpl<$Res> implements $MatchCopyWith<$Res> {
       media: media == freezed
           ? _value.media
           : media // ignore: cast_nullable_to_non_nullable
-              as List<Uri>,
+              as List<Media>,
       pronouns: pronouns == freezed
           ? _value.pronouns
           : pronouns // ignore: cast_nullable_to_non_nullable
@@ -107,7 +107,7 @@ abstract class _$$_MatchCopyWith<$Res> implements $MatchCopyWith<$Res> {
       {int id,
       String displayName,
       String bio,
-      List<Uri> media,
+      List<Media> media,
       String? pronouns,
       String? gender,
       List<String> interests});
@@ -148,7 +148,7 @@ class __$$_MatchCopyWithImpl<$Res> extends _$MatchCopyWithImpl<$Res>
       media: media == freezed
           ? _value._media
           : media // ignore: cast_nullable_to_non_nullable
-              as List<Uri>,
+              as List<Media>,
       pronouns: pronouns == freezed
           ? _value.pronouns
           : pronouns // ignore: cast_nullable_to_non_nullable
@@ -172,7 +172,7 @@ class _$_Match implements _Match {
       {required this.id,
       required this.displayName,
       this.bio = '',
-      final List<Uri> media = const [],
+      final List<Media> media = const [],
       this.pronouns,
       this.gender,
       final List<String> interests = const []})
@@ -189,10 +189,10 @@ class _$_Match implements _Match {
   @override
   @JsonKey()
   final String bio;
-  final List<Uri> _media;
+  final List<Media> _media;
   @override
   @JsonKey()
-  List<Uri> get media {
+  List<Media> get media {
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_media);
   }
@@ -258,7 +258,7 @@ abstract class _Match implements Match {
       {required final int id,
       required final String displayName,
       final String bio,
-      final List<Uri> media,
+      final List<Media> media,
       final String? pronouns,
       final String? gender,
       final List<String> interests}) = _$_Match;
@@ -272,7 +272,7 @@ abstract class _Match implements Match {
   @override
   String get bio => throw _privateConstructorUsedError;
   @override
-  List<Uri> get media => throw _privateConstructorUsedError;
+  List<Media> get media => throw _privateConstructorUsedError;
   @override
   String? get pronouns => throw _privateConstructorUsedError;
   @override
