@@ -6,6 +6,8 @@ import 'package:pull_common/src/model/provider/config.dart';
 import 'package:pull_common/src/model/provider/match_stream.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
+typedef CardBuilder = Widget Function(BuildContext context, Match match);
+
 /// A [ThemeExtension] that allows theming the [MatchCards] widget
 class MatchCardsTheme extends ThemeExtension<MatchCardsTheme> {
   const MatchCardsTheme(
@@ -42,7 +44,9 @@ class MatchCardsTheme extends ThemeExtension<MatchCardsTheme> {
 /// Displays a swipeable stack of cards built from a list of [Match]es, along with an overlay of button
 /// actions.
 class MatchCards extends ConsumerStatefulWidget {
-  const MatchCards({Key? key}) : super(key: key);
+  const MatchCards({required this.cardBuilder, super.key});
+
+  final CardBuilder cardBuilder;
 
   @override
   _MatchCardsState createState() => _MatchCardsState();
@@ -120,6 +124,7 @@ class _MatchCardsState extends ConsumerState<MatchCards> {
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: SwipableStack(
+              hitTestBehavior: HitTestBehavior.deferToChild,
               controller: _controller,
               stackClipBehaviour: Clip.none,
               allowVerticalSwipe: false,
@@ -163,9 +168,7 @@ class _MatchCardsState extends ConsumerState<MatchCards> {
                   }();
                   return Card(child: Center(child: CircularProgressIndicator()));
                 }
-                return MatchCard(
-                  match: match,
-                );
+                return widget.cardBuilder(context, match);
               },
             ),
           ),
@@ -178,83 +181,6 @@ class _MatchCardsState extends ConsumerState<MatchCards> {
           canRewind: _controller.canRewind,
         ),
       ],
-    );
-  }
-}
-
-/// A single decorated [Match] card for use in the [MatchCards] widget
-class MatchCard extends StatelessWidget {
-  const MatchCard({
-    required this.match,
-    Key? key,
-  }) : super(key: key);
-
-  final Match match;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return ClipRRect(
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).canvasColor,
-                borderRadius: BorderRadius.circular(14),
-                image: DecorationImage(
-                  image: AssetImage(match.media[0].uri.toString()),
-                  fit: BoxFit.cover,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    offset: const Offset(0, 2),
-                    blurRadius: 26,
-                    color: Colors.black.withOpacity(0.08),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 200,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(14),
-                ),
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: <Color>[
-                    Colors.black12.withOpacity(0),
-                    Colors.black12.withOpacity(.4),
-                    Colors.black12.withOpacity(.82),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  match.displayName,
-                  style: theme.textTheme.headline6!.copyWith(
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: BottomButtonsRow.height)
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

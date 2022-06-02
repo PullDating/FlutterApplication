@@ -38,7 +38,12 @@ class PullApp extends ConsumerWidget {
               backgroundColor: Colors.white,
               titleTextStyle: GoogleFonts.nunito(fontWeight: FontWeight.bold, color: Colors.purpleAccent, fontSize: 24),
               centerTitle: true),
-          extensions: const [MatchCardsTheme()]),
+          extensions: [
+            MatchCardsTheme(
+                swipeRightColor: Colors.deepPurple,
+                swipeLeftColor: Colors.pinkAccent.shade200,
+                rewindColor: Colors.blueGrey.shade700)
+          ]),
       routeInformationParser: _router.routeInformationParser,
       routerDelegate: _router.routerDelegate,
     );
