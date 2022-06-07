@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pull_flutter/views/settings.dart';
 import 'package:pull_flutter/views/tabs/card_swipe_tab.dart';
 import 'package:pull_flutter/views/tabs/chats_tab.dart';
 
@@ -38,13 +37,10 @@ class _PullHomePageState extends ConsumerState<PullHomePage>
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            tooltip: 'Navigate to your settings',
+            tooltip: 'Settings',
             color: Colors.deepPurple,
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const SettingsPage()));
+              context.go('/settings');
             },
           ),
         ],

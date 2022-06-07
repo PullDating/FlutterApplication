@@ -34,17 +34,17 @@ class _PullSettingsPageState extends ConsumerState<SettingsPage> {
                 textColor: Colors.purpleAccent,
               ),
             ListTile(
-              title: Text('Visit us',
+              title: Text('Website',
                   style: GoogleFonts.nunito(
                       fontWeight: FontWeight.bold,
                       color: Colors.purpleAccent,
                       fontSize: 12)),
               onTap: () {
-                launchUrl(Uri.parse('https://pull-dating.com'));
+                launchUrl(Uri.parse('https://pulldating.tips'));
               },
             ),
             ListTile(
-              title: Text('Discover our Code on Github',
+              title: Text('Github',
                   style: GoogleFonts.nunito(
                       fontWeight: FontWeight.bold,
                       color: Colors.purpleAccent,
