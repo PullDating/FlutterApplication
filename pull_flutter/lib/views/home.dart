@@ -6,7 +6,8 @@ import 'package:pull_flutter/views/tabs/chats_tab.dart';
 
 /// Main home page of this app, containing a bottom navigation bar and switchable content
 class PullHomePage extends ConsumerStatefulWidget {
-  const PullHomePage({Key? key, required this.title, required this.path}) : super(key: key);
+  const PullHomePage({Key? key, required this.title, required this.path})
+      : super(key: key);
 
   final String title;
   final String path;
@@ -17,7 +18,10 @@ class PullHomePage extends ConsumerStatefulWidget {
 
 class _PullHomePageState extends ConsumerState<PullHomePage>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  final tabs = const <String, Widget>{'cards': CardSwipeTab(), 'chats': ChatsTab()};
+  final tabs = const <String, Widget>{
+    'cards': CardSwipeTab(),
+    'chats': ChatsTab()
+  };
 
   @override
   void initState() {
@@ -30,6 +34,16 @@ class _PullHomePageState extends ConsumerState<PullHomePage>
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            tooltip: 'Settings',
+            color: Colors.deepPurple,
+            onPressed: () {
+              context.go('/settings');
+            },
+          ),
+        ],
       ),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 400),
@@ -42,7 +56,9 @@ class _PullHomePageState extends ConsumerState<PullHomePage>
             return FadeTransition(
               opacity: Tween<double>(begin: 0, end: 1).animate(animation),
               child: SlideTransition(
-                position: Tween<Offset>(begin: const Offset(0, 0.06), end: Offset.zero).animate(animation),
+                position: Tween<Offset>(
+                        begin: const Offset(0, 0.06), end: Offset.zero)
+                    .animate(animation),
                 child: _widget,
               ),
             );
@@ -57,7 +73,8 @@ class _PullHomePageState extends ConsumerState<PullHomePage>
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: tabs.keys.toList().indexOf(widget.path),
         items: const [
-          BottomNavigationBarItem(label: 'Cards', icon: Icon(Icons.people_outline_sharp)),
+          BottomNavigationBarItem(
+              label: 'Cards', icon: Icon(Icons.people_outline_sharp)),
           BottomNavigationBarItem(label: 'Chats', icon: Icon(Icons.chat))
         ],
         onTap: (i) {

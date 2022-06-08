@@ -36,7 +36,10 @@ class PullApp extends ConsumerWidget {
           textTheme: GoogleFonts.nunitoTextTheme(),
           appBarTheme: AppBarTheme(
               backgroundColor: Colors.white,
-              titleTextStyle: GoogleFonts.nunito(fontWeight: FontWeight.bold, color: Colors.purpleAccent, fontSize: 24),
+              titleTextStyle: GoogleFonts.nunito(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.purpleAccent,
+                  fontSize: 24),
               centerTitle: true),
           extensions: [
             MatchCardsTheme(

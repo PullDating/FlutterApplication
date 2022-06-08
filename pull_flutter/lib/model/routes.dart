@@ -3,11 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:pull_common/pull_common.dart';
 import 'package:pull_flutter/views/home.dart';
 import 'package:pull_flutter/views/login.dart';
+import 'package:pull_flutter/views/settings.dart';
 
 final appRoutes = <GoRoute>[
   GoRoute(
     path: '/',
-    builder: (BuildContext context, GoRouterState state) => const AuthRedirector(
+    builder: (BuildContext context, GoRouterState state) =>
+        const AuthRedirector(
       homeUrl: '/home/cards',
     ),
   ),
@@ -24,4 +26,8 @@ final appRoutes = <GoRoute>[
       return PullHomePage(title: 'Pull', path: page);
     },
   ),
+  GoRoute(
+      path: '/settings',
+      builder: (BuildContext context, GoRouterState state) =>
+          const SettingsPage()),
 ];
