@@ -21,7 +21,8 @@ class _PullSettingsPageState extends ConsumerState<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: const Text('Settings'),),
+          title: const Text('Settings'),
+        ),
         body: Material(
           child: ListView(children: [
             for (var i = 0; i < 10; i++)
@@ -40,16 +41,16 @@ class _PullSettingsPageState extends ConsumerState<SettingsPage> {
               },
             ),
             ListTile(
-              title: Text('Licenses',
-                  style: GoogleFonts.nunito(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.purpleAccent,
-                      fontSize: 12)),
+              title: Text(
+                'Licenses',
+                style: Theme.of(context).textTheme.headline5,
+              ),
               onTap: () {
                 showLicensePage(
                   context: context,
                   applicationName: "Pull Dating",
-                  applicationIcon: const ImageIcon(AssetImage("assets/icons/PullLogo.png")),
+                  applicationIcon: Image.asset("assets/icons/PullLogo.png",
+                      width: 40, height: 40),
                 );
               },
             ),
