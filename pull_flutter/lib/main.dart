@@ -33,7 +33,13 @@ class PullApp extends ConsumerWidget {
       theme: ThemeData(
           brightness: useDarkTheme ? Brightness.dark : Brightness.light,
           primarySwatch: Colors.deepPurple,
-          textTheme: GoogleFonts.nunitoTextTheme(),
+          textTheme: TextTheme(
+            headline5: GoogleFonts.nunito(
+                fontWeight: FontWeight.bold,
+                color: Colors.purpleAccent,
+                fontSize: 12),
+
+          ),
           appBarTheme: AppBarTheme(
               backgroundColor: Colors.white,
               titleTextStyle: GoogleFonts.nunito(
