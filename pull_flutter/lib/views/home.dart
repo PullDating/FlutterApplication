@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pull_flutter/views/tabs/card_swipe_tab.dart';
 import 'package:pull_flutter/views/tabs/chats_tab.dart';
+import 'package:pull_flutter/views/tabs/profile_tab.dart';
 
 /// Main home page of this app, containing a bottom navigation bar and switchable content
 class PullHomePage extends ConsumerStatefulWidget {
@@ -20,7 +21,8 @@ class _PullHomePageState extends ConsumerState<PullHomePage>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   final tabs = const <String, Widget>{
     'cards': CardSwipeTab(),
-    'chats': ChatsTab()
+    'chats': ChatsTab(),
+    'profile' : ProfileTab()
   };
 
   @override
@@ -75,7 +77,8 @@ class _PullHomePageState extends ConsumerState<PullHomePage>
         items: const [
           BottomNavigationBarItem(
               label: 'Cards', icon: Icon(Icons.people_outline_sharp)),
-          BottomNavigationBarItem(label: 'Chats', icon: Icon(Icons.chat))
+          BottomNavigationBarItem(label: 'Chats', icon: Icon(Icons.chat)),
+          BottomNavigationBarItem(label: 'Profile', icon: Icon(Icons.person))
         ],
         onTap: (i) {
           context.go('/home/${tabs.keys.elementAt(i)}');
