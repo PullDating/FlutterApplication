@@ -38,7 +38,6 @@ class PullApp extends ConsumerWidget {
                 fontWeight: FontWeight.bold,
                 color: Colors.purpleAccent,
                 fontSize: 12),
-
           ),
           appBarTheme: AppBarTheme(
               backgroundColor: Colors.white,
@@ -46,7 +45,9 @@ class PullApp extends ConsumerWidget {
                   fontWeight: FontWeight.bold,
                   color: Colors.purpleAccent,
                   fontSize: 24),
-              centerTitle: true),
+              centerTitle: true,
+            iconTheme: const IconThemeData(color: Colors.deepPurple),
+          ),
           extensions: [
             MatchCardsTheme(
                 swipeRightColor: Colors.deepPurple,
