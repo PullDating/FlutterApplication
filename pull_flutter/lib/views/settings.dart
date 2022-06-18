@@ -31,11 +31,10 @@ class _PullSettingsPageState extends ConsumerState<SettingsPage> {
                 textColor: Colors.purpleAccent,
               ),
             ListTile(
-              title: Text('Website',
-                  style: GoogleFonts.nunito(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.purpleAccent,
-                      fontSize: 12)),
+              title: Text(
+                'Website',
+                style: Theme.of(context).textTheme.headline5,
+              ),
               onTap: () {
                 launchUrl(Uri.parse('https://pulldating.tips'));
               },
@@ -55,11 +54,10 @@ class _PullSettingsPageState extends ConsumerState<SettingsPage> {
               },
             ),
             ListTile(
-              title: Text('Github',
-                  style: GoogleFonts.nunito(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.purpleAccent,
-                      fontSize: 12)),
+              title: Text(
+                'Github',
+                style: Theme.of(context).textTheme.headline5,
+              ),
               onTap: () {
                 launchUrl(Uri.parse(
                     'https://github.com/PullDating/FlutterApplication'));
