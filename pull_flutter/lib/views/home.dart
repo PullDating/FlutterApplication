@@ -42,7 +42,7 @@ class _PullHomePageState extends ConsumerState<PullHomePage>
             tooltip: 'Settings',
             color: Colors.deepPurple,
             onPressed: () {
-              context.go('/settings');
+              context.push('/settings');
             },
           ),
         ],
