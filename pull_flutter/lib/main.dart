@@ -36,10 +36,7 @@ class PullApp extends ConsumerWidget {
           textTheme: GoogleFonts.nunitoTextTheme(),
           appBarTheme: AppBarTheme(
               backgroundColor: Colors.white,
-              titleTextStyle: GoogleFonts.nunito(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.purpleAccent,
-                  fontSize: 24),
+              titleTextStyle: GoogleFonts.nunito(fontWeight: FontWeight.bold, color: Colors.purpleAccent, fontSize: 24),
               centerTitle: true),
           extensions: [
             MatchCardsTheme(
@@ -54,6 +51,7 @@ class PullApp extends ConsumerWidget {
 
   void _initHive(StateController<bool> hiveReady) async {
     await Hive.initFlutter();
+    (await Hive.openBox(kSettingsBox)).delete(kSettingsApiToken);
     hiveReady.state = true;
   }
 }
