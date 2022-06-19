@@ -61,7 +61,6 @@ class PullApp extends ConsumerWidget {
 
   void _initHive(StateController<bool> hiveReady) async {
     await Hive.initFlutter();
-    (await Hive.openBox(kSettingsBox)).delete(kSettingsApiToken);
     hiveReady.state = true;
   }
 }
