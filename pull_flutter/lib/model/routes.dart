@@ -6,7 +6,7 @@ import 'package:pull_flutter/views/login.dart';
 import 'package:pull_flutter/views/profileCreation/add_photos.dart';
 import 'package:pull_flutter/views/settings.dart';
 
-import '../views/profileCreation/profileCreationParent.dart';
+import '../views/profileCreation/profile_creation_parent.dart';
 
 final appRoutes = <GoRoute>[
   GoRoute(

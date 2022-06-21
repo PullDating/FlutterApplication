@@ -6,19 +6,23 @@ import 'package:pull_flutter/views/tabs/card_swipe_tab.dart';
 import 'package:pull_flutter/views/tabs/chats_tab.dart';
 import 'package:pull_flutter/views/tabs/profile_tab.dart';
 
-import 'addName.dart';
+import 'package:pull_common/src/model/provider/create_account.dart';
 
-class ProfileCreationParent extends StatefulWidget {
+import 'add_name.dart';
+
+
+
+class ProfileCreationParent extends ConsumerStatefulWidget {
   const ProfileCreationParent({Key? key, required this.title, required this.path}) : super(key: key);
 
   final String title;
   final String path;
 
   @override
-  State<ProfileCreationParent> createState() => _ProfileCreationParentState();
+  _ProfileCreationParentState createState() => _ProfileCreationParentState();
 }
 
-class _ProfileCreationParentState extends State<ProfileCreationParent> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin{
+class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin{
   final tabs = const <String,Widget>{
     'add_photos' : AddPhotosPage(),
     'name' : AddNamePage(),
@@ -27,10 +31,12 @@ class _ProfileCreationParentState extends State<ProfileCreationParent> with Tick
   @override
   void initState() {
     super.initState();
+    final profile = ref.read(accountCreationProfile);
   }
 
   @override
   Widget build(BuildContext context) {
+    final profile = ref.watch(accountCreationProfile);
     super.build(context);
     return Scaffold(
       appBar: AppBar(
