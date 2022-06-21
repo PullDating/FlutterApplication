@@ -19,7 +19,7 @@ class ProfileCreationParent extends ConsumerStatefulWidget {
   final String path;
 
   @override
-  _ProfileCreationParentState createState() => _ProfileCreationParentState();
+  ConsumerState <ProfileCreationParent> createState() => _ProfileCreationParentState();
 }
 
 class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin{
