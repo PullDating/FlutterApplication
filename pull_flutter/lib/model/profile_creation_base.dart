@@ -21,12 +21,12 @@ class _ProfileCreationTemplateState extends ConsumerState<ProfileCreationTemplat
   @override
   void initState() {
     super.initState();
-    final profile = ref.read(accountCreationProfile);
+    final profile = ref.read(accountCreationProvider);
   }
 
   @override
   Widget build(BuildContext context) {
-    final profile = ref.watch(accountCreationProfile);
+    final profile = ref.watch(accountCreationProvider);
     return Material(
       child: Column(
         children: [

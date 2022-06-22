@@ -30,15 +30,10 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent> w
     'add_photos' : ProfileCreationTemplate(entryField: ProfilePhotoField(),title: "Add Your Photos",),
   };
 
-  @override
-  void initState() {
-    super.initState();
-    final profile = ref.read(accountCreationProfile);
-  }
 
   @override
   Widget build(BuildContext context) {
-    final profile = ref.watch(accountCreationProfile);
+    final profile = ref.watch(accountCreationProvider);
     super.build(context);
     return Scaffold(
       appBar: AppBar(

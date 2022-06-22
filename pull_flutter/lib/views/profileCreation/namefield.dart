@@ -20,18 +20,12 @@ class _ProfileNameFieldState extends ConsumerState <ProfileNameField> {
 
   @override
   Widget build(BuildContext context) {
-    myData = ref.watch(accountCreationProfile).name;
-    ref.read(accountCreationProfile);
+    Profile myData = ref.watch(accountCreationProvider);
     final TextEditingController _nameController = TextEditingController();
-    _updateName() {
-      log("Second text field: ${_nameController.text}");
-      ref.read(accountCreationProfile).copyWith(name: _nameController.text);
-      print(ref.read(accountCreationProfile).toString());
-    }
-
+  _nameController.text = (myData.name == Null) ? myData.name! : '';
     //final TextEditingController _nameController = TextEditingController();
     _nameController.addListener(() {
-      _updateName();
+
     });
 
 
@@ -49,10 +43,12 @@ class _ProfileNameFieldState extends ConsumerState <ProfileNameField> {
               ),
               ElevatedButton(
                   onPressed: () {
-                    ref.read(accountCreationProfile).copyWith(name: "jeff");
-                    print(ref.read(accountCreationProfile).toString());
+                    print("button pressed");
+                    ref.read(accountCreationProvider.notifier).setName("jeff");
+                    print(myData.name);
+                    _nameController.text = myData.name!;
                   },
-                child: Text((myData == null)? myData! : "hello"),
+                child: Text('hello there general kenobi'),
               )
             ],
           )

@@ -6,10 +6,18 @@ import 'package:pull_common/src/model/entity/profile.dart';
 class accountCreationNotifier extends StateNotifier<Profile>{
   accountCreationNotifier() : super(Profile());
 
-  increase() => state = state.copyWith(name: state.name);
+  void setName(String name){
+    print("running setName function");
+    state = state.copyWith(name: name);
+  }
 
 }
 
+final accountCreationProvider = StateNotifierProvider<accountCreationNotifier,Profile>((ref) {
+  return accountCreationNotifier();
+});
+
+/*
 final accountCreationProfile = StateProvider((ref) => Profile(
   name: "default",
   birthdate: DateTime.now(),
@@ -18,3 +26,4 @@ final accountCreationProfile = StateProvider((ref) => Profile(
   height: 175.4,
 
 ));
+ */
