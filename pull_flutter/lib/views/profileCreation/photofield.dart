@@ -6,14 +6,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:reorderables/reorderables.dart';
 
-class AddPhotosPage extends StatefulWidget {
-  const AddPhotosPage({Key? key}) : super(key: key);
+class ProfilePhotoField extends StatefulWidget {
+  const ProfilePhotoField({Key? key}) : super(key: key);
 
   @override
-  State<AddPhotosPage> createState() => _AddPhotosPageState();
+  State<ProfilePhotoField> createState() => _ProfilePhotoFieldState();
 }
 
-class _AddPhotosPageState extends State<AddPhotosPage> {
+class _ProfilePhotoFieldState extends State<ProfilePhotoField> {
   @override
   void initState() {
     super.initState();
@@ -80,7 +80,7 @@ class _PhotoWrapListState extends State<PhotoWrapList> {
       children: [
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-          child: Text('Hold and drag to reorder your photos.'),
+          child: Text('Hold and drag to reorder.'),
         ),
         wrap,
         ButtonBar(

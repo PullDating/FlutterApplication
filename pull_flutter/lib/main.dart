@@ -41,6 +41,10 @@ class PullApp extends ConsumerWidget {
                   color: Colors.purpleAccent,
                   fontSize: 24),
               centerTitle: true),
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+            selectedItemColor: Colors.lightBlueAccent,
+            unselectedItemColor: const Color(0xff383838),
+          ),
           extensions: [
             MatchCardsTheme(
                 swipeRightColor: Colors.deepPurple,

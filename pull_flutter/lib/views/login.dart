@@ -21,7 +21,7 @@ class LoginPage extends ConsumerWidget {
                   onPressed: () {
                     settings!.put(kSettingsApiToken, natState.state = 'demo token');
                     //context.go('/home/cards');
-                    context.go('/createProfile/add_photos');
+                    context.go('/createProfile/name');
                   },
                   child: const Text("Login"))
             ],

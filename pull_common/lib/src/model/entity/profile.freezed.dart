@@ -20,11 +20,11 @@ Profile _$ProfileFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Profile {
-  String get name => throw _privateConstructorUsedError;
-  DateTime get birthdate => throw _privateConstructorUsedError;
-  String get bodytype => throw _privateConstructorUsedError;
-  String get gender => throw _privateConstructorUsedError;
-  double get height => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
+  DateTime? get birthdate => throw _privateConstructorUsedError;
+  String? get bodytype => throw _privateConstructorUsedError;
+  String? get gender => throw _privateConstructorUsedError;
+  double? get height => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,11 +36,11 @@ abstract class $ProfileCopyWith<$Res> {
   factory $ProfileCopyWith(Profile value, $Res Function(Profile) then) =
       _$ProfileCopyWithImpl<$Res>;
   $Res call(
-      {String name,
-      DateTime birthdate,
-      String bodytype,
-      String gender,
-      double height});
+      {String? name,
+      DateTime? birthdate,
+      String? bodytype,
+      String? gender,
+      double? height});
 }
 
 /// @nodoc
@@ -63,23 +63,23 @@ class _$ProfileCopyWithImpl<$Res> implements $ProfileCopyWith<$Res> {
       name: name == freezed
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       birthdate: birthdate == freezed
           ? _value.birthdate
           : birthdate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
       bodytype: bodytype == freezed
           ? _value.bodytype
           : bodytype // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       gender: gender == freezed
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       height: height == freezed
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
-              as double,
+              as double?,
     ));
   }
 }
@@ -91,11 +91,11 @@ abstract class _$$_ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       __$$_ProfileCopyWithImpl<$Res>;
   @override
   $Res call(
-      {String name,
-      DateTime birthdate,
-      String bodytype,
-      String gender,
-      double height});
+      {String? name,
+      DateTime? birthdate,
+      String? bodytype,
+      String? gender,
+      double? height});
 }
 
 /// @nodoc
@@ -119,23 +119,23 @@ class __$$_ProfileCopyWithImpl<$Res> extends _$ProfileCopyWithImpl<$Res>
       name: name == freezed
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       birthdate: birthdate == freezed
           ? _value.birthdate
           : birthdate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
       bodytype: bodytype == freezed
           ? _value.bodytype
           : bodytype // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       gender: gender == freezed
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       height: height == freezed
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
-              as double,
+              as double?,
     ));
   }
 }
@@ -144,25 +144,21 @@ class __$$_ProfileCopyWithImpl<$Res> extends _$ProfileCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Profile implements _Profile {
   const _$_Profile(
-      {required this.name,
-      required this.birthdate,
-      required this.bodytype,
-      required this.gender,
-      required this.height});
+      {this.name, this.birthdate, this.bodytype, this.gender, this.height});
 
   factory _$_Profile.fromJson(Map<String, dynamic> json) =>
       _$$_ProfileFromJson(json);
 
   @override
-  final String name;
+  final String? name;
   @override
-  final DateTime birthdate;
+  final DateTime? birthdate;
   @override
-  final String bodytype;
+  final String? bodytype;
   @override
-  final String gender;
+  final String? gender;
   @override
-  final double height;
+  final double? height;
 
   @override
   String toString() {
@@ -204,24 +200,24 @@ class _$_Profile implements _Profile {
 
 abstract class _Profile implements Profile {
   const factory _Profile(
-      {required final String name,
-      required final DateTime birthdate,
-      required final String bodytype,
-      required final String gender,
-      required final double height}) = _$_Profile;
+      {final String? name,
+      final DateTime? birthdate,
+      final String? bodytype,
+      final String? gender,
+      final double? height}) = _$_Profile;
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$_Profile.fromJson;
 
   @override
-  String get name => throw _privateConstructorUsedError;
+  String? get name => throw _privateConstructorUsedError;
   @override
-  DateTime get birthdate => throw _privateConstructorUsedError;
+  DateTime? get birthdate => throw _privateConstructorUsedError;
   @override
-  String get bodytype => throw _privateConstructorUsedError;
+  String? get bodytype => throw _privateConstructorUsedError;
   @override
-  String get gender => throw _privateConstructorUsedError;
+  String? get gender => throw _privateConstructorUsedError;
   @override
-  double get height => throw _privateConstructorUsedError;
+  double? get height => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileCopyWith<_$_Profile> get copyWith =>
