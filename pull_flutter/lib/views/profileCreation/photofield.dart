@@ -1,22 +1,38 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:reorderables/reorderables.dart';
 
-class ProfilePhotoField extends StatefulWidget {
+class ProfilePhotoField extends ConsumerStatefulWidget {
   const ProfilePhotoField({Key? key}) : super(key: key);
 
   @override
-  State<ProfilePhotoField> createState() => _ProfilePhotoFieldState();
+  ConsumerState<ProfilePhotoField> createState() => _ProfilePhotoFieldState();
 }
 
-class _ProfilePhotoFieldState extends State<ProfilePhotoField> {
+class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
+  final Storage storage = Storage();
+  String? state;
+  Future<Directory>? _appDocDir;
+
+
   @override
   void initState() {
     super.initState();
+    storage.readData().then((String value) => {
+
+      setState(() {
+        state = value;
+        print("State ${state}");
+      })
+
+    });
   }
 
   @override
@@ -25,7 +41,60 @@ class _ProfilePhotoFieldState extends State<ProfilePhotoField> {
       child: Center(
         child: Container(
           width: double.infinity,
-          child: PhotoWrapList(),
+          child: Column(
+            children: [
+              Text('${state ?? "File is Empty"}'),
+              ElevatedButton(
+                  onPressed: () {
+                    state = "ma name jeff.";
+                    print("the text in state is now: ${state}");
+                  },
+                  child: Text("Press to change text")
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _appDocDir = getApplicationDocumentsDirectory();
+                      //print("application directory: ${_appDocDir}");
+                    });
+                  },
+                  child: Text("Press to read data directory")
+              ),
+              FutureBuilder<Directory>(
+                future: _appDocDir,
+                builder: (BuildContext context, AsyncSnapshot<Directory> snapshot) {
+                  Text text = Text('');
+                  if(snapshot.connectionState == ConnectionState.done) {
+                    if(snapshot.hasError){
+                      text = Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      text = Text('Path: ${snapshot.data!.path}');
+                    } else {
+                      text = Text('unavailable');
+                    }
+                  }
+                  return new Container(
+                    child: text,
+                  );
+                },
+              ),
+              ElevatedButton(
+                  onPressed: () {
+                    setState(() async {
+                      state = await storage.readData();
+                      print("got ${state} from the file system");
+                    });
+                  },
+                  child: Text("Press to read data")
+              ),
+              ElevatedButton(onPressed: () {
+                storage.writeData(state ?? "Nothing to write");
+                },
+                child: Text('Write the data to the database'),
+              ),
+              PhotoWrapList(),
+            ],
+          ),
         ),
       ),
     );
@@ -233,3 +302,29 @@ class _ImageThumbnailState extends State<ImageThumbnail> {
   }
 }
 
+class Storage {
+  Future<String> get localPath async{
+    final dir = await getApplicationDocumentsDirectory();
+    return dir.path;
+  }
+
+  Future<File> get localFile async {
+    final path = await localPath;
+    return File('$path/db.txt');
+  }
+
+  Future<String> readData() async {
+    try {
+      final file = await localFile;
+      String body = await file.readAsString();
+      return body;
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<File> writeData(String data) async {
+    final file = await localFile;
+    return file.writeAsString("$data");
+  }
+}

@@ -11,6 +11,10 @@ class accountCreationNotifier extends StateNotifier<Profile>{
     state = state.copyWith(name: name);
   }
 
+  String? getName(){
+    return state.name;
+  }
+
 }
 
 final accountCreationProvider = StateNotifierProvider<accountCreationNotifier,Profile>((ref) {

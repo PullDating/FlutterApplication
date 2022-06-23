@@ -14,6 +14,9 @@ _$_Profile _$$_ProfileFromJson(Map<String, dynamic> json) => _$_Profile(
       bodytype: json['bodytype'] as String?,
       gender: json['gender'] as String?,
       height: (json['height'] as num?)?.toDouble(),
+      imagesPaths: (json['imagesPaths'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
@@ -23,4 +26,5 @@ Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
       'bodytype': instance.bodytype,
       'gender': instance.gender,
       'height': instance.height,
+      'imagesPaths': instance.imagesPaths,
     };

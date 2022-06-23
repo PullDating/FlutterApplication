@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 
@@ -12,6 +13,7 @@ class Profile with _$Profile {
     String? bodytype,
     String? gender,
     double? height,
+    List<String>? imagesPaths,
 
   }) = _Profile;
 

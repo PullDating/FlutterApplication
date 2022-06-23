@@ -15,20 +15,22 @@ class ProfileNameField extends ConsumerStatefulWidget {
 }
 
 class _ProfileNameFieldState extends ConsumerState <ProfileNameField> {
-
+  final TextEditingController _nameController = TextEditingController();
   String? myData;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    String? initial = ref.read(accountCreationProvider.notifier).getName();
+    _nameController.text = (initial == null) ? '' : initial;
+  }
 
   @override
   Widget build(BuildContext context) {
     Profile myData = ref.watch(accountCreationProvider);
-    final TextEditingController _nameController = TextEditingController();
-  _nameController.text = (myData.name == Null) ? myData.name! : '';
-    //final TextEditingController _nameController = TextEditingController();
-    _nameController.addListener(() {
-
-    });
-
-
+    //this value lags behind the actual riverpod instance, when I use setters and getters
+    //I get the correct value. I don't know how good this is to use.
 
     return Center(
       child: FractionallySizedBox(
@@ -40,16 +42,11 @@ class _ProfileNameFieldState extends ConsumerState <ProfileNameField> {
             children: [
               TextField(
                 controller: _nameController,
+                onSubmitted: (text) {
+                  ref.read(accountCreationProvider.notifier).setName(text);
+                  print(ref.read(accountCreationProvider.notifier).getName());
+                },
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    print("button pressed");
-                    ref.read(accountCreationProvider.notifier).setName("jeff");
-                    print(myData.name);
-                    _nameController.text = myData.name!;
-                  },
-                child: Text('hello there general kenobi'),
-              )
             ],
           )
         ),
