@@ -15,6 +15,18 @@ class accountCreationNotifier extends StateNotifier<Profile>{
     return state.name;
   }
 
+  void addImagePath(String imagepath,int index){
+    state.imagesPaths.insert(index, imagepath);
+  }
+
+  String? getPathAtIndex(int index){
+    return state.imagesPaths.elementAt(index);
+  }
+
+  void deleteAtIndex(int index){
+    state.imagesPaths.removeAt(index);
+  }
+
 }
 
 final accountCreationProvider = StateNotifierProvider<accountCreationNotifier,Profile>((ref) {

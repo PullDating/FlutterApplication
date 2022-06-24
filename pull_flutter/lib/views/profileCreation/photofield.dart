@@ -1,13 +1,21 @@
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:reorderables/reorderables.dart';
+import 'package:pull_common/src/model/provider/create_account.dart';
+
+//state variables for the page:
+int numPhotos = 0;
+int maxPhotos = 8;
+int minPhotos = 3;
 
 class ProfilePhotoField extends ConsumerStatefulWidget {
   const ProfilePhotoField({Key? key}) : super(key: key);
@@ -101,23 +109,30 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
   }
 }
 
-class PhotoWrapList extends StatefulWidget {
+class PhotoWrapList extends ConsumerStatefulWidget {
   const PhotoWrapList({Key? key}) : super(key: key);
 
   @override
-  State<PhotoWrapList> createState() => _PhotoWrapListState();
+  ConsumerState<PhotoWrapList> createState() => _PhotoWrapListState();
 }
 
-class _PhotoWrapListState extends State<PhotoWrapList> {
+class _PhotoWrapListState extends ConsumerState<PhotoWrapList> {
   final double _iconSize = 90;
   List<Widget> _tiles = [];
+  List<ValueNotifier<int>> _indexNotifiers = [];
 
   @override
   void initState() {
     super.initState();
-    _tiles = <Widget>[
-      ImageThumbnail(imageExists: false),
+    _indexNotifiers = <ValueNotifier<int>>[
+      ValueNotifier(0),
+      ValueNotifier(1),
     ];
+    _tiles = <ImageThumbnail>[
+      ImageThumbnail(imageExists: false, index: _indexNotifiers[0],required: true,),
+      ImageThumbnail(imageExists: false, index: _indexNotifiers[1],required: true,),
+    ];
+
   }
 
   @override
@@ -126,7 +141,16 @@ class _PhotoWrapListState extends State<PhotoWrapList> {
     void _onReorder(int oldIndex, int newIndex){
       setState(() {
         Widget row = _tiles.removeAt(oldIndex);
+        ValueNotifier<int> index = _indexNotifiers.removeAt(oldIndex);
+
         _tiles.insert(newIndex, row);
+        _indexNotifiers.insert(newIndex, index);
+
+        //working, it updates the index within the child.
+        for(int i = 0; i < _indexNotifiers.length; i++){
+          _indexNotifiers[i].value = i;
+        }
+
       });
     }
 
@@ -192,29 +216,49 @@ class _PhotoWrapListState extends State<PhotoWrapList> {
   }
 }
 
-class ImageThumbnail extends StatefulWidget {
-  const ImageThumbnail({
+class ImageThumbnail extends ConsumerStatefulWidget {
+  ImageThumbnail({
     Key? key,
     required this.imageExists,
     this.image,
     this.required = false,
+    required this.index,
   }) : super(key: key);
 
-  final bool imageExists;
-  final Image? image;
+  bool imageExists;
+  File? image;
   final bool required;
+  final ValueListenable<int> index;
 
   @override
-  State<ImageThumbnail> createState() => _ImageThumbnailState();
+  ConsumerState<ImageThumbnail> createState() => _ImageThumbnailState();
 }
 
-class _ImageThumbnailState extends State<ImageThumbnail> {
+class _ImageThumbnailState extends ConsumerState<ImageThumbnail> {
   final size = 40.0;
-  final ImagePicker _picker = ImagePicker();
 
-  pickImage() {
-    debugPrint("Selecting an image...");
+
+  Future pickImage() async {
+    try{
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (image == null) return;
+
+      final imageTemp = File(image.path);
+
+      setState(() {
+        widget.image = imageTemp;
+        widget.imageExists = true;
+      });
+
+      //now update the riverpods notifier
+      //ref.read(accountCreationProvider.notifier).addImagePath(widget.image!.path, how to get index here?);
+
+    } on PlatformException catch(e) {
+      print("Failed to pick image: $e");
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -228,7 +272,7 @@ class _ImageThumbnailState extends State<ImageThumbnail> {
           //  color: Colors.orange,
           //    borderRadius: BorderRadius.all(Radius.circular(20))
           //),
-          child: FittedBox(child: widget.image, fit:BoxFit.fill),
+          child: FittedBox(child: Image.file(widget.image!), fit:BoxFit.fill),
         ),
       );
     }else{
@@ -243,6 +287,7 @@ class _ImageThumbnailState extends State<ImageThumbnail> {
           child: Stack(
 
             children: [
+              Text('${widget.index.value.toString()}'),
               Center(
                 child: Container(
                   decoration: BoxDecoration(

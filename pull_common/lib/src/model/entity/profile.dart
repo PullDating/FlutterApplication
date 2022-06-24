@@ -13,7 +13,7 @@ class Profile with _$Profile {
     String? bodytype,
     String? gender,
     double? height,
-    List<String>? imagesPaths,
+    @Default([]) List<String> imagesPaths,
 
   }) = _Profile;
 

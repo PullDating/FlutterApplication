@@ -25,7 +25,7 @@ mixin _$Profile {
   String? get bodytype => throw _privateConstructorUsedError;
   String? get gender => throw _privateConstructorUsedError;
   double? get height => throw _privateConstructorUsedError;
-  List<String>? get imagesPaths => throw _privateConstructorUsedError;
+  List<String> get imagesPaths => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,7 +42,7 @@ abstract class $ProfileCopyWith<$Res> {
       String? bodytype,
       String? gender,
       double? height,
-      List<String>? imagesPaths});
+      List<String> imagesPaths});
 }
 
 /// @nodoc
@@ -86,7 +86,7 @@ class _$ProfileCopyWithImpl<$Res> implements $ProfileCopyWith<$Res> {
       imagesPaths: imagesPaths == freezed
           ? _value.imagesPaths
           : imagesPaths // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<String>,
     ));
   }
 }
@@ -103,7 +103,7 @@ abstract class _$$_ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       String? bodytype,
       String? gender,
       double? height,
-      List<String>? imagesPaths});
+      List<String> imagesPaths});
 }
 
 /// @nodoc
@@ -148,7 +148,7 @@ class __$$_ProfileCopyWithImpl<$Res> extends _$ProfileCopyWithImpl<$Res>
       imagesPaths: imagesPaths == freezed
           ? _value._imagesPaths
           : imagesPaths // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<String>,
     ));
   }
 }
@@ -162,7 +162,7 @@ class _$_Profile implements _Profile {
       this.bodytype,
       this.gender,
       this.height,
-      final List<String>? imagesPaths})
+      final List<String> imagesPaths = const []})
       : _imagesPaths = imagesPaths;
 
   factory _$_Profile.fromJson(Map<String, dynamic> json) =>
@@ -178,13 +178,12 @@ class _$_Profile implements _Profile {
   final String? gender;
   @override
   final double? height;
-  final List<String>? _imagesPaths;
+  final List<String> _imagesPaths;
   @override
-  List<String>? get imagesPaths {
-    final value = _imagesPaths;
-    if (value == null) return null;
+  @JsonKey()
+  List<String> get imagesPaths {
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
+    return EqualUnmodifiableListView(_imagesPaths);
   }
 
   @override
@@ -235,7 +234,7 @@ abstract class _Profile implements Profile {
       final String? bodytype,
       final String? gender,
       final double? height,
-      final List<String>? imagesPaths}) = _$_Profile;
+      final List<String> imagesPaths}) = _$_Profile;
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$_Profile.fromJson;
 
@@ -250,7 +249,7 @@ abstract class _Profile implements Profile {
   @override
   double? get height => throw _privateConstructorUsedError;
   @override
-  List<String>? get imagesPaths => throw _privateConstructorUsedError;
+  List<String> get imagesPaths => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileCopyWith<_$_Profile> get copyWith =>
