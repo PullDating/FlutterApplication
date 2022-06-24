@@ -16,15 +16,37 @@ class accountCreationNotifier extends StateNotifier<Profile>{
   }
 
   void addImagePath(String imagepath,int index){
-    state.imagesPaths.insert(index, imagepath);
+    List<String> paths = state.imagesPaths;
+    state = state.copyWith(imagesPaths: paths);
   }
 
   String? getPathAtIndex(int index){
     return state.imagesPaths.elementAt(index);
   }
 
+  double? getHeight(){
+    return state.height;
+  }
+
   void deleteAtIndex(int index){
     state.imagesPaths.removeAt(index);
+  }
+
+  void setBirthDate(DateTime date){
+    state = state.copyWith(birthdate: date);
+  }
+
+  void setGender(String gender){
+    state = state.copyWith(gender: gender);
+  }
+
+  void setHeight(double height){
+    state = state.copyWith(height: height);
+  }
+
+
+  DateTime? getBirthDate(){
+    return state.birthdate;
   }
 
 }

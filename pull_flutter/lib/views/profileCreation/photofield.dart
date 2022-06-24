@@ -29,7 +29,6 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
   String? state;
   Future<Directory>? _appDocDir;
 
-
   @override
   void initState() {
     super.initState();
@@ -39,7 +38,6 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
         state = value;
         print("State ${state}");
       })
-
     });
   }
 
@@ -132,6 +130,9 @@ class _PhotoWrapListState extends ConsumerState<PhotoWrapList> {
       ImageThumbnail(imageExists: false, index: _indexNotifiers[0],required: true,),
       ImageThumbnail(imageExists: false, index: _indexNotifiers[1],required: true,),
     ];
+
+    //TODO get this to work, I cannot figure it out for the life of me.
+    //ref.read(accountCreationProvider.notifier).addImagePath("", 0);
 
   }
 

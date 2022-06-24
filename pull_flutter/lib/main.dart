@@ -31,6 +31,9 @@ class PullApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Pull',
       theme: ThemeData(
+          radioTheme: RadioThemeData(
+            fillColor: MaterialStateColor.resolveWith((states) => Colors.lightBlueAccent)
+          ),
           brightness: useDarkTheme ? Brightness.dark : Brightness.light,
           primarySwatch: Colors.deepPurple,
           textTheme: GoogleFonts.nunitoTextTheme(),

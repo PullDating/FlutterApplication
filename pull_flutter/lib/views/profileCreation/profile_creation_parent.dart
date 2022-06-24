@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pull_flutter/views/profileCreation/birthdatefield.dart';
+import 'package:pull_flutter/views/profileCreation/genderfield.dart';
+import 'package:pull_flutter/views/profileCreation/heightfield.dart';
 import 'package:pull_flutter/views/profileCreation/photofield.dart';
 import 'package:pull_flutter/views/profileCreation/namefield.dart';
 import 'package:pull_flutter/views/tabs/card_swipe_tab.dart';
@@ -25,11 +28,27 @@ class ProfileCreationParent extends ConsumerStatefulWidget {
 
 class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent> with TickerProviderStateMixin, AutomaticKeepAliveClientMixin{
 
+  //List<ValueNotifier<bool>> _bottomButtonActive = [];
+
   final tabs = const <String,Widget>{
     'name' : ProfileCreationTemplate(entryField: ProfileNameField(),title: "Add Your Name",),
     'add_photos' : ProfileCreationTemplate(entryField: ProfilePhotoField(),title: "Add Your Photos",),
+    'birthdate' : ProfileCreationTemplate(entryField: ProfileBirthDateField(),title: "Enter your Birth Date",),
+    'gender' : ProfileCreationTemplate(entryField: ProfileGenderField(),title: "What's your gender?",),
+    'height' : ProfileCreationTemplate(entryField: ProfileHeightField(),title: "How tall are you?",),
   };
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //_bottomButtonActive = <ValueNotifier<bool>>[
+    //  ValueNotifier(true),
+    //  ValueNotifier(false),
+    //  ValueNotifier(false)
+    //];
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +95,19 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent> w
           BottomNavigationBarItem(
               label: '',
               icon: Icon(Icons.circle_rounded)
-          )
+          ),
+          BottomNavigationBarItem(
+            label: '',
+            icon: Icon(Icons.circle_rounded)
+          ),
+          BottomNavigationBarItem(
+              label: '',
+              icon: Icon(Icons.circle_rounded)
+          ),
+          BottomNavigationBarItem(
+              label: '',
+              icon: Icon(Icons.circle_rounded)
+          ),
         ],
         onTap: (i) {
           context.go('/createProfile/${tabs.keys.elementAt(i)}');
