@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:pull_common/pull_common.dart';
 import 'package:pull_flutter/views/home.dart';
 import 'package:pull_flutter/views/login.dart';
-import 'package:pull_flutter/views/profileCreation/add_photos.dart';
 import 'package:pull_flutter/views/settings.dart';
 
 import '../views/profileCreation/profileCreationParent.dart';
@@ -11,10 +10,8 @@ import '../views/profileCreation/profileCreationParent.dart';
 final appRoutes = <GoRoute>[
   GoRoute(
     path: '/',
-    builder: (BuildContext context, GoRouterState state) =>
-        const AuthRedirector(
-      //homeUrl: '/home/cards',
-          homeUrl: '/login',
+    builder: (BuildContext context, GoRouterState state) => const AuthRedirector(
+      homeUrl: '/home/cards',
     ),
   ),
   GoRoute(
@@ -30,6 +27,7 @@ final appRoutes = <GoRoute>[
       return PullHomePage(title: 'Pull', path: page);
     },
   ),
+
   /// The homepage route has its own sub-routes for different pages accessed via bottom nav bar
   GoRoute(
     path: '/createProfile/:page',
@@ -38,8 +36,5 @@ final appRoutes = <GoRoute>[
       return ProfileCreationParent(title: 'Pull', path: page);
     },
   ),
-  GoRoute(
-      path: '/settings',
-      builder: (BuildContext context, GoRouterState state) =>
-          const SettingsPage()),
+  GoRoute(path: '/settings', builder: (BuildContext context, GoRouterState state) => const SettingsPage()),
 ];
