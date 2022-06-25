@@ -14,6 +14,8 @@ class Profile with _$Profile {
     String? gender,
     double? height,
     @Default([]) List<String> imagesPaths,
+    String? datinggoal,
+    String? biography,
 
   }) = _Profile;
 

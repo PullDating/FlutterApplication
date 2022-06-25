@@ -18,6 +18,8 @@ _$_Profile _$$_ProfileFromJson(Map<String, dynamic> json) => _$_Profile(
               ?.map((e) => e as String)
               .toList() ??
           const [],
+      datinggoal: json['datinggoal'] as String?,
+      biography: json['biography'] as String?,
     );
 
 Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
@@ -28,4 +30,6 @@ Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
       'gender': instance.gender,
       'height': instance.height,
       'imagesPaths': instance.imagesPaths,
+      'datinggoal': instance.datinggoal,
+      'biography': instance.biography,
     };

@@ -7,11 +7,13 @@ class ProfileCreationTemplate extends ConsumerStatefulWidget {
   const ProfileCreationTemplate({
     Key? key,
     required this.title,
-    required this.entryField
+    required this.entryField,
+    required this.nextfunction
   }) : super(key: key);
 
   final String title;
   final Widget entryField;
+  final VoidCallback nextfunction;
 
   @override
   ConsumerState <ProfileCreationTemplate> createState() => _ProfileCreationTemplateState();
@@ -36,7 +38,13 @@ class _ProfileCreationTemplateState extends ConsumerState<ProfileCreationTemplat
           Center(
             child: widget.entryField,
           ),
-          Spacer(flex: 4,)
+          Spacer(flex: 4,),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.lightBlueAccent,
+            ),
+            onPressed: widget.nextfunction, child: Icon(Icons.navigate_next),
+          ),
         ],
       ),
     );

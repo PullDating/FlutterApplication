@@ -44,6 +44,18 @@ class accountCreationNotifier extends StateNotifier<Profile>{
     state = state.copyWith(height: height);
   }
 
+  void setBodyType(String bodytype){
+    state = state.copyWith(bodytype: bodytype);
+  }
+
+  void setDatingGoal(String datinggoal){
+    state = state.copyWith(datinggoal: datinggoal);
+  }
+
+  void setBiography(String biography){
+    state = state.copyWith(biography: biography);
+  }
+
 
   DateTime? getBirthDate(){
     return state.birthdate;

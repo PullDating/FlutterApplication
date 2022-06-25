@@ -26,6 +26,8 @@ mixin _$Profile {
   String? get gender => throw _privateConstructorUsedError;
   double? get height => throw _privateConstructorUsedError;
   List<String> get imagesPaths => throw _privateConstructorUsedError;
+  String? get datinggoal => throw _privateConstructorUsedError;
+  String? get biography => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,7 +44,9 @@ abstract class $ProfileCopyWith<$Res> {
       String? bodytype,
       String? gender,
       double? height,
-      List<String> imagesPaths});
+      List<String> imagesPaths,
+      String? datinggoal,
+      String? biography});
 }
 
 /// @nodoc
@@ -61,6 +65,8 @@ class _$ProfileCopyWithImpl<$Res> implements $ProfileCopyWith<$Res> {
     Object? gender = freezed,
     Object? height = freezed,
     Object? imagesPaths = freezed,
+    Object? datinggoal = freezed,
+    Object? biography = freezed,
   }) {
     return _then(_value.copyWith(
       name: name == freezed
@@ -87,6 +93,14 @@ class _$ProfileCopyWithImpl<$Res> implements $ProfileCopyWith<$Res> {
           ? _value.imagesPaths
           : imagesPaths // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      datinggoal: datinggoal == freezed
+          ? _value.datinggoal
+          : datinggoal // ignore: cast_nullable_to_non_nullable
+              as String?,
+      biography: biography == freezed
+          ? _value.biography
+          : biography // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -103,7 +117,9 @@ abstract class _$$_ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       String? bodytype,
       String? gender,
       double? height,
-      List<String> imagesPaths});
+      List<String> imagesPaths,
+      String? datinggoal,
+      String? biography});
 }
 
 /// @nodoc
@@ -123,6 +139,8 @@ class __$$_ProfileCopyWithImpl<$Res> extends _$ProfileCopyWithImpl<$Res>
     Object? gender = freezed,
     Object? height = freezed,
     Object? imagesPaths = freezed,
+    Object? datinggoal = freezed,
+    Object? biography = freezed,
   }) {
     return _then(_$_Profile(
       name: name == freezed
@@ -149,6 +167,14 @@ class __$$_ProfileCopyWithImpl<$Res> extends _$ProfileCopyWithImpl<$Res>
           ? _value._imagesPaths
           : imagesPaths // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      datinggoal: datinggoal == freezed
+          ? _value.datinggoal
+          : datinggoal // ignore: cast_nullable_to_non_nullable
+              as String?,
+      biography: biography == freezed
+          ? _value.biography
+          : biography // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -162,7 +188,9 @@ class _$_Profile implements _Profile {
       this.bodytype,
       this.gender,
       this.height,
-      final List<String> imagesPaths = const []})
+      final List<String> imagesPaths = const [],
+      this.datinggoal,
+      this.biography})
       : _imagesPaths = imagesPaths;
 
   factory _$_Profile.fromJson(Map<String, dynamic> json) =>
@@ -187,8 +215,13 @@ class _$_Profile implements _Profile {
   }
 
   @override
+  final String? datinggoal;
+  @override
+  final String? biography;
+
+  @override
   String toString() {
-    return 'Profile(name: $name, birthdate: $birthdate, bodytype: $bodytype, gender: $gender, height: $height, imagesPaths: $imagesPaths)';
+    return 'Profile(name: $name, birthdate: $birthdate, bodytype: $bodytype, gender: $gender, height: $height, imagesPaths: $imagesPaths, datinggoal: $datinggoal, biography: $biography)';
   }
 
   @override
@@ -202,7 +235,10 @@ class _$_Profile implements _Profile {
             const DeepCollectionEquality().equals(other.gender, gender) &&
             const DeepCollectionEquality().equals(other.height, height) &&
             const DeepCollectionEquality()
-                .equals(other._imagesPaths, _imagesPaths));
+                .equals(other._imagesPaths, _imagesPaths) &&
+            const DeepCollectionEquality()
+                .equals(other.datinggoal, datinggoal) &&
+            const DeepCollectionEquality().equals(other.biography, biography));
   }
 
   @JsonKey(ignore: true)
@@ -214,7 +250,9 @@ class _$_Profile implements _Profile {
       const DeepCollectionEquality().hash(bodytype),
       const DeepCollectionEquality().hash(gender),
       const DeepCollectionEquality().hash(height),
-      const DeepCollectionEquality().hash(_imagesPaths));
+      const DeepCollectionEquality().hash(_imagesPaths),
+      const DeepCollectionEquality().hash(datinggoal),
+      const DeepCollectionEquality().hash(biography));
 
   @JsonKey(ignore: true)
   @override
@@ -234,7 +272,9 @@ abstract class _Profile implements Profile {
       final String? bodytype,
       final String? gender,
       final double? height,
-      final List<String> imagesPaths}) = _$_Profile;
+      final List<String> imagesPaths,
+      final String? datinggoal,
+      final String? biography}) = _$_Profile;
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$_Profile.fromJson;
 
@@ -250,6 +290,10 @@ abstract class _Profile implements Profile {
   double? get height => throw _privateConstructorUsedError;
   @override
   List<String> get imagesPaths => throw _privateConstructorUsedError;
+  @override
+  String? get datinggoal => throw _privateConstructorUsedError;
+  @override
+  String? get biography => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileCopyWith<_$_Profile> get copyWith =>

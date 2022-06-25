@@ -41,7 +41,7 @@ class PullApp extends ConsumerWidget {
               backgroundColor: Colors.white,
               titleTextStyle: GoogleFonts.nunito(
                   fontWeight: FontWeight.bold,
-                  color: Colors.purpleAccent,
+                  color: Colors.pinkAccent,
                   fontSize: 24),
               centerTitle: true),
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
