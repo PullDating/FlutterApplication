@@ -8,12 +8,14 @@ class ProfileCreationTemplate extends ConsumerStatefulWidget {
     Key? key,
     required this.title,
     required this.entryField,
-    required this.nextfunction
+    required this.nextfunction,
+    this.isLast,
   }) : super(key: key);
 
   final String title;
   final Widget entryField;
   final VoidCallback nextfunction;
+  final bool? isLast;
 
   @override
   ConsumerState <ProfileCreationTemplate> createState() => _ProfileCreationTemplateState();
@@ -38,13 +40,17 @@ class _ProfileCreationTemplateState extends ConsumerState<ProfileCreationTemplat
           Center(
             child: widget.entryField,
           ),
-          Spacer(flex: 4,),
+          Spacer(flex: 3,),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               primary: Colors.lightBlueAccent,
+              shape: StadiumBorder(),
             ),
-            onPressed: widget.nextfunction, child: Icon(Icons.navigate_next),
+            onPressed: widget.nextfunction, child: (widget.isLast != null && widget.isLast == true)? Icon(Icons.check) : Icon(Icons.navigate_next),
           ),
+          Container(
+            height: 10,
+          )
         ],
       ),
     );

@@ -42,9 +42,8 @@ class _ProfileNameFieldState extends ConsumerState <ProfileNameField> {
             children: [
               TextField(
                 controller: _nameController,
-                onSubmitted: (text) {
+                onChanged: (text) {
                   ref.read(accountCreationProvider.notifier).setName(text);
-                  print(ref.read(accountCreationProvider.notifier).getName());
                 },
               ),
             ],

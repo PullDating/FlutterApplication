@@ -44,9 +44,11 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent> w
 
 
   void finalClick() {
-    print("You clicked the final next button for the sign up process");
+    //print("You clicked the final next button for the sign up process");
     setState(() {
-
+      //this is where we actually need to convert the states that we've collected into a database query
+      var jsonResult = ref.read(accountCreationProvider).toJson();
+      print(jsonResult);
     });
   }
 
@@ -74,7 +76,7 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent> w
       'height' : ProfileCreationTemplate(entryField: ProfileHeightField(),title: "How tall are you?",nextfunction: goToNext,),
       'bodytype' : ProfileCreationTemplate(entryField: ProfileBodyTypeField(),title: "What's your body type?",nextfunction: goToNext,),
       'datinggoal' : ProfileCreationTemplate(entryField: ProfileDatingGoalField(),title: "What are you looking for?",nextfunction: goToNext,),
-      'biography' : ProfileCreationTemplate(entryField: ProfileBiographyField(),title: "Write a bit about yourself.",nextfunction: finalClick,),
+      'biography' : ProfileCreationTemplate(entryField: ProfileBiographyField(),title: "Write a bit about yourself.",nextfunction: finalClick,isLast: true,),
     };
   }
 
