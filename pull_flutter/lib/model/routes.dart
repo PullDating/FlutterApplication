@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pull_common/pull_common.dart';
+import 'package:pull_flutter/views/filters.dart';
 import 'package:pull_flutter/views/home.dart';
 import 'package:pull_flutter/views/login.dart';
 import 'package:pull_flutter/views/profileCreation/photofield.dart';
@@ -41,5 +42,11 @@ final appRoutes = <GoRoute>[
   GoRoute(
       path: '/settings',
       builder: (BuildContext context, GoRouterState state) =>
-          const SettingsPage()),
+          const SettingsPage()
+  ),
+  GoRoute(
+      path: '/filters',
+      builder: (BuildContext context, GoRouterState state) =>
+      const FilterPage()
+  ),
 ];

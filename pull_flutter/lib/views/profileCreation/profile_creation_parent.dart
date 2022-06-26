@@ -49,6 +49,9 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent> w
       //this is where we actually need to convert the states that we've collected into a database query
       var jsonResult = ref.read(accountCreationProvider).toJson();
       print(jsonResult);
+      //TODO send api request with this data to /createProfile
+
+      context.go('/home/cards');
     });
   }
 

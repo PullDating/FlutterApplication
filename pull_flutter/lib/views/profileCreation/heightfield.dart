@@ -12,6 +12,8 @@ class ProfileHeightField extends ConsumerStatefulWidget {
 
 class _ProfileHeightFieldState extends ConsumerState<ProfileHeightField> {
   double? height = 0;
+  int? feet;
+  int? inches = 0;
 
   @override
   void initState() {
@@ -20,6 +22,8 @@ class _ProfileHeightFieldState extends ConsumerState<ProfileHeightField> {
     height = ref.read(accountCreationProvider.notifier).getHeight();
     if(height == null){
       height = 165;
+      feet = (height!~/30.48);
+      inches = (((height! / 30.48)-(height! ~/ 30.48))*12).toInt();
     }
   }
 
@@ -27,10 +31,11 @@ class _ProfileHeightFieldState extends ConsumerState<ProfileHeightField> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 500,
+      height: 400,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Text("${feet}\' ${(inches! < 10)? '0' : ''}${inches}\""),
           RotatedBox(
             quarterTurns: 3,
             child: Slider(
@@ -41,7 +46,10 @@ class _ProfileHeightFieldState extends ConsumerState<ProfileHeightField> {
               onChanged: (value) {
                 setState(() {
                   height = value;
+                  feet = (height!~/30.48);
+                  inches = (((height! / 30.48)-(height! ~/ 30.48))*12).toInt();
                   ref.read(accountCreationProvider.notifier).setHeight(value);
+                  print("${feet} ${inches}");
                 });
               },
             ),
