@@ -175,7 +175,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_chat_types:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_chat_types
       url: "https://pub.dartlang.org"
