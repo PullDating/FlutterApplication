@@ -47,6 +47,7 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent> w
     //print("You clicked the final next button for the sign up process");
     setState(() {
       //this is where we actually need to convert the states that we've collected into a database query
+      //TODO this function isn't creating valid json, it doesn't have the string quotations because it is just a Map.
       var jsonResult = ref.read(accountCreationProvider).toJson();
       print(jsonResult);
       //TODO send api request with this data to /createProfile
@@ -151,39 +152,39 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent> w
         items: const [
           BottomNavigationBarItem(
             label: '',
-            icon: Icon(Icons.circle_rounded)
+            icon: Icon(Icons.circle_rounded,size: 15,)
           ),
           BottomNavigationBarItem(
               label: '',
-              icon: Icon(Icons.circle_rounded)
+              icon: Icon(Icons.circle_rounded,size: 15,)
           ),
           BottomNavigationBarItem(
             label: '',
-            icon: Icon(Icons.circle_rounded)
+            icon: Icon(Icons.circle_rounded, size: 15,)
           ),
           BottomNavigationBarItem(
               label: '',
-              icon: Icon(Icons.circle_rounded)
+              icon: Icon(Icons.circle_rounded,size: 15,)
           ),
           BottomNavigationBarItem(
               label: '',
-              icon: Icon(Icons.circle_rounded)
+              icon: Icon(Icons.circle_rounded,size: 15,)
           ),
           BottomNavigationBarItem(
               label: '',
-              icon: Icon(Icons.circle_rounded)
+              icon: Icon(Icons.circle_rounded,size: 15,)
           ),
           BottomNavigationBarItem(
               label: '',
-              icon: Icon(Icons.circle_rounded)
+              icon: Icon(Icons.circle_rounded,size: 15,)
           ),
           BottomNavigationBarItem(
               label: '',
-              icon: Icon(Icons.circle_rounded)
+              icon: Icon(Icons.circle_rounded,size: 15,)
           ),
         ],
         onTap: (i) {
-          context.go('/createProfile/${tabs!.keys.elementAt(i)}');
+          context.go('/createProfile/${tabs.keys.elementAt(i)}');
         },
       ),
     );

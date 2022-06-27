@@ -24,53 +24,9 @@ class _FilterPageState extends State<FilterPage> {
     return Material(
       child: SafeArea(
         child: Container(
-          child: Text("hello"),
-          /*
           child: ListView(
             children: [
-              /*
-              FilterListItem(
-                icon: Icon(Icons.social_distance),
-                title: "A title",
-                widget: Slider(
-                  min: 0.1,
-                  max: 50,
-                  divisions: 100,
-                  value: distance!,
-                  onChanged: (value) {
-                    setState(() {
-                      distance = value;
-                      print("distance updated: $distance");
-                    });
-                  },
-                ),
-              ),
-              */
-              ListTile(
-                leading: Icon(Icons.social_distance),
-                title: Text('Distance'),
-                subtitle: Text("Subtitle"),
-                trailing: Container(
-                    child: Row(
-                      children: [
-                        Text("Some more text"),
-                      ],
-                    )
-                ),
-                /*
-                Slider(
-                  min: 0.1,
-                  max: 50,
-                  divisions: 100,
-                  value: distance!,
-                  onChanged: (value) {
-                    setState(() {
-                      distance = value;
-                    });
-                  },
-                ),
-                 */
-              ),
+              FilterListItem(icon: Icon(Icons.access_time_outlined),title: "ehllo ther", widget: Text("hello")),
               ListTile(
                 leading: Icon(Icons.transgender), //this probably needs to change, but idk the icon for just gender
                 title: Text('Gender'),
@@ -101,8 +57,6 @@ class _FilterPageState extends State<FilterPage> {
               ),
             ],
           ),
-
-           */
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pull_common/pull_common.dart';
+import 'package:pull_flutter/views/chat.dart';
 import 'package:pull_flutter/views/filters.dart';
 import 'package:pull_flutter/views/home.dart';
 import 'package:pull_flutter/views/login.dart';
@@ -48,5 +49,13 @@ final appRoutes = <GoRoute>[
       path: '/filters',
       builder: (BuildContext context, GoRouterState state) =>
       const FilterPage()
+  ),
+  //TODO add /chat route that goes to the correct chat depending on which user was clicked on on the match list page
+  GoRoute(
+      path: '/chat/:chatuuid',
+      builder: (BuildContext context, GoRouterState state) {
+        final chatuuid = state.params['chatuuid']; //this holds the uuid of the person who you are chatting with.
+        return ChatPage(uuid: (chatuuid != null) ? chatuuid! : "error",);
+      }
   ),
 ];
