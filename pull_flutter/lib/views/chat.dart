@@ -23,19 +23,34 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final List<types.Message> _messages = []; //list of messages
   var _user;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _user = types.User(id: widget.uuid);
-  }
-
+  var _otheruser;
 
   void _addMessages(types.Message message){
     setState(() {
       _messages.insert(0,message);
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //TODO get the uuid of the logged in user and replace the id here.
+    _user = types.User(id: "-1"); //the use of the application
+
+    _otheruser = types.User(id: widget.uuid); //their match.
+
+    //some debug / test print stuff.
+    final _message = types.PartialText(
+      text: "hello there, general kenobi",
+    );
+    final textMessage = types.TextMessage(
+      author: _otheruser,
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      id: randomString(),
+      text: _message.text,
+    );
+    _addMessages(textMessage);
   }
 
   void _handleSendPressed(types.PartialText message){
@@ -57,6 +72,11 @@ class _ChatPageState extends State<ChatPage> {
       child: SafeArea(
         child: Scaffold(
           body: Chat(
+            theme: const DefaultChatTheme(
+              inputBackgroundColor: Colors.black,
+              primaryColor: Colors.lightBlueAccent,
+              secondaryColor: Colors.pinkAccent,
+            ),
             messages: _messages,
             onSendPressed: _handleSendPressed,
             user: _user,
