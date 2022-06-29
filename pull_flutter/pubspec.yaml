@@ -29,6 +29,7 @@ dependencies:
   fluttertoast: ^8.0.9
   flutter_chat_ui: ^1.6.3
   flutter_chat_types: ^3.4.3
+  firebase_messaging: ^11.4.2
 
 dev_dependencies:
   flutter_test:
