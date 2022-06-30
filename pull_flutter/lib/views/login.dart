@@ -20,8 +20,8 @@ class LoginPage extends ConsumerWidget {
               ElevatedButton(
                   onPressed: () {
                     settings!.put(kSettingsApiToken, natState.state = 'demo token');
-                    //context.go('/home/cards');
-                    context.go('/chat/1');
+                    context.go('/home/cards');
+                    //context.go('/chat/1');
                   },
                   child: const Text("Login"))
             ],
