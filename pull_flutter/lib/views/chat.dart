@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -20,10 +21,16 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
+
+
 class _ChatPageState extends State<ChatPage> {
   final List<types.Message> _messages = []; //list of messages
   var _user;
   var _otheruser;
+
+  Future<String?> getToken() async {
+    return FirebaseMessaging.instance.getToken();
+  }
 
   void _addMessages(types.Message message){
     setState(() {
@@ -31,8 +38,9 @@ class _ChatPageState extends State<ChatPage> {
     });
   }
 
+
   @override
-  void initState() {
+  initState() {
     // TODO: implement initState
     super.initState();
     //TODO get the uuid of the logged in user and replace the id here.

@@ -30,6 +30,9 @@ dependencies:
   flutter_chat_ui: ^1.6.3
   flutter_chat_types: ^3.4.3
   firebase_messaging: ^11.4.2
+  firebase_core: ^1.18.0
+  flutter_local_notifications: ^9.6.1
+  overlay_support: ^2.0.1
 
 dev_dependencies:
   flutter_test:
