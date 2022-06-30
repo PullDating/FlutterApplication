@@ -17,13 +17,8 @@ import 'firebase_options.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pull_common/src/model/entity/pushnotification.dart';
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // If you're going to use other Firebase services in the background, such as Firestore,
-  // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp();
-  print('Handling a background message ${message.messageId}');
+Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message: ${message.messageId}");
 }
 
 void main() async {
@@ -60,11 +55,28 @@ class _PullAppState extends ConsumerState<PullApp> {
   @override
   void initState() {
     _totalNotifications = 0;
+
     registerNotification();
+
+    // For handling notification when the app is in background
+    // but not terminated
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      PushNotification notification = PushNotification(
+        title: message.notification?.title,
+        body: message.notification?.body,
+      );
+      setState(() {
+        //TODO update riverpods with the notification information.
+        _totalNotifications++;
+      });
+    });
+
+    checkForInitialMessage();
 
     super.initState();
   }
 
+  //for detecting notifications
   void registerNotification() async {
     // 1. Initialize the Firebase app
     await Firebase.initializeApp(
@@ -74,9 +86,14 @@ class _PullAppState extends ConsumerState<PullApp> {
     // 2. Instantiate Firebase Messaging
     _messaging = FirebaseMessaging.instance;
 
+    // 3. Get the FCM token (required to uniquely identify the device for cloud messaging.
     _messaging.getToken().then((token){
+      //TODO should this be put in a riverpods state variable somehow?
       print(token);
     });
+
+    //4. Configure Background messaging
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     // 3. On iOS, this helps to take the user permissions
     NotificationSettings settings = await _messaging.requestPermission(
@@ -118,6 +135,23 @@ class _PullAppState extends ConsumerState<PullApp> {
       print('User declined or has not accepted permission');
     }
   }
+  //for when the app is terminated and the user is brought back by the click of the notification.
+  checkForInitialMessage() async {
+    await Firebase.initializeApp();
+    RemoteMessage? initialMessage =
+    await FirebaseMessaging.instance.getInitialMessage();
+
+    if (initialMessage != null) {
+      PushNotification notification = PushNotification(
+        title: initialMessage.notification?.title,
+        body: initialMessage.notification?.body,
+      );
+      setState(() {
+        _totalNotifications++;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {

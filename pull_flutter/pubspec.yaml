@@ -33,6 +33,7 @@ dependencies:
   firebase_core: ^1.18.0
   flutter_local_notifications: ^9.6.1
   overlay_support: ^2.0.1
+  firebase_analytics: ^9.1.10
 
 dev_dependencies:
   flutter_test:
