@@ -17,8 +17,12 @@ import 'firebase_options.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pull_common/src/model/entity/pushnotification.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+
 Future _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
+
 }
 
 void main() async {
@@ -78,6 +82,7 @@ class _PullAppState extends ConsumerState<PullApp> {
 
   //for detecting notifications
   void registerNotification() async {
+
     // 1. Initialize the Firebase app
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
