@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pull_common/pull_common.dart';
+import 'package:pull_flutter/views/analytics.dart';
 import 'package:pull_flutter/views/home.dart';
 import 'package:pull_flutter/views/login.dart';
 import 'package:pull_flutter/views/settings.dart';
@@ -37,4 +38,6 @@ final appRoutes = <GoRoute>[
     },
   ),
   GoRoute(path: '/settings', builder: (BuildContext context, GoRouterState state) => const SettingsPage()),
+  GoRoute(path: '/analytics', builder: (BuildContext context, GoRouterState state) => const AnalyticsPage()),
+
 ];
