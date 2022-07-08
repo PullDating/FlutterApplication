@@ -5,5 +5,6 @@ part 'response_exception.freezed.dart';
 /// Indicates an HTTP response code error
 @freezed
 class ResponseException with _$ResponseException implements Exception {
-  const factory ResponseException(int code, {String? message}) = _ResponseException;
+  const factory ResponseException(int code, {String? message}) =
+      _ResponseException;
 }

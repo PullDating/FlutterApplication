@@ -15,19 +15,23 @@ void main() {
   group('Authentication', () {
     test('Authenticating sets the auth token', () async {
       final client = MockClient();
-      final container = ProviderContainer(overrides: [httpClientProvider.overrideWithValue(client)]);
+      final container = ProviderContainer(
+          overrides: [httpClientProvider.overrideWithValue(client)]);
 
       expect(container.read(networkAuthTokenProvider), equals(null));
       final repository = container.read(repositoryProvider);
 
-      final authRequest = AuthRequest.emailPassword('test@example.com', 'p@ssword123!');
+      final authRequest =
+          AuthRequest.emailPassword('test@example.com', 'p@ssword123!');
       final authRequestJson = authRequest.toJson();
 
       final authResult = Future.value(Response('sample_token', 200));
 
-      when(() => client.post(authUri, headers: {}, body: authRequestJson)).thenAnswer((_) => authResult);
+      when(() => client.post(authUri, headers: {}, body: authRequestJson))
+          .thenAnswer((_) => authResult);
       final token = await repository.authenticate(authRequest);
-      verify(() => client.post(authUri, headers: {}, body: authRequestJson)).called(1);
+      verify(() => client.post(authUri, headers: {}, body: authRequestJson))
+          .called(1);
 
       expect(token, equals('sample_token'));
       expect(container.read(networkAuthTokenProvider), equals('sample_token'));
@@ -35,18 +39,23 @@ void main() {
 
     test('Server error causes authentication to throw', () async {
       final client = MockClient();
-      final container = ProviderContainer(overrides: [httpClientProvider.overrideWithValue(client)]);
+      final container = ProviderContainer(
+          overrides: [httpClientProvider.overrideWithValue(client)]);
 
       final repository = container.read(repositoryProvider);
 
-      final authRequest = AuthRequest.emailPassword('test@example.com', 'p@ssword123!');
+      final authRequest =
+          AuthRequest.emailPassword('test@example.com', 'p@ssword123!');
       final authRequestJson = authRequest.toJson();
 
       final authResult = Future.value(Response('Internal Server Error', 500));
 
-      when(() => client.post(authUri, headers: {}, body: authRequestJson)).thenAnswer((_) => authResult);
-      await expectLater(repository.authenticate(authRequest), throwsA(isA<ResponseException>()));
-      verify(() => client.post(authUri, headers: {}, body: authRequestJson)).called(1);
+      when(() => client.post(authUri, headers: {}, body: authRequestJson))
+          .thenAnswer((_) => authResult);
+      await expectLater(repository.authenticate(authRequest),
+          throwsA(isA<ResponseException>()));
+      verify(() => client.post(authUri, headers: {}, body: authRequestJson))
+          .called(1);
 
       expect(container.read(networkAuthTokenProvider), equals(null));
     });

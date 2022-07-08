@@ -33,12 +33,11 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
   void initState() {
     super.initState();
     storage.readData().then((String value) => {
-
-      setState(() {
-        state = value;
-        print("State ${state}");
-      })
-    });
+          setState(() {
+            state = value;
+            print("State ${state}");
+          })
+        });
   }
 
   @override
@@ -55,8 +54,7 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
                     state = "ma name jeff.";
                     print("the text in state is now: ${state}");
                   },
-                  child: Text("Press to change text")
-              ),
+                  child: Text("Press to change text")),
               ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -64,14 +62,14 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
                       //print("application directory: ${_appDocDir}");
                     });
                   },
-                  child: Text("Press to read data directory")
-              ),
+                  child: Text("Press to read data directory")),
               FutureBuilder<Directory>(
                 future: _appDocDir,
-                builder: (BuildContext context, AsyncSnapshot<Directory> snapshot) {
+                builder:
+                    (BuildContext context, AsyncSnapshot<Directory> snapshot) {
                   Text text = Text('');
-                  if(snapshot.connectionState == ConnectionState.done) {
-                    if(snapshot.hasError){
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasError) {
                       text = Text('Error: ${snapshot.error}');
                     } else if (snapshot.hasData) {
                       text = Text('Path: ${snapshot.data!.path}');
@@ -91,10 +89,10 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
                       print("got ${state} from the file system");
                     });
                   },
-                  child: Text("Press to read data")
-              ),
-              ElevatedButton(onPressed: () {
-                storage.writeData(state ?? "Nothing to write");
+                  child: Text("Press to read data")),
+              ElevatedButton(
+                onPressed: () {
+                  storage.writeData(state ?? "Nothing to write");
                 },
                 child: Text('Write the data to the database'),
               ),
@@ -127,19 +125,25 @@ class _PhotoWrapListState extends ConsumerState<PhotoWrapList> {
       ValueNotifier(1),
     ];
     _tiles = <ImageThumbnail>[
-      ImageThumbnail(imageExists: false, index: _indexNotifiers[0],required: true,),
-      ImageThumbnail(imageExists: false, index: _indexNotifiers[1],required: true,),
+      ImageThumbnail(
+        imageExists: false,
+        index: _indexNotifiers[0],
+        required: true,
+      ),
+      ImageThumbnail(
+        imageExists: false,
+        index: _indexNotifiers[1],
+        required: true,
+      ),
     ];
 
     //TODO get this to work, I cannot figure it out for the life of me.
     //ref.read(accountCreationProvider.notifier).addImagePath("", 0);
-
   }
 
   @override
   Widget build(BuildContext context) {
-
-    void _onReorder(int oldIndex, int newIndex){
+    void _onReorder(int oldIndex, int newIndex) {
       setState(() {
         Widget row = _tiles.removeAt(oldIndex);
         ValueNotifier<int> index = _indexNotifiers.removeAt(oldIndex);
@@ -148,10 +152,9 @@ class _PhotoWrapListState extends ConsumerState<PhotoWrapList> {
         _indexNotifiers.insert(newIndex, index);
 
         //working, it updates the index within the child.
-        for(int i = 0; i < _indexNotifiers.length; i++){
+        for (int i = 0; i < _indexNotifiers.length; i++) {
           _indexNotifiers[i].value = i;
         }
-
       });
     }
 
@@ -160,11 +163,13 @@ class _PhotoWrapListState extends ConsumerState<PhotoWrapList> {
       runSpacing: 4.0,
       //padding: const EdgeInsets.all(8),
       onReorder: _onReorder,
-      onNoReorder: (int index){
-        debugPrint('${DateTime.now().toString().substring(5,22)} reorder cancelled. index:$index');
+      onNoReorder: (int index) {
+        debugPrint(
+            '${DateTime.now().toString().substring(5, 22)} reorder cancelled. index:$index');
       },
-      onReorderStarted: (int index){
-        debugPrint('${DateTime.now().toString().substring(5,22)} reorder started. index:$index');
+      onReorderStarted: (int index) {
+        debugPrint(
+            '${DateTime.now().toString().substring(5, 22)} reorder started. index:$index');
       },
       children: _tiles,
     );
@@ -238,9 +243,8 @@ class ImageThumbnail extends ConsumerStatefulWidget {
 class _ImageThumbnailState extends ConsumerState<ImageThumbnail> {
   final size = 40.0;
 
-
   Future pickImage() async {
-    try{
+    try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
 
       if (image == null) return;
@@ -255,87 +259,80 @@ class _ImageThumbnailState extends ConsumerState<ImageThumbnail> {
       //now update the riverpods notifier
       //ref.read(accountCreationProvider.notifier).addImagePath(widget.image!.path, how to get index here?);
 
-    } on PlatformException catch(e) {
+    } on PlatformException catch (e) {
       print("Failed to pick image: $e");
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    if(widget.imageExists) {
+    if (widget.imageExists) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(20.0),
         child: Container(
-          width: 3*size,
-          height: 4*size,
+          width: 3 * size,
+          height: 4 * size,
           //decoration: BoxDecoration(
           //  color: Colors.orange,
           //    borderRadius: BorderRadius.all(Radius.circular(20))
           //),
-          child: FittedBox(child: Image.file(widget.image!), fit:BoxFit.fill),
+          child: FittedBox(child: Image.file(widget.image!), fit: BoxFit.fill),
         ),
       );
-    }else{
-      if(widget.required){
+    } else {
+      if (widget.required) {
         return Container(
-          width: 3*size,
-          height: 4*size,
+          width: 3 * size,
+          height: 4 * size,
           decoration: const BoxDecoration(
               color: Colors.lightBlueAccent,
-              borderRadius: BorderRadius.all(Radius.circular(20))
-          ),
+              borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Stack(
-
             children: [
               Text('${widget.index.value.toString()}'),
               Center(
                 child: Container(
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(100))
-                  ),
+                      borderRadius: BorderRadius.all(Radius.circular(100))),
                   child: IconButton(
                       onPressed: () {
                         pickImage();
                       },
                       color: Colors.lightBlueAccent,
-                      icon: const Icon(Icons.add)
-                  ),
+                      icon: const Icon(Icons.add)),
                 ),
               ),
             ],
           ),
         );
-      }else{ //if it is not required, thus it should be a dotted border
+      } else {
+        //if it is not required, thus it should be a dotted border
         return DottedBorder(
           strokeWidth: 2,
-          dashPattern: [6,6],
+          dashPattern: [6, 6],
           color: Colors.lightBlueAccent,
           borderType: BorderType.RRect,
           radius: Radius.circular(20.0),
           child: Container(
-            width: 3*size,
-            height: 4*size,
+            width: 3 * size,
+            height: 4 * size,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
             child: Stack(
-
               children: [
                 Center(
                   child: Container(
                     decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(100))
-                    ),
+                        borderRadius: BorderRadius.all(Radius.circular(100))),
                     child: IconButton(
                         onPressed: () {
                           pickImage();
                         },
                         color: Colors.lightBlueAccent,
-                        icon: const Icon(Icons.add)
-                    ),
+                        icon: const Icon(Icons.add)),
                   ),
                 ),
               ],
@@ -343,13 +340,12 @@ class _ImageThumbnailState extends ConsumerState<ImageThumbnail> {
           ),
         );
       }
-
     }
   }
 }
 
 class Storage {
-  Future<String> get localPath async{
+  Future<String> get localPath async {
     final dir = await getApplicationDocumentsDirectory();
     return dir.path;
   }

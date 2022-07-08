@@ -7,19 +7,20 @@ class ProfileDatingGoalField extends ConsumerStatefulWidget {
   const ProfileDatingGoalField({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ProfileDatingGoalField> createState() => _ProfileDatingGoalFieldState();
+  ConsumerState<ProfileDatingGoalField> createState() =>
+      _ProfileDatingGoalFieldState();
 }
 
-class _ProfileDatingGoalFieldState extends ConsumerState<ProfileDatingGoalField> {
+class _ProfileDatingGoalFieldState
+    extends ConsumerState<ProfileDatingGoalField> {
   String? datinggoal;
 
-  void changeRadioButton(String? value){
+  void changeRadioButton(String? value) {
     setState(() {
       datinggoal = value;
-      if(value != null){
-        ref.read(accountCreationProvider.notifier).setDatingGoal(value);
+      if (value != null) {
+        ref.read(AccountCreationProvider.notifier).setDatingGoal(value);
       }
-
     });
   }
 
@@ -27,7 +28,7 @@ class _ProfileDatingGoalFieldState extends ConsumerState<ProfileDatingGoalField>
   void initState() {
     // TODO: implement initState
     super.initState();
-    datinggoal = ref.read(accountCreationProvider).datinggoal;
+    datinggoal = ref.read(AccountCreationProvider).datinggoal;
   }
 
   @override

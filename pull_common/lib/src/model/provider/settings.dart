@@ -15,5 +15,6 @@ final settingsFutureProvider = Provider<AsyncValue<Box>>((ref) {
 });
 
 /// A provider that provides the settings box if it's available, otherwise null
-final settingsProvider =
-    Provider<Box?>((ref) => ref.watch(settingsFutureProvider).maybeWhen(data: (d) => d, orElse: () => null));
+final settingsProvider = Provider<Box?>((ref) => ref
+    .watch(settingsFutureProvider)
+    .maybeWhen(data: (d) => d, orElse: () => null));

@@ -1,70 +1,67 @@
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pull_common/src/model/entity/profile.dart';
 
+class AccountCreationNotifier extends StateNotifier<Profile> {
+  AccountCreationNotifier() : super(Profile());
 
-class accountCreationNotifier extends StateNotifier<Profile>{
-  accountCreationNotifier() : super(Profile());
-
-  void setName(String name){
+  void setName(String name) {
     print("running setName function");
     state = state.copyWith(name: name);
   }
 
-  String? getName(){
+  String? getName() {
     return state.name;
   }
 
-  void addImagePath(String imagepath,int index){
+  void addImagePath(String imagepath, int index) {
     List<String> paths = state.imagesPaths;
     state = state.copyWith(imagesPaths: paths);
   }
 
-  String? getPathAtIndex(int index){
+  String? getPathAtIndex(int index) {
     return state.imagesPaths.elementAt(index);
   }
 
-  double? getHeight(){
+  double? getHeight() {
     return state.height;
   }
 
-  void deleteAtIndex(int index){
+  void deleteAtIndex(int index) {
     state.imagesPaths.removeAt(index);
   }
 
-  void setBirthDate(DateTime date){
+  void setBirthDate(DateTime date) {
     state = state.copyWith(birthdate: date);
   }
 
-  void setGender(String gender){
+  void setGender(String gender) {
     state = state.copyWith(gender: gender);
   }
 
-  void setHeight(double height){
+  void setHeight(double height) {
     state = state.copyWith(height: height);
   }
 
-  void setBodyType(String bodytype){
+  void setBodyType(String bodytype) {
     state = state.copyWith(bodytype: bodytype);
   }
 
-  void setDatingGoal(String datinggoal){
+  void setDatingGoal(String datinggoal) {
     state = state.copyWith(datinggoal: datinggoal);
   }
 
-  void setBiography(String biography){
+  void setBiography(String biography) {
     state = state.copyWith(biography: biography);
   }
 
-
-  DateTime? getBirthDate(){
+  DateTime? getBirthDate() {
     return state.birthdate;
   }
-
 }
 
-final accountCreationProvider = StateNotifierProvider<accountCreationNotifier,Profile>((ref) {
-  return accountCreationNotifier();
+final AccountCreationProvider =
+    StateNotifierProvider<AccountCreationNotifier, Profile>((ref) {
+  return AccountCreationNotifier();
 });
 
 /*

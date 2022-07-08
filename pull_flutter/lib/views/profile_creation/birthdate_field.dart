@@ -7,19 +7,18 @@ class ProfileBirthDateField extends ConsumerStatefulWidget {
   const ProfileBirthDateField({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ProfileBirthDateField> createState() => _ProfileBirthDateFieldState();
+  ConsumerState<ProfileBirthDateField> createState() =>
+      _ProfileBirthDateFieldState();
 }
 
 class _ProfileBirthDateFieldState extends ConsumerState<ProfileBirthDateField> {
   DateTime? birthdate;
 
-
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    birthdate = ref.read(accountCreationProvider.notifier).getBirthDate();
+    birthdate = ref.read(AccountCreationProvider.notifier).getBirthDate();
   }
 
   @override
@@ -28,13 +27,14 @@ class _ProfileBirthDateFieldState extends ConsumerState<ProfileBirthDateField> {
       width: double.infinity,
       height: 200,
       child: CupertinoDatePicker(
-        mode: CupertinoDatePickerMode.date,
-        initialDateTime: (birthdate == null) ? DateTime.now() : birthdate,
-        onDateTimeChanged: (val) {
-          birthdate = val;
-          ref.watch(accountCreationProvider.notifier).setBirthDate(birthdate!);
-        }
-      ),
+          mode: CupertinoDatePickerMode.date,
+          initialDateTime: (birthdate == null) ? DateTime.now() : birthdate,
+          onDateTimeChanged: (val) {
+            birthdate = val;
+            ref
+                .watch(AccountCreationProvider.notifier)
+                .setBirthDate(birthdate!);
+          }),
     );
   }
 }

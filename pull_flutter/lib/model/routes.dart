@@ -5,10 +5,10 @@ import 'package:pull_flutter/views/chat.dart';
 import 'package:pull_flutter/views/filters.dart';
 import 'package:pull_flutter/views/home.dart';
 import 'package:pull_flutter/views/login.dart';
-import 'package:pull_flutter/views/profileCreation/photofield.dart';
+import 'package:pull_flutter/views/profile_creation/photo_field.dart';
 import 'package:pull_flutter/views/settings.dart';
 
-import '../views/profileCreation/profile_creation_parent.dart';
+import '../views/profile_creation/profile_creation_parent.dart';
 
 final appRoutes = <GoRoute>[
   GoRoute(
@@ -16,7 +16,7 @@ final appRoutes = <GoRoute>[
     builder: (BuildContext context, GoRouterState state) =>
         const AuthRedirector(
       //homeUrl: '/home/cards',
-          homeUrl: '/login',
+      homeUrl: '/login',
     ),
   ),
   GoRoute(
@@ -32,6 +32,7 @@ final appRoutes = <GoRoute>[
       return PullHomePage(title: 'Pull', path: page);
     },
   ),
+
   /// The homepage route has its own sub-routes for different pages accessed via bottom nav bar
   GoRoute(
     path: '/createProfile/:page',
@@ -43,19 +44,19 @@ final appRoutes = <GoRoute>[
   GoRoute(
       path: '/settings',
       builder: (BuildContext context, GoRouterState state) =>
-          const SettingsPage()
-  ),
+          const SettingsPage()),
   GoRoute(
       path: '/filters',
       builder: (BuildContext context, GoRouterState state) =>
-      const FilterPage()
-  ),
+          const FilterPage()),
   //TODO add /chat route that goes to the correct chat depending on which user was clicked on on the match list page
   GoRoute(
-      path: '/chat/:chatuuid',
+      path: '/chat/:uuid',
       builder: (BuildContext context, GoRouterState state) {
-        final chatuuid = state.params['chatuuid']; //this holds the uuid of the person who you are chatting with.
-        return ChatPage(uuid: (chatuuid != null) ? chatuuid! : "error",);
-      }
-  ),
+        final uuid = state.params[
+            'uuid']; //this holds the uuid of the person who you are chatting with.
+        return ChatPage(
+          uuid: (uuid != null) ? uuid : "error",
+        );
+      }),
 ];

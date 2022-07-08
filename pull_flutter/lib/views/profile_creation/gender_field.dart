@@ -13,13 +13,12 @@ class ProfileGenderField extends ConsumerStatefulWidget {
 class _ProfileGenderFieldState extends ConsumerState<ProfileGenderField> {
   String? gender;
 
-  void changeRadioButton(String? value){
+  void changeRadioButton(String? value) {
     setState(() {
       gender = value;
-      if(value != null){
-        ref.read(accountCreationProvider.notifier).setGender(value);
+      if (value != null) {
+        ref.read(AccountCreationProvider.notifier).setGender(value);
       }
-
     });
   }
 
@@ -27,7 +26,7 @@ class _ProfileGenderFieldState extends ConsumerState<ProfileGenderField> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    gender = ref.read(accountCreationProvider).gender;
+    gender = ref.read(AccountCreationProvider).gender;
   }
 
   @override

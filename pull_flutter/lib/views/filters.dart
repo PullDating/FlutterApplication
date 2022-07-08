@@ -10,13 +10,11 @@ class FilterPage extends StatefulWidget {
 class _FilterPageState extends State<FilterPage> {
   double? distance; //distance from user in km
 
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     distance = 10;
-
   }
 
   @override
@@ -26,32 +24,37 @@ class _FilterPageState extends State<FilterPage> {
         child: Container(
           child: ListView(
             children: [
-              FilterListItem(icon: Icon(Icons.access_time_outlined),title: "ehllo ther", widget: Text("hello")),
-              ListTile(
-                leading: Icon(Icons.transgender), //this probably needs to change, but idk the icon for just gender
+              FilterListItem(
+                  icon: Icon(Icons.access_time_outlined),
+                  title: "ehllo ther",
+                  widget: Text("hello")),
+              const ListTile(
+                leading: Icon(Icons
+                    .transgender), //this probably needs to change, but idk the icon for just gender
                 title: Text('Gender'),
               ),
-              ListTile(
+              const ListTile(
                 leading: Icon(Icons.access_time_outlined),
                 title: Text('Age'),
               ),
-              ListTile(
+              const ListTile(
                 leading: Icon(Icons.social_distance),
                 title: Text('Distance'),
               ),
-              ListTile(
+              const ListTile(
                 leading: Icon(Icons.height),
                 title: Text('Height'),
               ),
-              ListTile(
+              const ListTile(
                 leading: Icon(Icons.man_outlined),
                 title: Text('Body Type'),
               ),
-              ListTile(
+              const ListTile(
                 //leading: Icon(Icons.man_outlined),
-                title: Text("You will only see people who match these filters, and you will only be shown to people who's filters you match."),
+                title: Text(
+                    "You will only see people who match these filters, and you will only be shown to people who's filters you match."),
               ),
-              ListTile(
+              const ListTile(
                 //leading: Icon(Icons.man_outlined),
                 title: Text('Dating goal will match your selection.'),
               ),
@@ -90,4 +93,3 @@ class FilterListItem extends StatelessWidget {
     );
   }
 }
-

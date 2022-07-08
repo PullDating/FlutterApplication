@@ -16,12 +16,12 @@ class ChatsTab extends ConsumerWidget {
             InkWell(
               onTap: () {
                 ///TODO go to the corresponding chat.
-                context.go('/chat/${i}');
+                context.go('/chat/$i');
               },
               child: ListTile(
                 title: Text("Person $i"),
-                subtitle: Text("You: Most recent text"),
-                trailing: Text("Time"),
+                subtitle: const Text("You: Most recent text"),
+                trailing: const Text("Time"),
                 leading: CircleAvatar(
                   child: Text(i.toString()),
                 ),

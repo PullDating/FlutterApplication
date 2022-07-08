@@ -1,52 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:pull_common/src/model/provider/create_account.dart';
 
-class ProfileCreationTemplate extends ConsumerStatefulWidget {
+class ProfileCreationTemplate extends StatelessWidget {
   const ProfileCreationTemplate({
     Key? key,
     required this.title,
     required this.entryField,
-    required this.nextfunction,
+    required this.nextFunction,
     this.isLast,
   }) : super(key: key);
 
   final String title;
   final Widget entryField;
-  final VoidCallback nextfunction;
+  final VoidCallback nextFunction;
   final bool? isLast;
 
   @override
-  ConsumerState <ProfileCreationTemplate> createState() => _ProfileCreationTemplateState();
-}
-
-class _ProfileCreationTemplateState extends ConsumerState<ProfileCreationTemplate> {
-  @override
-  void initState() {
-    super.initState();
-    final profile = ref.read(accountCreationProvider);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final profile = ref.watch(accountCreationProvider);
     return Material(
       child: Column(
         children: [
-          Container(height: 50,),
-          Text(widget.title),
-          Spacer(flex: 3,),
-          Center(
-            child: widget.entryField,
+          Container(
+            height: 50,
           ),
-          Spacer(flex: 3,),
+          Text(title),
+          const Spacer(
+            flex: 3,
+          ),
+          Center(
+            child: entryField,
+          ),
+          const Spacer(
+            flex: 3,
+          ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               primary: Colors.lightBlueAccent,
-              shape: StadiumBorder(),
+              shape: const StadiumBorder(),
             ),
-            onPressed: widget.nextfunction, child: (widget.isLast != null && widget.isLast == true)? Icon(Icons.check) : Icon(Icons.navigate_next),
+            onPressed: nextFunction,
+            child: (isLast != null && isLast == true)
+                ? const Icon(Icons.check)
+                : const Icon(Icons.navigate_next),
           ),
           Container(
             height: 10,
@@ -57,11 +53,71 @@ class _ProfileCreationTemplateState extends ConsumerState<ProfileCreationTemplat
   }
 }
 
-class Test extends StatelessWidget {
-  const Test({Key? key}) : super(key: key);
+
+
+/*
+class ProfileCreationTemplate extends ConsumerStatefulWidget {
+  const ProfileCreationTemplate({
+    Key? key,
+    required this.title,
+    required this.entryField,
+    required this.nextFunction,
+    this.isLast,
+  }) : super(key: key);
+
+  final String title;
+  final Widget entryField;
+  final VoidCallback nextFunction;
+  final bool? isLast;
+
+  @override
+  ConsumerState<ProfileCreationTemplate> createState() =>
+      _ProfileCreationTemplateState();
+}
+
+class _ProfileCreationTemplateState
+    extends ConsumerState<ProfileCreationTemplate> {
+  @override
+  void initState() {
+    super.initState();
+    final profile = ref.read(AccountCreationProvider);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Text("hello");
+    final profile = ref.watch(AccountCreationProvider);
+    return Material(
+      child: Column(
+        children: [
+          Container(
+            height: 50,
+          ),
+          Text(widget.title),
+          const Spacer(
+            flex: 3,
+          ),
+          Center(
+            child: widget.entryField,
+          ),
+          const Spacer(
+            flex: 3,
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.lightBlueAccent,
+              shape: const StadiumBorder(),
+            ),
+            onPressed: widget.nextFunction,
+            child: (widget.isLast != null && widget.isLast == true)
+                ? const Icon(Icons.check)
+                : const Icon(Icons.navigate_next),
+          ),
+          Container(
+            height: 10,
+          )
+        ],
+      ),
+    );
   }
 }
+*/

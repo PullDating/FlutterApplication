@@ -7,7 +7,8 @@ import 'package:pull_common/pull_common.dart';
 /// A widget that automatically redirects to the login page if the locally stored authentication token is not present
 /// (i.e the user is not logged in), otherwise automatically redirects to the home page
 class AuthRedirector extends ConsumerWidget {
-  const AuthRedirector({super.key, this.authUrl = '/login', this.homeUrl = '/home', this.child});
+  const AuthRedirector(
+      {super.key, this.authUrl = '/login', this.homeUrl = '/home', this.child});
 
   final String authUrl;
   final String homeUrl;
@@ -18,7 +19,8 @@ class AuthRedirector extends ConsumerWidget {
     // Wait for the local settings data to be available
     ref.listen<AsyncValue<Box>>(settingsFutureProvider, (previous, next) {
       // Navigate based on the presence of the stored auth token
-      next.whenData((value) => context.go(value.get(kSettingsApiToken) == null ? authUrl : homeUrl));
+      next.whenData((value) =>
+          context.go(value.get(kSettingsApiToken) == null ? authUrl : homeUrl));
     });
     return Material(child: Center(child: child ?? CircularProgressIndicator()));
   }

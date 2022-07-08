@@ -32,8 +32,8 @@ class PullApp extends ConsumerWidget {
       title: 'Pull',
       theme: ThemeData(
           radioTheme: RadioThemeData(
-            fillColor: MaterialStateColor.resolveWith((states) => Colors.lightBlueAccent)
-          ),
+              fillColor: MaterialStateColor.resolveWith(
+                  (states) => Colors.lightBlueAccent)),
           brightness: useDarkTheme ? Brightness.dark : Brightness.light,
           primarySwatch: Colors.deepPurple,
           textTheme: GoogleFonts.nunitoTextTheme(),
@@ -46,7 +46,7 @@ class PullApp extends ConsumerWidget {
               centerTitle: true),
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             selectedItemColor: Colors.lightBlueAccent,
-            unselectedItemColor: const Color(0xff383838),
+            unselectedItemColor: Color(0xff383838),
           ),
           extensions: [
             MatchCardsTheme(

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 
-String randomString(){
+String randomString() {
   final random = Random.secure();
-  final values = List<int>.generate(16,(i) => random.nextInt(255));
+  final values = List<int>.generate(16, (i) => random.nextInt(255));
   return base64UrlEncode(values);
 }
 
@@ -25,9 +25,9 @@ class _ChatPageState extends State<ChatPage> {
   var _user;
   var _otheruser;
 
-  void _addMessages(types.Message message){
+  void _addMessages(types.Message message) {
     setState(() {
-      _messages.insert(0,message);
+      _messages.insert(0, message);
     });
   }
 
@@ -53,7 +53,7 @@ class _ChatPageState extends State<ChatPage> {
     _addMessages(textMessage);
   }
 
-  void _handleSendPressed(types.PartialText message){
+  void _handleSendPressed(types.PartialText message) {
     final textMessage = types.TextMessage(
       author: _user,
       createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -63,8 +63,6 @@ class _ChatPageState extends State<ChatPage> {
 
     _addMessages(textMessage);
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +82,5 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ),
     );
-
-
-
   }
 }

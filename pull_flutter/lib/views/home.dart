@@ -22,7 +22,7 @@ class _PullHomePageState extends ConsumerState<PullHomePage>
   final tabs = const <String, Widget>{
     'cards': CardSwipeTab(),
     'chats': ChatsTab(),
-    'profile' : ProfileTab()
+    'profile': ProfileTab()
   };
 
   @override

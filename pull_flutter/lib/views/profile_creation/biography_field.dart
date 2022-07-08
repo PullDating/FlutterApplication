@@ -9,7 +9,8 @@ class ProfileBiographyField extends ConsumerStatefulWidget {
   const ProfileBiographyField({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ProfileBiographyField> createState() => _ProfileBiographyFieldState();
+  ConsumerState<ProfileBiographyField> createState() =>
+      _ProfileBiographyFieldState();
 }
 
 class _ProfileBiographyFieldState extends ConsumerState<ProfileBiographyField> {
@@ -23,7 +24,7 @@ class _ProfileBiographyFieldState extends ConsumerState<ProfileBiographyField> {
     // TODO: implement initState
     super.initState();
     _controller = TextEditingController();
-    biography = ref.read(accountCreationProvider).biography;
+    biography = ref.read(AccountCreationProvider).biography;
     _controller.text = (biography == null) ? '' : biography!;
   }
 
@@ -50,7 +51,7 @@ class _ProfileBiographyFieldState extends ConsumerState<ProfileBiographyField> {
               controller: _controller,
               onChanged: (String value) {
                 biography = value;
-                ref.read(accountCreationProvider.notifier).setBiography(value);
+                ref.read(AccountCreationProvider.notifier).setBiography(value);
 
                 setState(() {
                   numCharacters = _controller.text.characters.length;
@@ -59,11 +60,14 @@ class _ProfileBiographyFieldState extends ConsumerState<ProfileBiographyField> {
                 print("Current number of characters: ${numCharacters}");
               },
             ),
-            Text((numCharacters >= 300)? "Max Characters Reached!" : "${numCharacters}/${maxCharacters}",
+            Text(
+              (numCharacters >= 300)
+                  ? "Max Characters Reached!"
+                  : "${numCharacters}/${maxCharacters}",
               style: TextStyle(
-                color:(numCharacters >= 300)? Colors.pinkAccent : Colors.black,
+                color:
+                    (numCharacters >= 300) ? Colors.pinkAccent : Colors.black,
               ),
-
             ),
           ],
         ),

@@ -43,7 +43,8 @@ class PullRepository {
 
   /// Perform an (authenticated, if possible) POST request with optional body
   Future<String> _post(Uri uri, {Object? body}) async {
-    final response = await _client.post(uri, headers: await _authHeader, body: body);
+    final response =
+        await _client.post(uri, headers: await _authHeader, body: body);
 
     if (!response.statusCode.isOk) {
       throw ResponseException(response.statusCode, message: response.body);
@@ -61,7 +62,8 @@ class PullRepository {
   /// List the next potential matches in the card stack
   void nextMatches() async {
     final pageSize = _read(matchPageSizeProvider);
-    final matchList = (json.decode(await _get(nextMatchesUri.replace(query: 'page_size=$pageSize'))) as List)
+    final matchList = (json.decode(await _get(
+            nextMatchesUri.replace(query: 'page_size=$pageSize'))) as List)
         .map((e) => Match.fromJson(e));
     _read(activeRefreshProvider.notifier).state = false;
     _read(matchStreamControllerProvider).add(matchList);

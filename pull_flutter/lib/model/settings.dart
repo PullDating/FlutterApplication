@@ -6,7 +6,9 @@ final _useDarkThemeStreamProvider = StreamProvider<bool>((ref) async* {
   final settings = ref.watch(settingsProvider);
   if (settings != null) {
     yield settings.get(kSettingsUseDarkTheme) as bool;
-    yield* settings.watch(key: kSettingsUseDarkTheme).map((event) => event.value as bool);
+    yield* settings
+        .watch(key: kSettingsUseDarkTheme)
+        .map((event) => event.value as bool);
   } else {
     yield false;
   }

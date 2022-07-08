@@ -7,19 +7,19 @@ class ProfileBodyTypeField extends ConsumerStatefulWidget {
   const ProfileBodyTypeField({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ProfileBodyTypeField> createState() => _ProfileBodyTypeFieldState();
+  ConsumerState<ProfileBodyTypeField> createState() =>
+      _ProfileBodyTypeFieldState();
 }
 
 class _ProfileBodyTypeFieldState extends ConsumerState<ProfileBodyTypeField> {
   String? bodytype;
 
-  void changeRadioButton(String? value){
+  void changeRadioButton(String? value) {
     setState(() {
       bodytype = value;
-      if(value != null){
-        ref.read(accountCreationProvider.notifier).setBodyType(value);
+      if (value != null) {
+        ref.read(AccountCreationProvider.notifier).setBodyType(value);
       }
-
     });
   }
 
@@ -27,7 +27,7 @@ class _ProfileBodyTypeFieldState extends ConsumerState<ProfileBodyTypeField> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    bodytype = ref.read(accountCreationProvider).bodytype;
+    bodytype = ref.read(AccountCreationProvider).bodytype;
   }
 
   @override
