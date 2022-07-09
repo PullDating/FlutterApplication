@@ -51,7 +51,6 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
       var jsonResult = ref.read(AccountCreationProvider).toJson();
       print(jsonResult);
       //TODO send api request with this data to /createProfile
-
       context.go('/home/cards');
     });
   }
@@ -60,53 +59,47 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    //_bottomButtonActive = <ValueNotifier<bool>>[
-    //  ValueNotifier(true),
-    //  ValueNotifier(false),
-    //  ValueNotifier(false)
-    //];
 
     tabs = <String, Widget>{
       'name': ProfileCreationTemplate(
           entryField: ProfileNameField(),
           title: "Add Your Name",
-          nextFunction: goToNext),
+          onNext: goToNext),
       'add_photos': ProfileCreationTemplate(
         entryField: ProfilePhotoField(),
         title: "Add Your Photos",
-        nextFunction: goToNext,
+        onNext: goToNext,
       ),
       'birthdate': ProfileCreationTemplate(
         entryField: ProfileBirthDateField(),
         title: "Enter your Birth Date",
-        nextFunction: goToNext,
+        onNext: goToNext,
       ),
       'gender': ProfileCreationTemplate(
         entryField: ProfileGenderField(),
         title: "What's your gender?",
-        nextFunction: goToNext,
+        onNext: goToNext,
       ),
       'height': ProfileCreationTemplate(
         entryField: ProfileHeightField(),
         title: "How tall are you?",
-        nextFunction: goToNext,
+        onNext: goToNext,
       ),
       'bodytype': ProfileCreationTemplate(
         entryField: ProfileBodyTypeField(),
         title: "What's your body type?",
-        nextFunction: goToNext,
+        onNext: goToNext,
       ),
       'datinggoal': ProfileCreationTemplate(
         entryField: ProfileDatingGoalField(),
         title: "What are you looking for?",
-        nextFunction: goToNext,
+        onNext: goToNext,
       ),
       'biography': ProfileCreationTemplate(
         entryField: ProfileBiographyField(),
         title: "Write a bit about yourself.",
-        nextFunction: finalClick,
+        onNext: finalClick,
         isLast: true,
       ),
     };
@@ -142,8 +135,6 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
               ),
             ],
           ),
-
-          //widget.title,
         ),
       ),
       body: AnimatedSwitcher(

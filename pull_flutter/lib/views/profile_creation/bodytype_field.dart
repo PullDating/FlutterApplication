@@ -25,7 +25,6 @@ class _ProfileBodyTypeFieldState extends ConsumerState<ProfileBodyTypeField> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     bodytype = ref.read(AccountCreationProvider).bodytype;
   }

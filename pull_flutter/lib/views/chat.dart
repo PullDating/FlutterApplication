@@ -37,9 +37,7 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
     //TODO get the uuid of the logged in user and replace the id here.
     _user = types.User(id: "-1"); //the use of the application
-
     _otheruser = types.User(id: widget.uuid); //their match.
-
     //some debug / test print stuff.
     final _message = types.PartialText(
       text: "hello there, general kenobi",

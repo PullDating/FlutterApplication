@@ -19,13 +19,13 @@ class _ProfileHeightFieldState extends ConsumerState<ProfileHeightField> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     height = ref.read(AccountCreationProvider.notifier).getHeight();
     if (height == null) {
       height = (maxHeight + minHeight)/2;
-      feet = (height! ~/ 30.48);
-      inches = (((height! / 30.48) - (height! ~/ 30.48)) * 12).toInt();
+      List<int> result = cmToFootAndInch(height!);
+      feet = result[0];
+      inches = result[1];
     }
   }
 
@@ -48,9 +48,9 @@ class _ProfileHeightFieldState extends ConsumerState<ProfileHeightField> {
                 onChanged: (value) {
                   setState(() {
                     height = value;
-                    feet = (height! ~/ 30.48);
-                    inches =
-                        (((height! / 30.48) - (height! ~/ 30.48)) * 12).toInt();
+                    List<int> result = cmToFootAndInch(height!);
+                    feet = result[0];
+                    inches = result[1];
                     ref.read(AccountCreationProvider.notifier).setHeight(value);
                     print("$feet $inches");
                   });
@@ -62,4 +62,13 @@ class _ProfileHeightFieldState extends ConsumerState<ProfileHeightField> {
           ],
         ));
   }
+}
+
+///This function takes in the height of the person in cm, and returns their height
+///in feet and inches, as a list where the first item is the feet and the second
+/// in inches. both integers.
+List<int> cmToFootAndInch(double height) {
+  int feet = (height ~/ 30.48);
+  int inches = (((height / 30.48) - feet) * 12).toInt();
+  return [feet,inches];
 }

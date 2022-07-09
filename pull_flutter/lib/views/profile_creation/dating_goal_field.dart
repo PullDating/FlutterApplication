@@ -26,7 +26,6 @@ class _ProfileDatingGoalFieldState
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     datinggoal = ref.read(AccountCreationProvider).datinggoal;
   }
