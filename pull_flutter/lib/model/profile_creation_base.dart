@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pull_common/src/model/provider/create_account.dart';
 
 class ProfileCreationTemplate extends StatelessWidget {
   const ProfileCreationTemplate({
@@ -35,10 +33,6 @@ class ProfileCreationTemplate extends StatelessWidget {
             flex: 3,
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              primary: Colors.lightBlueAccent,
-              shape: const StadiumBorder(),
-            ),
             onPressed: onNext,
             child: (isLast != null && isLast == true)
                 ? const Icon(Icons.check)
@@ -47,7 +41,7 @@ class ProfileCreationTemplate extends StatelessWidget {
           Container(
             height: 10,
           )
-        ],
+        ]
       ),
     );
   }

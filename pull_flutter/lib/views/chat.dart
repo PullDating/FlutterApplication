@@ -33,7 +33,6 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     //TODO get the uuid of the logged in user and replace the id here.
     _user = types.User(id: "-1"); //the use of the application

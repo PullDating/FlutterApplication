@@ -8,13 +8,11 @@ class FilterPage extends StatefulWidget {
 }
 
 class _FilterPageState extends State<FilterPage> {
-  double? distance; //distance from user in km
+  double? distance = 10; //distance from user in km
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    distance = 10;
   }
 
   @override

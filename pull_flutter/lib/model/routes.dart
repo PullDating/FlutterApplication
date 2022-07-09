@@ -5,7 +5,6 @@ import 'package:pull_flutter/views/chat.dart';
 import 'package:pull_flutter/views/filters.dart';
 import 'package:pull_flutter/views/home.dart';
 import 'package:pull_flutter/views/login.dart';
-import 'package:pull_flutter/views/profile_creation/photo_field.dart';
 import 'package:pull_flutter/views/settings.dart';
 
 import '../views/profile_creation/profile_creation_parent.dart';

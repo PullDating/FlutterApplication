@@ -10,12 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:reorderables/reorderables.dart';
-import 'package:pull_common/src/model/provider/create_account.dart';
-
-//state variables for the page:
-int numPhotos = 0;
-int maxPhotos = 8;
-int minPhotos = 3;
+import 'package:pull_common/pull_common.dart';
 
 class ProfilePhotoField extends ConsumerStatefulWidget {
   const ProfilePhotoField({Key? key}) : super(key: key);
@@ -25,78 +20,30 @@ class ProfilePhotoField extends ConsumerStatefulWidget {
 }
 
 class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
-  final Storage storage = Storage();
-  String? state;
-  Future<Directory>? _appDocDir;
+  Directory? _docDir;
 
   @override
   void initState() {
     super.initState();
-    storage.readData().then((String value) => {
-          setState(() {
-            state = value;
-            print("State ${state}");
-          })
-        });
   }
 
   @override
   Widget build(BuildContext context) {
     return Material(
       child: Center(
-        child: Container(
+        child: SizedBox(
           width: double.infinity,
           child: Column(
             children: [
-              Text('${state ?? "File is Empty"}'),
               ElevatedButton(
-                  onPressed: () {
-                    state = "ma name jeff.";
-                    print("the text in state is now: ${state}");
+                  onPressed: ()  async {
+                    _docDir = await getApplicationDocumentsDirectory();
+                    setState(() {});
+
                   },
-                  child: Text("Press to change text")),
-              ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _appDocDir = getApplicationDocumentsDirectory();
-                      //print("application directory: ${_appDocDir}");
-                    });
-                  },
-                  child: Text("Press to read data directory")),
-              FutureBuilder<Directory>(
-                future: _appDocDir,
-                builder:
-                    (BuildContext context, AsyncSnapshot<Directory> snapshot) {
-                  Text text = Text('');
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasError) {
-                      text = Text('Error: ${snapshot.error}');
-                    } else if (snapshot.hasData) {
-                      text = Text('Path: ${snapshot.data!.path}');
-                    } else {
-                      text = Text('unavailable');
-                    }
-                  }
-                  return new Container(
-                    child: text,
-                  );
-                },
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    setState(() async {
-                      state = await storage.readData();
-                      print("got ${state} from the file system");
-                    });
-                  },
-                  child: Text("Press to read data")),
-              ElevatedButton(
-                onPressed: () {
-                  storage.writeData(state ?? "Nothing to write");
-                },
-                child: Text('Write the data to the database'),
-              ),
-              PhotoWrapList(),
+                  child: const Text("Press to read data directory")),
+              Text((_docDir != null)? _docDir.toString(): "null" ),
+              const PhotoWrapList(),
             ],
           ),
         ),
@@ -177,8 +124,8 @@ class _PhotoWrapListState extends ConsumerState<PhotoWrapList> {
     var column = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
           child: Text('Hold and drag to reorder.'),
         ),
         wrap,
@@ -187,7 +134,7 @@ class _PhotoWrapListState extends ConsumerState<PhotoWrapList> {
           children: [
             IconButton(
               iconSize: 50,
-              icon: Icon(Icons.add_circle),
+              icon: const Icon(Icons.add_circle),
               color: Colors.deepOrange,
               padding: const EdgeInsets.all(0.0),
               onPressed: () {
@@ -199,7 +146,7 @@ class _PhotoWrapListState extends ConsumerState<PhotoWrapList> {
             ),
             IconButton(
               iconSize: 50,
-              icon: Icon(Icons.remove_circle),
+              icon: const Icon(Icons.remove_circle),
               color: Colors.teal,
               padding: const EdgeInsets.all(0.0),
               onPressed: () {
@@ -292,7 +239,7 @@ class _ImageThumbnailState extends ConsumerState<ImageThumbnail> {
               Text('${widget.index.value.toString()}'),
               Center(
                 child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(100))),
                   child: IconButton(
@@ -313,18 +260,18 @@ class _ImageThumbnailState extends ConsumerState<ImageThumbnail> {
           dashPattern: [6, 6],
           color: Colors.lightBlueAccent,
           borderType: BorderType.RRect,
-          radius: Radius.circular(20.0),
+          radius: const Radius.circular(20.0),
           child: Container(
             width: 3 * size,
             height: 4 * size,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
             ),
             child: Stack(
               children: [
                 Center(
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(100))),
                     child: IconButton(
@@ -341,32 +288,5 @@ class _ImageThumbnailState extends ConsumerState<ImageThumbnail> {
         );
       }
     }
-  }
-}
-
-class Storage {
-  Future<String> get localPath async {
-    final dir = await getApplicationDocumentsDirectory();
-    return dir.path;
-  }
-
-  Future<File> get localFile async {
-    final path = await localPath;
-    return File('$path/db.txt');
-  }
-
-  Future<String> readData() async {
-    try {
-      final file = await localFile;
-      String body = await file.readAsString();
-      return body;
-    } catch (e) {
-      return e.toString();
-    }
-  }
-
-  Future<File> writeData(String data) async {
-    final file = await localFile;
-    return file.writeAsString("$data");
   }
 }

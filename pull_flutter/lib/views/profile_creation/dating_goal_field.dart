@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:pull_common/src/model/provider/create_account.dart';
+import 'package:pull_common/pull_common.dart';
 
 class ProfileDatingGoalField extends ConsumerStatefulWidget {
   const ProfileDatingGoalField({Key? key}) : super(key: key);

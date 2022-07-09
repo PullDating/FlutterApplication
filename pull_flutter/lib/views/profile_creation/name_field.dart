@@ -2,9 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:pull_common/src/model/provider/create_account.dart';
-import 'package:pull_common/src/model/entity/profile.dart';
+import 'package:pull_common/pull_common.dart';
 
 class ProfileNameField extends ConsumerStatefulWidget {
   const ProfileNameField({Key? key}) : super(key: key);
@@ -27,10 +25,6 @@ class _ProfileNameFieldState extends ConsumerState<ProfileNameField> {
 
   @override
   Widget build(BuildContext context) {
-    Profile myData = ref.watch(AccountCreationProvider);
-    //this value lags behind the actual riverpod instance, when I use setters and getters
-    //I get the correct value. I don't know how good this is to use.
-
     return Center(
       child: FractionallySizedBox(
         widthFactor: 0.7,

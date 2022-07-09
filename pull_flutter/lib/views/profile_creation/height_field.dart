@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:pull_common/src/model/provider/create_account.dart';
+import 'package:pull_common/pull_common.dart';
 
 class ProfileHeightField extends ConsumerStatefulWidget {
   const ProfileHeightField({Key? key}) : super(key: key);
@@ -31,13 +30,13 @@ class _ProfileHeightFieldState extends ConsumerState<ProfileHeightField> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         width: double.infinity,
         height: 400,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("${feet}\' ${(inches! < 10) ? '0' : ''}${inches}\""),
+            Text("$feet\' ${(inches! < 10) ? '0' : ''}$inches\""),
             RotatedBox(
               quarterTurns: 3,
               child: Slider(
@@ -52,7 +51,6 @@ class _ProfileHeightFieldState extends ConsumerState<ProfileHeightField> {
                     feet = result[0];
                     inches = result[1];
                     ref.read(AccountCreationProvider.notifier).setHeight(value);
-                    print("$feet $inches");
                   });
                 },
               ),

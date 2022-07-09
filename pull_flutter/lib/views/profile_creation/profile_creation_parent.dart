@@ -10,11 +10,7 @@ import 'package:pull_flutter/views/profile_creation/gender_field.dart';
 import 'package:pull_flutter/views/profile_creation/height_field.dart';
 import 'package:pull_flutter/views/profile_creation/photo_field.dart';
 import 'package:pull_flutter/views/profile_creation/name_field.dart';
-import 'package:pull_flutter/views/tabs/card_swipe_tab.dart';
-import 'package:pull_flutter/views/tabs/chats_tab.dart';
-import 'package:pull_flutter/views/tabs/profile_tab.dart';
-
-import 'package:pull_common/src/model/provider/create_account.dart';
+import 'package:pull_common/pull_common.dart';
 
 import '../../model/profile_creation_base.dart';
 
@@ -63,41 +59,41 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
 
     tabs = <String, Widget>{
       'name': ProfileCreationTemplate(
-          entryField: ProfileNameField(),
+          entryField: const ProfileNameField(),
           title: "Add Your Name",
           onNext: goToNext),
       'add_photos': ProfileCreationTemplate(
-        entryField: ProfilePhotoField(),
+        entryField: const ProfilePhotoField(),
         title: "Add Your Photos",
         onNext: goToNext,
       ),
       'birthdate': ProfileCreationTemplate(
-        entryField: ProfileBirthDateField(),
+        entryField: const ProfileBirthDateField(),
         title: "Enter your Birth Date",
         onNext: goToNext,
       ),
       'gender': ProfileCreationTemplate(
-        entryField: ProfileGenderField(),
+        entryField: const ProfileGenderField(),
         title: "What's your gender?",
         onNext: goToNext,
       ),
       'height': ProfileCreationTemplate(
-        entryField: ProfileHeightField(),
+        entryField: const ProfileHeightField(),
         title: "How tall are you?",
         onNext: goToNext,
       ),
       'bodytype': ProfileCreationTemplate(
-        entryField: ProfileBodyTypeField(),
+        entryField: const ProfileBodyTypeField(),
         title: "What's your body type?",
         onNext: goToNext,
       ),
       'datinggoal': ProfileCreationTemplate(
-        entryField: ProfileDatingGoalField(),
+        entryField: const ProfileDatingGoalField(),
         title: "What are you looking for?",
         onNext: goToNext,
       ),
       'biography': ProfileCreationTemplate(
-        entryField: ProfileBiographyField(),
+        entryField: const ProfileBiographyField(),
         title: "Write a bit about yourself.",
         onNext: finalClick,
         isLast: true,
