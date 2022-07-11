@@ -20,6 +20,8 @@ _$_Profile _$$_ProfileFromJson(Map<String, dynamic> json) => _$_Profile(
           const [],
       datinggoal: json['datinggoal'] as String?,
       biography: json['biography'] as String?,
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
@@ -32,4 +34,6 @@ Map<String, dynamic> _$$_ProfileToJson(_$_Profile instance) =>
       'imagesPaths': instance.imagesPaths,
       'datinggoal': instance.datinggoal,
       'biography': instance.biography,
+      'latitude': instance.latitude,
+      'longitude': instance.longitude,
     };

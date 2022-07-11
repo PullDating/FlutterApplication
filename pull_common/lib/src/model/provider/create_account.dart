@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pull_common/src/model/entity/profile.dart';
+import 'package:location/location.dart';
 
 class AccountCreationNotifier extends StateNotifier<Profile> {
   AccountCreationNotifier() : super(Profile());
@@ -56,6 +57,22 @@ class AccountCreationNotifier extends StateNotifier<Profile> {
 
   DateTime? getBirthDate() {
     return state.birthdate;
+  }
+
+  double? getLatitidue(){
+    return state.latitude;
+  }
+
+  void setLatitude(double latitude) {
+    state = state.copyWith(latitude: latitude);
+  }
+
+  double? getLongitude(){
+    return state.longitude;
+  }
+
+  void setLongitude(double longitude) {
+    state = state.copyWith(longitude: longitude);
   }
 }
 
