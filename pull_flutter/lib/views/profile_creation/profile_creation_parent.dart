@@ -11,6 +11,7 @@ import 'package:pull_flutter/views/profile_creation/height_field.dart';
 import 'package:pull_flutter/views/profile_creation/photo_field.dart';
 import 'package:pull_flutter/views/profile_creation/name_field.dart';
 import 'package:pull_common/pull_common.dart';
+import 'package:location/location.dart';
 
 import '../../model/profile_creation_base.dart';
 
@@ -31,6 +32,12 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   //List<ValueNotifier<bool>> _bottomButtonActive = [];
 
+  //Location variables.
+  Location location = Location();
+  late bool _serviceEnabled;
+  late PermissionStatus _permissionGranted;
+  late LocationData _locationData;
+
   void goToNext() {
     print('go to next was called');
     setState(() {
@@ -39,9 +46,30 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
     });
   }
 
-  void finalClick() {
+  void finalClick() async {
     //print("You clicked the final next button for the sign up process");
-    setState(() {
+    setState(() async {
+      //TODO get the location
+      //for now I'm going to fake it.
+      _serviceEnabled = await location.serviceEnabled();
+      if (!_serviceEnabled) {
+        _serviceEnabled = await location.requestService();
+        if (!_serviceEnabled) {
+          return;
+        }
+      }
+
+      _permissionGranted = await location.hasPermission();
+      if (_permissionGranted == PermissionStatus.denied) {
+        _permissionGranted = await location.requestPermission();
+        if (_permissionGranted != PermissionStatus.granted) {
+          return;
+        }
+      }
+
+      _locationData = await location.getLocation();
+      print("location Data: $_locationData");
+
       //this is where we actually need to convert the states that we've collected into a database query
       //TODO this function isn't creating valid json, it doesn't have the string quotations because it is just a Map.
       var jsonResult = ref.read(AccountCreationProvider).toJson();

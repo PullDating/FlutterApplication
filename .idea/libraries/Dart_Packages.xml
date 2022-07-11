@@ -539,6 +539,27 @@
             </list>
           </value>
         </entry>
+        <entry key="location">
+          <value>
+            <list>
+              <option value="E:/Program Downloads/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/location-4.4.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="location_platform_interface">
+          <value>
+            <list>
+              <option value="E:/Program Downloads/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/location_platform_interface-2.3.0/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="location_web">
+          <value>
+            <list>
+              <option value="E:/Program Downloads/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/location_web-3.1.1/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="logging">
           <value>
             <list>
@@ -1116,6 +1137,9 @@
       <root url="file://E:/Program Downloads/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/json_serializable-6.2.0/lib" />
       <root url="file://E:/Program Downloads/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/linkify-4.1.0/lib" />
       <root url="file://E:/Program Downloads/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/lints-2.0.0/lib" />
+      <root url="file://E:/Program Downloads/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/location-4.4.0/lib" />
+      <root url="file://E:/Program Downloads/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/location_platform_interface-2.3.0/lib" />
+      <root url="file://E:/Program Downloads/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/location_web-3.1.1/lib" />
       <root url="file://E:/Program Downloads/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/logging-1.0.2/lib" />
       <root url="file://E:/Program Downloads/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.11/lib" />
       <root url="file://E:/Program Downloads/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/material_color_utilities-0.1.4/lib" />
