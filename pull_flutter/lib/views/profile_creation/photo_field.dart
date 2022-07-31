@@ -13,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:pull_common/pull_common.dart';
 import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ProfilePhotoField extends ConsumerStatefulWidget {
   const ProfilePhotoField({Key? key}) : super(key: key);
@@ -26,8 +27,6 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
   int minProfilePhotos = 2;
   int maxProfilePhotos = 7;
 
-
-
   void getPhotoLimits() async {
     var url = profilePhotoLimitsUri;
     var decoded;
@@ -37,24 +36,46 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
         print("attemping to set state with new photo limits");
         minProfilePhotos = decoded['minProfilePhotos'];
         maxProfilePhotos = decoded['maxProfilePhotos'];
-        populateTiles();
+        imageList = List<File?>.filled(maxProfilePhotos, null);
+        print(imageList);
       }),
       print("min" + minProfilePhotos.toString()),
       print("max" + maxProfilePhotos.toString())
     });
   }
 
-  var tiles = <ImageThumbnail>[];
 
-  void populateTiles() {
-    //add the correct number of mandatory photos
-    for(int i = 0; i < minProfilePhotos; i++){
-      tiles.add(ImageThumbnail( imageExists: false, required: true));
-    }
+  List<File?> imageList = [];
+  int totalFilled = 0;
+  bool mandatoryFilled = false;
 
-    //add the correct number of optional photos
-    for(int i = minProfilePhotos; i < maxProfilePhotos; i++){
-      tiles.add(ImageThumbnail(imageExists: false, required: false));
+  void deleteImageCallback(int index){ //for when a thumbnail deletes an image.
+    setState(() {
+      totalFilled--;
+      if(totalFilled <= minProfilePhotos){
+        mandatoryFilled = false;
+      }
+    });
+    print("image deleted, new number filled: " + totalFilled.toString());
+  }
+
+  Future pickImage(int index) async {
+    try {
+      print("trying to pick image.");
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null) return;
+      final imageTemp = File(image.path);
+      setState(() {
+        imageList[index] = imageTemp;
+        print(imageList);
+        totalFilled++;
+        if(totalFilled >= minProfilePhotos){
+          print("mandatory field should be set");
+          mandatoryFilled = true;
+        }
+      });
+    } on PlatformException catch (e) {
+      print("Failed to pick image: $e");
     }
   }
 
@@ -67,32 +88,52 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
 
   void _onReorder(int oldIndex, int newIndex) {
     setState(() {
-      ImageThumbnail row = tiles.removeAt(oldIndex);
-      //ValueNotifier<int> index = _indexNotifiers.removeAt(oldIndex);
-
-      tiles.insert(newIndex, row);
-      //_indexNotifiers.insert(newIndex, index);
-
-      //working, it updates the index within the child.
-      //for (int i = 0; i < _indexNotifiers.length; i++) {
-      //  _indexNotifiers[i].value = i;
-      //}
+      File? temp = imageList[oldIndex];
+      imageList[oldIndex] = imageList[newIndex];
+      imageList[newIndex] = temp;
+      //TODO save the new order in riverpods
     });
   }
 
   @override
   Widget build(BuildContext context) {
+
+    var tiles = <ImageThumbnailV2>[];
+    for(int i = 0; i < minProfilePhotos; i++){
+      tiles.add(ImageThumbnailV2(
+        image: imageList[i],
+        pickImage: pickImage,
+        index: i,
+        required: true,
+        mandatoryFilled: mandatoryFilled,
+      ));
+    }
+
+    //add the correct number of optional photos
+    for(int i = minProfilePhotos; i < maxProfilePhotos; i++){
+      tiles.add(ImageThumbnailV2(
+        image: imageList[i],
+        pickImage: pickImage,
+        index: i,
+        required: false,
+        mandatoryFilled: mandatoryFilled,
+      ));
+    }
+
     return Material(
       child: Center(
         child: SizedBox(
           width: double.infinity,
           child: Column(
             children: [
-              WrapList(
-                minProfilePhotos: minProfilePhotos,
-                maxProfilePhotos: maxProfilePhotos,
-                onReorder: _onReorder,
-                tiles: tiles,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: WrapList(
+                  minProfilePhotos: minProfilePhotos,
+                  maxProfilePhotos: maxProfilePhotos,
+                  onReorder: _onReorder,
+                  tiles: tiles,
+                ),
               ),
             ],
           ),
@@ -141,14 +182,130 @@ class WrapList extends StatelessWidget {
   }
 }
 
+class ImageThumbnailV2 extends StatelessWidget {
+  ImageThumbnailV2({
+    Key? key,
+    required this.pickImage,
+    this.image,
+    required this.index,
+    required this.required,
+    required this.mandatoryFilled,
+  }) : super(key: key);
+
+  //functions in the parent to call
+  Function pickImage;
+
+  //payload
+  File? image;
+
+  //relevant state variables
+  int index;
+  bool required;
+  bool mandatoryFilled;
+
+  @override
+  Widget build(BuildContext context) {
+    final size = 40.0; //just a variable to determine size of the tiles.
+
+    if (image != null) {
+      print("image was not null");
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(20.0),
+        child: Container(
+          width: 3 * size,
+          height: 4 * size,
+          //decoration: BoxDecoration(
+          //  color: Colors.orange,
+          //    borderRadius: BorderRadius.all(Radius.circular(20))
+          //),
+          child: FittedBox(child: Image.file(image!), fit: BoxFit.fill),
+        ),
+      );
+    } else {
+      if (required) {
+        return Container(
+          width: 3 * size,
+          height: 4 * size,
+          decoration: const BoxDecoration(
+              color: Colors.lightBlueAccent,
+              borderRadius: BorderRadius.all(Radius.circular(20))),
+          child: Stack(
+            children: [
+              //Text('${widget.index.value.toString()}'),
+              Center(
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(100))),
+                  child: IconButton(
+                      onPressed: () async {
+                        await pickImage(index);
+                      },
+                      color: Colors.lightBlueAccent,
+                      icon: const Icon(Icons.add)),
+                ),
+              ),
+            ],
+          ),
+        );
+      } else {
+        print("image does not exist.");
+        //if it is not required, thus it should be a dotted border
+        return Container(
+          width: 3 * size,
+          height: 4 * size,
+          child: DottedBorder(
+            strokeWidth: 2,
+            dashPattern: [6, 6],
+            color: Colors.lightBlueAccent,
+            borderType: BorderType.RRect,
+            radius: const Radius.circular(20.0),
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(100))),
+                      child: IconButton(
+                          onPressed: () async {
+                            if(mandatoryFilled){ //only allow them to pick these ones if the mandatory ones are already filled.
+                              await pickImage(index);
+                            }else{
+                              Fluttertoast.showToast(
+                                  msg: "You have to add the mandatory photos first!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.SNACKBAR,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.pinkAccent,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0
+                              );
+                            }
+                          },
+                          color: Colors.lightBlueAccent,
+                          icon: const Icon(Icons.add)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      }
+    }
+  }
+}
+
+//AFAIK PhotoWrapList here is depricated
+//since I moved all the state logic to the top level, call the other one.
 
 
-//AFAIK everything below here is depricated
-//since I moved all the state logic to the top level.
-
-
-
-
+/*
 class PhotoWrapList extends ConsumerStatefulWidget {
   const PhotoWrapList(this.minPhotos, this.maxPhotos, {
     Key? key,
@@ -271,19 +428,36 @@ class _PhotoWrapListState extends ConsumerState<PhotoWrapList> {
     );
   }
 }
+*/
 
+
+
+
+
+
+
+
+/*
 class ImageThumbnail extends ConsumerStatefulWidget {
   ImageThumbnail({
     Key? key,
     required this.imageExists,
     this.image,
     this.required = false,
+    required this.mandatoryFilled,
+    required this.index,
+    required this.selectImageCallback,
+    required this.deleteImageCallback,
     //required this.index,
   }) : super(key: key);
 
+  Function deleteImageCallback;
+  Function selectImageCallback;
+  int index;
   bool imageExists;
   File? image;
   final bool required;
+  bool mandatoryFilled; //tells if the first minProfilePhotos have been filled in the current state.
   //final ValueListenable<int> index;
 
   @override
@@ -308,7 +482,7 @@ class _ImageThumbnailState extends ConsumerState<ImageThumbnail> {
 
       //now update the riverpods notifier
       //ref.read(accountCreationProvider.notifier).addImagePath(widget.image!.path, how to get index here?);
-
+      widget.selectImageCallback(widget.index);
     } on PlatformException catch (e) {
       print("Failed to pick image: $e");
     }
@@ -358,34 +532,48 @@ class _ImageThumbnailState extends ConsumerState<ImageThumbnail> {
         );
       } else {
         //if it is not required, thus it should be a dotted border
-        return DottedBorder(
-          strokeWidth: 2,
-          dashPattern: [6, 6],
-          color: Colors.lightBlueAccent,
-          borderType: BorderType.RRect,
-          radius: const Radius.circular(20.0),
-          child: Container(
-            width: 3 * size,
-            height: 4 * size,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-            ),
-            child: Stack(
-              children: [
-                Center(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(100))),
-                    child: IconButton(
-                        onPressed: () {
-                          pickImage();
-                        },
-                        color: Colors.lightBlueAccent,
-                        icon: const Icon(Icons.add)),
+        return Container(
+          width: 3 * size,
+          height: 4 * size,
+          child: DottedBorder(
+            strokeWidth: 2,
+            dashPattern: [6, 6],
+            color: Colors.lightBlueAccent,
+            borderType: BorderType.RRect,
+            radius: const Radius.circular(20.0),
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+              ),
+              child: Stack(
+                children: [
+                  Center(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(100))),
+                      child: IconButton(
+                          onPressed: () {
+                            if(widget.mandatoryFilled){ //only allow them to pick these ones if the mandatory ones are already filled.
+                              pickImage();
+                            }else{
+                              Fluttertoast.showToast(
+                                  msg: "You have to add the mandatory photos first!",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.SNACKBAR,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.pinkAccent,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0
+                              );
+                            }
+                          },
+                          color: Colors.lightBlueAccent,
+                          icon: const Icon(Icons.add)),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -393,3 +581,5 @@ class _ImageThumbnailState extends ConsumerState<ImageThumbnail> {
     }
   }
 }
+
+ */
