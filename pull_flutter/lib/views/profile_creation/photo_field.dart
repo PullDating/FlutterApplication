@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dotted_border/dotted_border.dart';
@@ -11,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:pull_common/pull_common.dart';
+import 'package:http/http.dart' as http;
 
 class ProfilePhotoField extends ConsumerStatefulWidget {
   const ProfilePhotoField({Key? key}) : super(key: key);
@@ -21,10 +23,61 @@ class ProfilePhotoField extends ConsumerStatefulWidget {
 
 class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
   Directory? _docDir;
+  int minProfilePhotos = 2;
+  int maxProfilePhotos = 7;
+
+
+
+  void getPhotoLimits() async {
+    var url = profilePhotoLimitsUri;
+    var decoded;
+    await http.get(url).then((response) => {
+      decoded = json.decode(response.body),
+      setState(() {
+        print("attemping to set state with new photo limits");
+        minProfilePhotos = decoded['minProfilePhotos'];
+        maxProfilePhotos = decoded['maxProfilePhotos'];
+        populateTiles();
+      }),
+      print("min" + minProfilePhotos.toString()),
+      print("max" + maxProfilePhotos.toString())
+    });
+  }
+
+  var tiles = <ImageThumbnail>[];
+
+  void populateTiles() {
+    //add the correct number of mandatory photos
+    for(int i = 0; i < minProfilePhotos; i++){
+      tiles.add(ImageThumbnail( imageExists: false, required: true));
+    }
+
+    //add the correct number of optional photos
+    for(int i = minProfilePhotos; i < maxProfilePhotos; i++){
+      tiles.add(ImageThumbnail(imageExists: false, required: false));
+    }
+  }
 
   @override
   void initState() {
+    //TODO make request to server to get min and max photo limits.
     super.initState();
+    getPhotoLimits();
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      ImageThumbnail row = tiles.removeAt(oldIndex);
+      //ValueNotifier<int> index = _indexNotifiers.removeAt(oldIndex);
+
+      tiles.insert(newIndex, row);
+      //_indexNotifiers.insert(newIndex, index);
+
+      //working, it updates the index within the child.
+      //for (int i = 0; i < _indexNotifiers.length; i++) {
+      //  _indexNotifiers[i].value = i;
+      //}
+    });
   }
 
   @override
@@ -35,15 +88,12 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
           width: double.infinity,
           child: Column(
             children: [
-              ElevatedButton(
-                  onPressed: ()  async {
-                    _docDir = await getApplicationDocumentsDirectory();
-                    setState(() {});
-
-                  },
-                  child: const Text("Press to read data directory")),
-              Text((_docDir != null)? _docDir.toString(): "null" ),
-              const PhotoWrapList(),
+              WrapList(
+                minProfilePhotos: minProfilePhotos,
+                maxProfilePhotos: maxProfilePhotos,
+                onReorder: _onReorder,
+                tiles: tiles,
+              ),
             ],
           ),
         ),
@@ -52,11 +102,64 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
   }
 }
 
-class PhotoWrapList extends ConsumerStatefulWidget {
-  const PhotoWrapList({Key? key}) : super(key: key);
+
+
+class WrapList extends StatelessWidget {
+  List<Widget> tiles;
+  int maxProfilePhotos;
+  int minProfilePhotos;
+  Function(int,int) onReorder;
+
+  WrapList(
+      {
+        Key? key,
+        required int this.minProfilePhotos,
+        required int this.maxProfilePhotos,
+        required List<Widget> this.tiles,
+        required Function(int,int) this.onReorder,
+      }) : super(key: key);
+
+  final double _iconSize = 90;
 
   @override
-  ConsumerState<PhotoWrapList> createState() => _PhotoWrapListState();
+  Widget build(BuildContext context) {
+    return ReorderableWrap(
+      spacing: 8.0,
+      runSpacing: 4.0,
+      //padding: const EdgeInsets.all(8),
+      onReorder: onReorder,
+      onNoReorder: (int index) {
+        debugPrint(
+            '${DateTime.now().toString().substring(5, 22)} reorder cancelled. index:$index');
+      },
+      onReorderStarted: (int index) {
+        debugPrint(
+            '${DateTime.now().toString().substring(5, 22)} reorder started. index:$index');
+      },
+      children: tiles,
+    );
+  }
+}
+
+
+
+//AFAIK everything below here is depricated
+//since I moved all the state logic to the top level.
+
+
+
+
+class PhotoWrapList extends ConsumerStatefulWidget {
+  const PhotoWrapList(this.minPhotos, this.maxPhotos, {
+    Key? key,
+  }) : super(key: key);
+
+  final int maxPhotos;
+  final int minPhotos;
+
+  @override
+  ConsumerState<PhotoWrapList> createState() =>
+      _PhotoWrapListState();
 }
 
 class _PhotoWrapListState extends ConsumerState<PhotoWrapList> {
@@ -67,22 +170,22 @@ class _PhotoWrapListState extends ConsumerState<PhotoWrapList> {
   @override
   void initState() {
     super.initState();
-    _indexNotifiers = <ValueNotifier<int>>[
-      ValueNotifier(0),
-      ValueNotifier(1),
-    ];
-    _tiles = <ImageThumbnail>[
-      ImageThumbnail(
-        imageExists: false,
-        index: _indexNotifiers[0],
-        required: true,
-      ),
-      ImageThumbnail(
-        imageExists: false,
-        index: _indexNotifiers[1],
-        required: true,
-      ),
-    ];
+    //_indexNotifiers = <ValueNotifier<int>>[
+    //  ValueNotifier(0),
+    //  ValueNotifier(1),
+    //];
+
+    _tiles = <ImageThumbnail>[];
+
+    //add the correct number of mandatory photos
+    for(int i = 0; i < widget.minPhotos; i++){
+      _tiles.add(ImageThumbnail( imageExists: false, required: true));
+    }
+
+    //add the correct number of optional photos
+    for(int i = widget.minPhotos; i < widget.maxPhotos; i++){
+      _tiles.add(ImageThumbnail(imageExists: false, required: true));
+    }
 
     //TODO get this to work, I cannot figure it out for the life of me.
     //ref.read(accountCreationProvider.notifier).addImagePath("", 0);
@@ -175,13 +278,13 @@ class ImageThumbnail extends ConsumerStatefulWidget {
     required this.imageExists,
     this.image,
     this.required = false,
-    required this.index,
+    //required this.index,
   }) : super(key: key);
 
   bool imageExists;
   File? image;
   final bool required;
-  final ValueListenable<int> index;
+  //final ValueListenable<int> index;
 
   @override
   ConsumerState<ImageThumbnail> createState() => _ImageThumbnailState();
@@ -236,7 +339,7 @@ class _ImageThumbnailState extends ConsumerState<ImageThumbnail> {
               borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Stack(
             children: [
-              Text('${widget.index.value.toString()}'),
+              //Text('${widget.index.value.toString()}'),
               Center(
                 child: Container(
                   decoration: const BoxDecoration(

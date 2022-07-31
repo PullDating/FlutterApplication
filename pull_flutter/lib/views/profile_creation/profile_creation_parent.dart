@@ -74,12 +74,17 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
       ref.read(AccountCreationProvider.notifier).setLatitude(_locationData.latitude!);
 
 
+
+
       //this is where we actually need to convert the states that we've collected into a database query
       //TODO this function isn't creating valid json, it doesn't have the string quotations because it is just a Map.
       var jsonResult = ref.read(AccountCreationProvider).toJson();
 
       print(jsonResult);
       //TODO send api request with this data to /createProfile
+
+
+
       context.go('/home/cards');
     });
   }

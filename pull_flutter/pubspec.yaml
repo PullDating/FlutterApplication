@@ -30,6 +30,7 @@ dependencies:
   flutter_chat_ui: ^1.6.3
   flutter_chat_types: ^3.4.3
   location: ^4.4.0
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:

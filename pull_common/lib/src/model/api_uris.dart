@@ -1,4 +1,7 @@
-const _baseUrl = 'https://pull.dating/api'; // TODO put the actual URL here
+//AVD uses 10.0.2.2 as an alias for localhost.
+const _baseUrl = 'http://10.0.2.2:3000'; // TODO put the actual URL here
 
 final authUri = Uri.parse('$_baseUrl/auth');
 final nextMatchesUri = Uri.parse('$_baseUrl/nextMatches');
+final profileUri = Uri.parse('$_baseUrl/profile');
+final profilePhotoLimitsUri = Uri.parse('$_baseUrl/profile/photoLimits');
