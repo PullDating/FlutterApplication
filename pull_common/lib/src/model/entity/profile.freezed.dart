@@ -26,7 +26,6 @@ mixin _$Profile {
   String? get gender => throw _privateConstructorUsedError;
   double? get height =>
       throw _privateConstructorUsedError; //Height is stored in cm
-  List<String> get imagesPaths => throw _privateConstructorUsedError;
   String? get datinggoal => throw _privateConstructorUsedError;
   String? get biography => throw _privateConstructorUsedError;
   double? get latitude => throw _privateConstructorUsedError;
@@ -47,7 +46,6 @@ abstract class $ProfileCopyWith<$Res> {
       String? bodytype,
       String? gender,
       double? height,
-      List<String> imagesPaths,
       String? datinggoal,
       String? biography,
       double? latitude,
@@ -69,7 +67,6 @@ class _$ProfileCopyWithImpl<$Res> implements $ProfileCopyWith<$Res> {
     Object? bodytype = freezed,
     Object? gender = freezed,
     Object? height = freezed,
-    Object? imagesPaths = freezed,
     Object? datinggoal = freezed,
     Object? biography = freezed,
     Object? latitude = freezed,
@@ -96,10 +93,6 @@ class _$ProfileCopyWithImpl<$Res> implements $ProfileCopyWith<$Res> {
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
               as double?,
-      imagesPaths: imagesPaths == freezed
-          ? _value.imagesPaths
-          : imagesPaths // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       datinggoal: datinggoal == freezed
           ? _value.datinggoal
           : datinggoal // ignore: cast_nullable_to_non_nullable
@@ -132,7 +125,6 @@ abstract class _$$_ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       String? bodytype,
       String? gender,
       double? height,
-      List<String> imagesPaths,
       String? datinggoal,
       String? biography,
       double? latitude,
@@ -155,7 +147,6 @@ class __$$_ProfileCopyWithImpl<$Res> extends _$ProfileCopyWithImpl<$Res>
     Object? bodytype = freezed,
     Object? gender = freezed,
     Object? height = freezed,
-    Object? imagesPaths = freezed,
     Object? datinggoal = freezed,
     Object? biography = freezed,
     Object? latitude = freezed,
@@ -182,10 +173,6 @@ class __$$_ProfileCopyWithImpl<$Res> extends _$ProfileCopyWithImpl<$Res>
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
               as double?,
-      imagesPaths: imagesPaths == freezed
-          ? _value._imagesPaths
-          : imagesPaths // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       datinggoal: datinggoal == freezed
           ? _value.datinggoal
           : datinggoal // ignore: cast_nullable_to_non_nullable
@@ -215,12 +202,10 @@ class _$_Profile implements _Profile {
       this.bodytype,
       this.gender,
       this.height,
-      final List<String> imagesPaths = const [],
       this.datinggoal,
       this.biography,
       this.latitude,
-      this.longitude})
-      : _imagesPaths = imagesPaths;
+      this.longitude});
 
   factory _$_Profile.fromJson(Map<String, dynamic> json) =>
       _$$_ProfileFromJson(json);
@@ -236,15 +221,6 @@ class _$_Profile implements _Profile {
   @override
   final double? height;
 //Height is stored in cm
-  final List<String> _imagesPaths;
-//Height is stored in cm
-  @override
-  @JsonKey()
-  List<String> get imagesPaths {
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_imagesPaths);
-  }
-
   @override
   final String? datinggoal;
   @override
@@ -256,7 +232,7 @@ class _$_Profile implements _Profile {
 
   @override
   String toString() {
-    return 'Profile(name: $name, birthdate: $birthdate, bodytype: $bodytype, gender: $gender, height: $height, imagesPaths: $imagesPaths, datinggoal: $datinggoal, biography: $biography, latitude: $latitude, longitude: $longitude)';
+    return 'Profile(name: $name, birthdate: $birthdate, bodytype: $bodytype, gender: $gender, height: $height, datinggoal: $datinggoal, biography: $biography, latitude: $latitude, longitude: $longitude)';
   }
 
   @override
@@ -269,8 +245,6 @@ class _$_Profile implements _Profile {
             const DeepCollectionEquality().equals(other.bodytype, bodytype) &&
             const DeepCollectionEquality().equals(other.gender, gender) &&
             const DeepCollectionEquality().equals(other.height, height) &&
-            const DeepCollectionEquality()
-                .equals(other._imagesPaths, _imagesPaths) &&
             const DeepCollectionEquality()
                 .equals(other.datinggoal, datinggoal) &&
             const DeepCollectionEquality().equals(other.biography, biography) &&
@@ -287,7 +261,6 @@ class _$_Profile implements _Profile {
       const DeepCollectionEquality().hash(bodytype),
       const DeepCollectionEquality().hash(gender),
       const DeepCollectionEquality().hash(height),
-      const DeepCollectionEquality().hash(_imagesPaths),
       const DeepCollectionEquality().hash(datinggoal),
       const DeepCollectionEquality().hash(biography),
       const DeepCollectionEquality().hash(latitude),
@@ -311,7 +284,6 @@ abstract class _Profile implements Profile {
       final String? bodytype,
       final String? gender,
       final double? height,
-      final List<String> imagesPaths,
       final String? datinggoal,
       final String? biography,
       final double? latitude,
@@ -330,8 +302,6 @@ abstract class _Profile implements Profile {
   @override
   double? get height => throw _privateConstructorUsedError;
   @override //Height is stored in cm
-  List<String> get imagesPaths => throw _privateConstructorUsedError;
-  @override
   String? get datinggoal => throw _privateConstructorUsedError;
   @override
   String? get biography => throw _privateConstructorUsedError;

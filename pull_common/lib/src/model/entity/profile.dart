@@ -1,3 +1,4 @@
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 //import 'package:isar/isar.dart';
 import 'package:location/location.dart';
@@ -13,7 +14,6 @@ class Profile with _$Profile {
     String? bodytype,
     String? gender,
     double? height, //Height is stored in cm
-    @Default([]) List<String> imagesPaths,
     String? datinggoal,
     String? biography,
     double? latitude,

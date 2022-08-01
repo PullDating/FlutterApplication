@@ -23,27 +23,10 @@ class ProfilePhotoField extends ConsumerStatefulWidget {
 }
 
 class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
+
   Directory? _docDir;
   int minProfilePhotos = 2;
   int maxProfilePhotos = 7;
-
-  void getPhotoLimits() async {
-    var url = profilePhotoLimitsUri;
-    var decoded;
-    await http.get(url).then((response) => {
-      decoded = json.decode(response.body),
-      setState(() {
-        print("attemping to set state with new photo limits");
-        minProfilePhotos = decoded['minProfilePhotos'];
-        maxProfilePhotos = decoded['maxProfilePhotos'];
-        imageList = List<File?>.filled(maxProfilePhotos, null);
-        print(imageList);
-      }),
-      print("min" + minProfilePhotos.toString()),
-      print("max" + maxProfilePhotos.toString())
-    });
-  }
-
 
   List<File?> imageList = [];
   int totalFilled = 0;
@@ -83,20 +66,37 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
   void initState() {
     //TODO make request to server to get min and max photo limits.
     super.initState();
-    getPhotoLimits();
+    //imageList = List<File?>.filled(7, null);
+    //imageList = ref.watch(ProfilePhotosProvider).images;
   }
+
+
 
   void _onReorder(int oldIndex, int newIndex) {
     setState(() {
+      //check to make sure they aren't arranging the empty ones
+      if(imageList[oldIndex] == null){
+        print("cannot move an empty image tile.");
+        return;
+      }
+
       File? temp = imageList[oldIndex];
       imageList[oldIndex] = imageList[newIndex];
       imageList[newIndex] = temp;
       //TODO save the new order in riverpods
+
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
+
+    imageList = ref.watch(ProfilePhotosProvider).images;
+
+    print("image list in build methjod" + imageList.toString());
+    maxProfilePhotos = ref.watch(ProfilePhotosProvider).max;
+    minProfilePhotos = ref.watch(ProfilePhotosProvider).min;
 
     var tiles = <ImageThumbnailV2>[];
     for(int i = 0; i < minProfilePhotos; i++){

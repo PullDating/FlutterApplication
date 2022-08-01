@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +15,8 @@ import 'package:pull_flutter/views/profile_creation/photo_field.dart';
 import 'package:pull_flutter/views/profile_creation/name_field.dart';
 import 'package:pull_common/pull_common.dart';
 import 'package:location/location.dart';
+
+import 'package:http/http.dart' as http;
 
 import '../../model/profile_creation_base.dart';
 
@@ -38,6 +43,8 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
   late PermissionStatus _permissionGranted;
   late LocationData _locationData;
 
+
+  //navigation behaviour
   void goToNext() {
     print('go to next was called');
     setState(() {
@@ -89,12 +96,29 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
     });
   }
 
+  void getPhotoLimits() async {
+    print("got into getPhotoLimits");
+    var url = profilePhotoLimitsUri;
+    var decoded;
+    await http.get(url).then((response) => {
+      decoded = json.decode(response.body),
+      print("attemping to set state with new photo limits"),
+      ref.read(ProfilePhotosProvider.notifier).setMax(decoded['maxProfilePhotos']),
+      ref.read(ProfilePhotosProvider.notifier).setMin(decoded['minProfilePhotos']),
+      ref.read(ProfilePhotosProvider.notifier).setImages(List<File?>.filled(ref.read(ProfilePhotosProvider.notifier).getMax(), null)),
+    });
+  }
+
+
   late Map<String, Widget> tabs;
+  late List<File?> images;
 
   @override
   void initState() {
     super.initState();
+    print("about to set the images watch");
 
+    getPhotoLimits();
     tabs = <String, Widget>{
       'name': ProfileCreationTemplate(
           entryField: const ProfileNameField(),
