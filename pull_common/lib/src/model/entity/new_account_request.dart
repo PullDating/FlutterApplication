@@ -7,5 +7,6 @@ part 'new_account_request.g.dart';
 class NewAccountRequest with _$NewAccountRequest {
   const factory NewAccountRequest.phone(String phone) = _Phone;
 
-  factory NewAccountRequest.fromJson(Map<String, Object?> json) => _$NewAccountRequestFromJson(json);
+  factory NewAccountRequest.fromJson(Map<String, Object?> json) =>
+      _$NewAccountRequestFromJson(json);
 }

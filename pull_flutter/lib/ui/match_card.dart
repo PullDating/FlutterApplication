@@ -18,7 +18,12 @@ class PullMatchCard extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16.0),
-            boxShadow: [BoxShadow(offset: const Offset(0, 2), blurRadius: 8, color: Colors.black12.withAlpha(56))]),
+            boxShadow: [
+              BoxShadow(
+                  offset: const Offset(0, 2),
+                  blurRadius: 8,
+                  color: Colors.black12.withAlpha(56))
+            ]),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12.0),
           child: Stack(
@@ -28,12 +33,14 @@ class PullMatchCard extends StatelessWidget {
                   child: ListView(
                     scrollDirection: Axis.vertical,
                     children: [
-                      Image(image: AssetImage(match.media.first.uri.toString())),
+                      Image(
+                          image: AssetImage(match.media.first.uri.toString())),
                       if (match.bio.isNotEmpty)
                         Container(
                           color: theme.canvasColor,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 24),
                             child: Text(match.bio),
                           ),
                         )
