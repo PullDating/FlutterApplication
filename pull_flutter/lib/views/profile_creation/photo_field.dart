@@ -36,16 +36,16 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
   void deleteImageCallback(int index){ //for when a thumbnail deletes an image.
     setState(() {
       imageList[index] = null;
-      print("index to delete: " + index.toString());
+      //print("index to delete: " + index.toString());
       //shift the other spots backwards in list to backfill.
       for(int i = index; i < maxProfilePhotos-1; i++){
-        print("index in loop:" + i.toString());
+        //print("index in loop:" + i.toString());
         imageList[i] = imageList[i+1];
       }
       imageList[maxProfilePhotos-1] = null;
 
       totalFilled--;
-      if(totalFilled <= minProfilePhotos){
+      if(totalFilled < minProfilePhotos){
         mandatoryFilled = false;
       }
     });
