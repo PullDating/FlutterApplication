@@ -13,6 +13,9 @@ class LoginPage extends HookConsumerWidget {
     final repository = ref.watch(repositoryProvider);
     final phoneFieldController = useTextEditingController();
 
+    final natState = ref.watch(networkAuthTokenProvider.state);
+    final settings = ref.watch(settingsProvider);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -35,7 +38,7 @@ class LoginPage extends HookConsumerWidget {
                 const Padding(padding: EdgeInsets.only(bottom: 25)),
                 ElevatedButton(
                     onPressed: () async {
-                      final authResult = await repository.authenticate(AuthRequest.phone(phoneFieldController.text));
+                      //final authResult = await repository.authenticate(AuthRequest.phone(phoneFieldController.text));
 
                       settings!.put(kSettingsApiToken, natState.state = 'demo token');
                       //context.go('/home/cards');
