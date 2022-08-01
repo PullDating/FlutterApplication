@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/foundation.dart';
@@ -110,7 +111,7 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
     }
 
     //add the correct number of optional photos
-    for(int i = minProfilePhotos; i < maxProfilePhotos; i++){
+    for(int i = minProfilePhotos; i < min(max(minProfilePhotos+1, totalFilled+1),maxProfilePhotos); i++){
       tiles.add(ImageThumbnailV2(
         image: imageList[i],
         pickImage: pickImage,
