@@ -36,8 +36,16 @@ class _ProfileDatingGoalFieldState
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           RadioListTile<String>(
+            title: const Text('Marriage'),
+            value: 'marriage',
+            groupValue: datinggoal,
+            onChanged: (String? value) {
+              changeRadioButton(value);
+            },
+          ),
+          RadioListTile<String>(
             title: const Text('Long-term Relationship'),
-            value: 'ltr',
+            value: 'longterm',
             groupValue: datinggoal,
             onChanged: (String? value) {
               changeRadioButton(value);
@@ -45,7 +53,7 @@ class _ProfileDatingGoalFieldState
           ),
           RadioListTile<String>(
             title: const Text('Short-term Relationship'),
-            value: 'str',
+            value: 'shortterm',
             groupValue: datinggoal,
             onChanged: (String? value) {
               changeRadioButton(value);
@@ -61,7 +69,7 @@ class _ProfileDatingGoalFieldState
           ),
           RadioListTile<String>(
             title: const Text('Just Chatting'),
-            value: 'chatting',
+            value: 'justchatting',
             groupValue: datinggoal,
             onChanged: (String? value) {
               changeRadioButton(value);

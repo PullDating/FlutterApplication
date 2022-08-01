@@ -13,9 +13,9 @@ class _ProfileGenderFieldState extends ConsumerState<ProfileGenderField> {
   String? gender;
 
   void changeRadioButton(String? value) {
+    print("gender radio button pressed");
     setState(() {
-      gender = value;
-      if (value != null) {
+      if(value != null){
         ref.read(AccountCreationProvider.notifier).setGender(value);
       }
     });
@@ -24,33 +24,36 @@ class _ProfileGenderFieldState extends ConsumerState<ProfileGenderField> {
   @override
   void initState() {
     super.initState();
-    gender = ref.read(AccountCreationProvider).gender;
+    //gender = ref.read(AccountCreationProvider).gender;
   }
 
   @override
   Widget build(BuildContext context) {
+
+    gender = ref.watch(AccountCreationProvider).gender;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         RadioListTile<String>(
-          title: const Text('Male'),
-          value: 'Male',
+          title: const Text('Man'),
+          value: 'man',
           groupValue: gender,
           onChanged: (String? value) {
             changeRadioButton(value);
           },
         ),
         RadioListTile<String>(
-          title: const Text('Female'),
-          value: 'Female',
+          title: const Text('Woman'),
+          value: 'woman',
           groupValue: gender,
           onChanged: (String? value) {
             changeRadioButton(value);
           },
         ),
         RadioListTile<String>(
-          title: const Text('Non Binary'),
-          value: 'Non Binary',
+          title: const Text('Non-Binary'),
+          value: 'non-binary',
           groupValue: gender,
           onChanged: (String? value) {
             changeRadioButton(value);

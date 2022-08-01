@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pull_flutter/views/profile_creation/biography_field.dart';
@@ -43,7 +45,6 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
   late PermissionStatus _permissionGranted;
   late LocationData _locationData;
 
-
   //navigation behaviour
   void goToNext() {
     print('go to next was called');
@@ -55,44 +56,48 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
 
   void finalClick() async {
     //print("You clicked the final next button for the sign up process");
-    setState(() async {
-      //TODO get the location
-      //for now I'm going to fake it.
-      _serviceEnabled = await location.serviceEnabled();
+    //TODO get the location
+    //for now I'm going to fake it.
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
       if (!_serviceEnabled) {
-        _serviceEnabled = await location.requestService();
-        if (!_serviceEnabled) {
-          return;
-        }
+        return;
       }
+    }
 
-      _permissionGranted = await location.hasPermission();
-      if (_permissionGranted == PermissionStatus.denied) {
-        _permissionGranted = await location.requestPermission();
-        if (_permissionGranted != PermissionStatus.granted) {
-          return;
-        }
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
       }
+    }
 
-      _locationData = await location.getLocation();
-      print("location Data: $_locationData");
+    _locationData = await location.getLocation();
+    print("location Data: $_locationData");
 
-      ref.read(AccountCreationProvider.notifier).setLongitude(_locationData.longitude!);
-      ref.read(AccountCreationProvider.notifier).setLatitude(_locationData.latitude!);
+    ref.read(AccountCreationProvider.notifier).setLongitude(_locationData.longitude!);
+    ref.read(AccountCreationProvider.notifier).setLatitude(_locationData.latitude!);
 
+    print("\n\n\n\n\n\n\n\n");
+    print("I'm going to try uploading the stuff now");
 
+    try{
+      PullRepository repo = PullRepository(ref.read);
+      await repo.createProfile();
+    }catch (e){
+      print("There was an error somewhere in the profile creation.");
+      print(e);
+      return;
+    }
 
-
-      //this is where we actually need to convert the states that we've collected into a database query
-      //TODO this function isn't creating valid json, it doesn't have the string quotations because it is just a Map.
-      var jsonResult = ref.read(AccountCreationProvider).toJson();
-
-      print(jsonResult);
-      //TODO send api request with this data to /createProfile
-
+    print("\n\n\n\n\n\n\n");
+    setState(() async {
 
 
       context.go('/home/cards');
+
     });
   }
 
@@ -100,13 +105,34 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
     print("got into getPhotoLimits");
     var url = profilePhotoLimitsUri;
     var decoded;
-    await http.get(url).then((response) => {
-      decoded = json.decode(response.body),
-      print("attemping to set state with new photo limits"),
-      ref.read(ProfilePhotosProvider.notifier).setMax(decoded['maxProfilePhotos']),
-      ref.read(ProfilePhotosProvider.notifier).setMin(decoded['minProfilePhotos']),
-      ref.read(ProfilePhotosProvider.notifier).setImages(List<File?>.filled(ref.read(ProfilePhotosProvider.notifier).getMax(), null)),
-    });
+
+
+    try {
+      var response = await http.get(url).timeout(const Duration(seconds: 3));
+      if(response.statusCode == 200){
+        print("Success");
+        decoded = json.decode(response.body);
+        print("attemping to set state with new photo limits");
+        ref.read(ProfilePhotosProvider.notifier).setMax(decoded['maxProfilePhotos']);
+        ref.read(ProfilePhotosProvider.notifier).setMin(decoded['minProfilePhotos']);
+        ref.read(ProfilePhotosProvider.notifier).setImages(List<File?>.filled(ref.read(ProfilePhotosProvider.notifier).getMax(), null));
+      }else{
+        print("Something wrong");
+      }
+    } on TimeoutException catch (e) {
+      print('Timeout');
+      Fluttertoast.showToast(
+          msg: "You're having connectivity issues, please check connection and reset your app.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    } on Error catch (e) {
+      print('Error: $e');
+    }
   }
 
 

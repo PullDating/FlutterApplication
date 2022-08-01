@@ -9,18 +9,24 @@ class ProfileImages{
   const ProfileImages({
     required this.min,
     required this.max,
-    required this.images
+    required this.images,
+    required this.numFilled,
+    required this.mandatoryFilled,
   });
 
   final int min;
   final int max;
   final List<File?> images;
+  final int numFilled;
+  final bool mandatoryFilled;
 
-  ProfileImages copyWith({List<File?>? images, int? min, int? max}){
+  ProfileImages copyWith({List<File?>? images, int? min, int? max, int? numFilled, bool? mandatoryFilled}){
     return ProfileImages(
       min: min ?? this.min,
       max: max ?? this.max,
       images: images ?? this.images,
+      numFilled: numFilled ?? this.numFilled,
+      mandatoryFilled: mandatoryFilled ?? this.mandatoryFilled,
     );
   }
 
@@ -31,7 +37,7 @@ final ProfilePhotosProvider = StateNotifierProvider<ProfilePhotosNotifier, Profi
 });
 
 class ProfilePhotosNotifier extends StateNotifier<ProfileImages> {
-  ProfilePhotosNotifier() : super(ProfileImages(max: 100, min: 0, images: []));
+  ProfilePhotosNotifier() : super(ProfileImages(max: 100, min: 0, images: [], numFilled: 0, mandatoryFilled: false));
 
   void setImages(List<File?> images){
     state = state.copyWith(images: images);
@@ -53,25 +59,51 @@ class ProfilePhotosNotifier extends StateNotifier<ProfileImages> {
     return state.min;
   }
 
-  void addImage(File image){
 
+
+  int getNumFilled(){
+    return state.numFilled;
   }
 
-  void replaceImage(int index, File image){
+  void setImage(File image, int index){
+    List<File?> tempimages = state.images;
+    int tempnumfilled = state.numFilled;
+    bool tempmandatory = state.mandatoryFilled;
     if(index < state.max && index >= 0){
-      List<File?> temp = state.images;
-      temp[index] = image;
-      state = state.copyWith(images: temp);
+      tempimages[index] = image;
+      tempnumfilled++;
+      if(tempnumfilled >= state.min){
+        tempmandatory = true;
+      }
+      state = state.copyWith(
+          images: tempimages,
+          numFilled: tempnumfilled,
+          mandatoryFilled: tempmandatory
+      );
     } else {
       throw "The index you tried to replace is out of range";
     }
   }
 
-  void removeImages(int index){
+  void removeImage(int index){
     if(index < state.max && index >= 0){
+
       List<File?> temp = state.images;
-      temp[index] = null;
-      state = state.copyWith(images: temp);
+      int tempfilled = state.numFilled;
+      for(int i = index; i < state.max-1; i++){
+        //print("index in loop:" + i.toString());
+        temp[i] = temp[i+1];
+      }
+      temp[state.max-1] = null;
+      tempfilled--;
+
+      bool mandatory = state.mandatoryFilled;
+      if(tempfilled < state.min){
+        mandatory = false;
+      }
+
+      state = state.copyWith(images: temp, numFilled: tempfilled, mandatoryFilled: mandatory);
+
     } else {
       throw "The index you tried to replace is out of range";
     }
@@ -83,6 +115,22 @@ class ProfilePhotosNotifier extends StateNotifier<ProfileImages> {
 
 class AccountCreationNotifier extends StateNotifier<Profile> {
   AccountCreationNotifier() : super(Profile());
+
+  String? getGender(){
+    return state.gender;
+  }
+
+  String? getDatingGoal(){
+    return state.datinggoal;
+  }
+
+  String? getBiography(){
+    return state.biography;
+  }
+
+  String? getBodyType(){
+    return state.bodytype;
+  }
 
   void setName(String name) {
     print("running setName function");

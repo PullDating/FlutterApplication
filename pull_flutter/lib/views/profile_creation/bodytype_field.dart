@@ -35,24 +35,24 @@ class _ProfileBodyTypeFieldState extends ConsumerState<ProfileBodyTypeField> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           RadioListTile<String>(
-            title: const Text('HeavySet'),
-            value: 'HeavySet',
+            title: const Text('Obese'),
+            value: 'obese',
             groupValue: bodytype,
             onChanged: (String? value) {
               changeRadioButton(value);
             },
           ),
           RadioListTile<String>(
-            title: const Text('Stocky'),
-            value: 'Stocky',
+            title: const Text('Heavy'),
+            value: 'heavy',
             groupValue: bodytype,
             onChanged: (String? value) {
               changeRadioButton(value);
             },
           ),
           RadioListTile<String>(
-            title: const Text('A Few Extra Pounds'),
-            value: 'AFewExtraPounds',
+            title: const Text('Muscular'),
+            value: 'muscular',
             groupValue: bodytype,
             onChanged: (String? value) {
               changeRadioButton(value);
@@ -60,23 +60,15 @@ class _ProfileBodyTypeFieldState extends ConsumerState<ProfileBodyTypeField> {
           ),
           RadioListTile<String>(
             title: const Text('Average'),
-            value: 'Average',
+            value: 'average',
             groupValue: bodytype,
             onChanged: (String? value) {
               changeRadioButton(value);
             },
           ),
           RadioListTile<String>(
-            title: const Text('Athletic'),
-            value: 'Athletic',
-            groupValue: bodytype,
-            onChanged: (String? value) {
-              changeRadioButton(value);
-            },
-          ),
-          RadioListTile<String>(
-            title: const Text('Slender'),
-            value: 'Slender',
+            title: const Text('Lean'),
+            value: 'lean',
             groupValue: bodytype,
             onChanged: (String? value) {
               changeRadioButton(value);

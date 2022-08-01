@@ -25,31 +25,14 @@ class ProfilePhotoField extends ConsumerStatefulWidget {
 
 class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
 
-  Directory? _docDir;
   int minProfilePhotos = 2;
   int maxProfilePhotos = 7;
 
   List<File?> imageList = [];
-  int totalFilled = 0;
-  bool mandatoryFilled = false;
+
 
   void deleteImageCallback(int index){ //for when a thumbnail deletes an image.
-    setState(() {
-      imageList[index] = null;
-      //print("index to delete: " + index.toString());
-      //shift the other spots backwards in list to backfill.
-      for(int i = index; i < maxProfilePhotos-1; i++){
-        //print("index in loop:" + i.toString());
-        imageList[i] = imageList[i+1];
-      }
-      imageList[maxProfilePhotos-1] = null;
-
-      totalFilled--;
-      if(totalFilled < minProfilePhotos){
-        mandatoryFilled = false;
-      }
-    });
-    print("image deleted, new number filled: " + totalFilled.toString());
+    ref.read(ProfilePhotosProvider.notifier).removeImage(index);
   }
 
   Future pickImage(int index) async {
@@ -57,16 +40,7 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
       print("trying to pick image.");
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image == null) return;
-      final imageTemp = File(image.path);
-      setState(() {
-        imageList[index] = imageTemp;
-        print(imageList);
-        totalFilled++;
-        if(totalFilled >= minProfilePhotos){
-          print("mandatory field should be set");
-          mandatoryFilled = true;
-        }
-      });
+      ref.read(ProfilePhotosProvider.notifier).setImage(File(image.path), index);
     } on PlatformException catch (e) {
       print("Failed to pick image: $e");
     }
@@ -102,11 +76,16 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
   @override
   Widget build(BuildContext context) {
 
-    imageList = ref.watch(ProfilePhotosProvider).images;
-
-    print("image list in build methjod" + imageList.toString());
-    maxProfilePhotos = ref.watch(ProfilePhotosProvider).max;
-    minProfilePhotos = ref.watch(ProfilePhotosProvider).min;
+    List<File?> imageList = ref.watch(ProfilePhotosProvider).images;
+    print("image list in build method" + imageList.toString());
+    int maxProfilePhotos = ref.watch(ProfilePhotosProvider).max;
+    print("maxProfilePhotos: " + maxProfilePhotos.toString());
+    int minProfilePhotos = ref.watch(ProfilePhotosProvider).min;
+    print("minProfilePhotos: " + minProfilePhotos.toString());
+    bool mandatoryFilled = ref.watch(ProfilePhotosProvider).mandatoryFilled;
+    print("mandatoryFilled: " + mandatoryFilled.toString());
+    int totalFilled = ref.watch(ProfilePhotosProvider).numFilled;
+    print("Total Filled: " + totalFilled.toString());
 
     var tiles = <ImageThumbnailV2>[];
     for(int i = 0; i < minProfilePhotos; i++){
@@ -222,7 +201,7 @@ class ImageThumbnailV2 extends StatelessWidget {
     final size = 40.0; //just a variable to determine size of the tiles.
 
     if (image != null) {
-      print("image was not null");
+      //print("image was not null");
       return ClipRRect(
         borderRadius: BorderRadius.circular(20.0),
         child: Container(
@@ -279,7 +258,7 @@ class ImageThumbnailV2 extends StatelessWidget {
           ),
         );
       } else {
-        print("image does not exist.");
+        //print("image does not exist.");
         //if it is not required, thus it should be a dotted border
         return Container(
           width: 3 * size,
