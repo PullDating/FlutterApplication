@@ -35,6 +35,15 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
 
   void deleteImageCallback(int index){ //for when a thumbnail deletes an image.
     setState(() {
+      imageList[index] = null;
+      print("index to delete: " + index.toString());
+      //shift the other spots backwards in list to backfill.
+      for(int i = index; i < maxProfilePhotos-1; i++){
+        print("index in loop:" + i.toString());
+        imageList[i] = imageList[i+1];
+      }
+      imageList[maxProfilePhotos-1] = null;
+
       totalFilled--;
       if(totalFilled <= minProfilePhotos){
         mandatoryFilled = false;
@@ -104,6 +113,7 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
       tiles.add(ImageThumbnailV2(
         image: imageList[i],
         pickImage: pickImage,
+        deleteImageCallback: deleteImageCallback,
         index: i,
         required: true,
         mandatoryFilled: mandatoryFilled,
@@ -115,6 +125,7 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
       tiles.add(ImageThumbnailV2(
         image: imageList[i],
         pickImage: pickImage,
+        deleteImageCallback: deleteImageCallback,
         index: i,
         required: false,
         mandatoryFilled: mandatoryFilled,
@@ -187,6 +198,7 @@ class ImageThumbnailV2 extends StatelessWidget {
   ImageThumbnailV2({
     Key? key,
     required this.pickImage,
+    required this.deleteImageCallback,
     this.image,
     required this.index,
     required this.required,
@@ -195,6 +207,7 @@ class ImageThumbnailV2 extends StatelessWidget {
 
   //functions in the parent to call
   Function pickImage;
+  Function deleteImageCallback;
 
   //payload
   File? image;
@@ -219,7 +232,23 @@ class ImageThumbnailV2 extends StatelessWidget {
           //  color: Colors.orange,
           //    borderRadius: BorderRadius.all(Radius.circular(20))
           //),
-          child: FittedBox(child: Image.file(image!), fit: BoxFit.fill),
+          child: Stack(
+            children: [
+              SizedBox(
+                width: 3 * size,
+                height: 4 * size,
+                child: FittedBox(child: Image.file(image!), fit: BoxFit.fitWidth),
+              ),
+              //FittedBox(child: Image.file(image!), fit: BoxFit.fill),
+              IconButton(
+                icon: const Icon(Icons.delete),
+                tooltip: "delete photo",
+                onPressed: () {
+                  deleteImageCallback(index);
+                },
+              )
+            ],
+          ),
         ),
       );
     } else {
