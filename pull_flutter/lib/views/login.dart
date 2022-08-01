@@ -35,15 +35,18 @@ class LoginPage extends HookConsumerWidget {
                 const Padding(padding: EdgeInsets.only(bottom: 25)),
                 ElevatedButton(
                     onPressed: () async {
-                      final router = GoRouter.of(context);
                       final authResult = await repository.authenticate(AuthRequest.phone(phoneFieldController.text));
+
+                      settings!.put(kSettingsApiToken, natState.state = 'demo token');
+                      //context.go('/home/cards');
+                      context.go('/createProfile/name');
 
                       /* if (!authResult.userExists) {
                         router.go('/createAccount/add_photos');
                         return;
                       }*/
 
-                      router.go('/home/cards');
+                      //router.go('/home/cards');
                     },
                     child: const Text("Login"))
               ],

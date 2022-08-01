@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pull_common/src/model/entity/match.dart';
@@ -11,7 +10,9 @@ typedef CardBuilder = Widget Function(BuildContext context, Match match);
 /// A [ThemeExtension] that allows theming the [MatchCards] widget
 class MatchCardsTheme extends ThemeExtension<MatchCardsTheme> {
   const MatchCardsTheme(
-      {this.rewindColor = Colors.orange, this.swipeLeftColor = Colors.red, this.swipeRightColor = Colors.green});
+      {this.rewindColor = Colors.orange,
+      this.swipeLeftColor = Colors.red,
+      this.swipeRightColor = Colors.green});
 
   /// The color of the rewind button
   final Color rewindColor;
@@ -23,7 +24,8 @@ class MatchCardsTheme extends ThemeExtension<MatchCardsTheme> {
   final Color swipeRightColor;
 
   @override
-  ThemeExtension<MatchCardsTheme> copyWith({Color? rewindColor, Color? swipeLeftColor, Color? swipeRightColor}) {
+  ThemeExtension<MatchCardsTheme> copyWith(
+      {Color? rewindColor, Color? swipeLeftColor, Color? swipeRightColor}) {
     return MatchCardsTheme(
         rewindColor: rewindColor ?? this.rewindColor,
         swipeLeftColor: swipeLeftColor ?? this.swipeLeftColor,
@@ -31,12 +33,18 @@ class MatchCardsTheme extends ThemeExtension<MatchCardsTheme> {
   }
 
   @override
-  ThemeExtension<MatchCardsTheme> lerp(ThemeExtension<MatchCardsTheme>? other, double t) {
+  ThemeExtension<MatchCardsTheme> lerp(
+      ThemeExtension<MatchCardsTheme>? other, double t) {
     final _other = other is MatchCardsTheme ? other : null;
     return MatchCardsTheme(
-      rewindColor: Color.lerp(this.rewindColor, _other?.rewindColor, t) ?? this.rewindColor,
-      swipeLeftColor: Color.lerp(this.swipeLeftColor, _other?.swipeLeftColor, t) ?? this.swipeLeftColor,
-      swipeRightColor: Color.lerp(this.swipeRightColor, _other?.swipeRightColor, t) ?? this.swipeRightColor,
+      rewindColor: Color.lerp(this.rewindColor, _other?.rewindColor, t) ??
+          this.rewindColor,
+      swipeLeftColor:
+          Color.lerp(this.swipeLeftColor, _other?.swipeLeftColor, t) ??
+              this.swipeLeftColor,
+      swipeRightColor:
+          Color.lerp(this.swipeRightColor, _other?.swipeRightColor, t) ??
+              this.swipeRightColor,
     );
   }
 }
@@ -79,7 +87,8 @@ class _MatchCardsState extends ConsumerState<MatchCards> {
     matches = List.filled(pageSize * 2, null);
 
     /// Listen for new match suggestions and update the list
-    ref.listenOnce<AsyncValue<Iterable<Match>>>(matchStreamProvider, (previous, next) {
+    ref.listenOnce<AsyncValue<Iterable<Match>>>(matchStreamProvider,
+        (previous, next) {
       next.whenData((value) {
         if (!mounted) {
           return;
@@ -146,7 +155,8 @@ class _MatchCardsState extends ConsumerState<MatchCards> {
               onSwipeCompleted: (index, direction) {
                 final itemIndex = index % matches.length;
                 // If we're getting close to the end of the current data, refresh with new data
-                if (itemIndex == pageSize - 3 || itemIndex == matches.length - 3) {
+                if (itemIndex == pageSize - 3 ||
+                    itemIndex == matches.length - 3) {
                   lastSwipeIndex = itemIndex;
                   ref.read(matchStreamRefreshProvider)();
                 }
@@ -166,7 +176,8 @@ class _MatchCardsState extends ConsumerState<MatchCards> {
                     }
                     setState(() {});
                   }();
-                  return Card(child: Center(child: CircularProgressIndicator()));
+                  return Card(
+                      child: Center(child: CircularProgressIndicator()));
                 }
                 return widget.cardBuilder(context, match);
               },
@@ -215,20 +226,29 @@ class BottomButtonsRow extends StatelessWidget {
             children: [
               _BottomButton(
                 color: canRewind
-                    ? Theme.of(context).extension<MatchCardsTheme>()?.rewindColor ?? Colors.orange
+                    ? Theme.of(context)
+                            .extension<MatchCardsTheme>()
+                            ?.rewindColor ??
+                        Colors.orange
                     : Colors.grey,
                 onPressed: canRewind ? onRewindTap : null,
                 child: const Icon(Icons.refresh),
               ),
               _BottomButton(
-                color: Theme.of(context).extension<MatchCardsTheme>()?.swipeLeftColor ?? Colors.red,
+                color: Theme.of(context)
+                        .extension<MatchCardsTheme>()
+                        ?.swipeLeftColor ??
+                    Colors.red,
                 child: const Icon(Icons.arrow_back),
                 onPressed: () {
                   onSwipe(SwipeDirection.left);
                 },
               ),
               _BottomButton(
-                color: Theme.of(context).extension<MatchCardsTheme>()?.swipeRightColor ?? Colors.green,
+                color: Theme.of(context)
+                        .extension<MatchCardsTheme>()
+                        ?.swipeRightColor ??
+                    Colors.green,
                 onPressed: () {
                   onSwipe(SwipeDirection.right);
                 },

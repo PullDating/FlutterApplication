@@ -22,6 +22,15 @@ dependencies:
   hive_flutter: ^1.1.0
   google_fonts: ^3.0.0
   url_launcher: ^6.1.2
+  reorderables: ^0.5.0
+  dotted_border: ^2.0.0
+  image_picker: ^0.8.5
+  path_provider: ^2.0.11
+  fluttertoast: ^8.0.9
+  flutter_chat_ui: ^1.6.3
+  flutter_chat_types: ^3.4.3
+  location: ^4.4.0
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:

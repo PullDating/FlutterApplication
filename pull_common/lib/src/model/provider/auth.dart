@@ -7,6 +7,10 @@ final storedAuthTokenProvider = Provider<String?>((ref) {
   return ref.watch(settingsProvider)?.get(kSettingsApiToken);
 });
 
+final storedUUIDProvider = Provider<String?>((ref) {
+  return ref.watch(settingsProvider)?.get(kSettingsUUID);
+});
+
 /// The auth token fetched from the network
 final networkAuthTokenProvider = StateProvider<String?>((_) => null);
 
@@ -15,4 +19,14 @@ final authTokenProvider = Provider<String?>((ref) {
   final storedAuthToken = ref.watch(storedAuthTokenProvider);
   final networkAuthToken = ref.watch(networkAuthTokenProvider);
   return storedAuthToken ?? networkAuthToken;
+});
+
+final UUIDProvider = Provider<String?>((ref){
+  final storedUUID = ref.watch(storedUUIDProvider);
+  if(storedUUID != null){
+    return storedUUID;
+  }else{
+    throw("Couldn't find Stored UUID");
+  }
+
 });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 /// Tab displaying a list of all of your matches/conversations
 class ProfileTab extends ConsumerWidget {
@@ -49,7 +50,9 @@ class ProfileTab extends ConsumerWidget {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.go('/filters');
+                  },
                   child: Icon(Icons.filter_list_rounded, color: Colors.white),
                   style: ElevatedButton.styleFrom(
                     shape: CircleBorder(),
