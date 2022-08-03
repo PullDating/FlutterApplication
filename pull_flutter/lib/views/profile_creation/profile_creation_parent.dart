@@ -55,9 +55,7 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
   }
 
   void finalClick() async {
-    //print("You clicked the final next button for the sign up process");
-    //TODO get the location
-    //for now I'm going to fake it.
+    //get the longitude and latitude of the device.
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
@@ -81,7 +79,17 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
     ref.read(AccountCreationProvider.notifier).setLatitude(_locationData.latitude!);
 
     print("\n\n\n\n\n\n\n\n");
-    print("I'm going to try uploading the stuff now");
+    //print("I'm going to try uploading the stuff now");
+
+    //Photo Compression
+    List<File?> images = ref.read(ProfilePhotosProvider.notifier).getImages();
+    try {
+      images = await compressProfilePhotos(images);
+      print("images: " + images.toString());
+      ref.read(ProfilePhotosProvider.notifier).setImages(images);
+    } catch (e){
+      print("error: " + e.toString());
+    }
 
     try{
       PullRepository repo = PullRepository(ref.read);
@@ -92,7 +100,6 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
       return;
     }
 
-    print("\n\n\n\n\n\n\n");
     setState(() async {
 
 
