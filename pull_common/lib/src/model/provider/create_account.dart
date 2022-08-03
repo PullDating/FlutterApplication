@@ -39,6 +39,10 @@ final ProfilePhotosProvider = StateNotifierProvider<ProfilePhotosNotifier, Profi
 class ProfilePhotosNotifier extends StateNotifier<ProfileImages> {
   ProfilePhotosNotifier() : super(ProfileImages(max: 100, min: 0, images: [], numFilled: 0, mandatoryFilled: false));
 
+  List<File?> getImages(){
+    return state.images;
+  }
+
   void setImages(List<File?> images){
     state = state.copyWith(images: images);
   }
