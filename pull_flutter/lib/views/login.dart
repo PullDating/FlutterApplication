@@ -18,41 +18,50 @@ class LoginPage extends HookConsumerWidget {
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 36.0),
-          child: Center(
-            child: Column(
-              children: [
-                Text(
-                  "Pull",
-                  style: Theme.of(context).textTheme.headline3,
-                ),
-                SizedBox(
-                  width: 250,
-                  child: TextField(
-                      controller: phoneFieldController,
-                      decoration: const InputDecoration(
-                        label: Text("Phone"),
-                      )),
-                ),
-                const Padding(padding: EdgeInsets.only(bottom: 25)),
-                ElevatedButton(
-                    onPressed: () async {
-                      //final authResult = await repository.authenticate(AuthRequest.phone(phoneFieldController.text));
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/decorations/loginbackground.png"),
+                fit: BoxFit.cover),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 36.0),
+            child: Center(
+              child: Column(
+                children: [
+                  Text(
+                    "Pull",
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                  SizedBox(
+                    width: 250,
+                    child: TextField(
+                        controller: phoneFieldController,
+                        decoration: const InputDecoration(
+                          label: Text("Phone"),
+                        )),
+                  ),
+                  const Padding(padding: EdgeInsets.only(bottom: 25)),
+                  ElevatedButton(
+                      onPressed: () async {
+                        //final authResult = await repository.authenticate(AuthRequest.phone(phoneFieldController.text));
 
-                      settings!.put(kSettingsApiToken, natState.state = 'demo token');
-                      //context.go('/home/cards');
-                      context.go('/createProfile/name');
+                        settings!.put(kSettingsApiToken, natState.state = 'demo token');
+                        context.go('/home/cards');
+                        //context.go('/createProfile/name');
 
-                      /* if (!authResult.userExists) {
-                        router.go('/createAccount/add_photos');
-                        return;
-                      }*/
+                        /* if (!authResult.userExists) {
+                          router.go('/createAccount/add_photos');
+                          return;
+                        }*/
 
-                      //router.go('/home/cards');
-                    },
-                    child: const Text("Login"))
-              ],
+                        //router.go('/home/cards');
+                      },
+                      child: const Text("Login"))
+                ],
+              ),
             ),
           ),
         ),

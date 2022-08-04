@@ -14,8 +14,8 @@ final appRoutes = <GoRoute>[
     path: '/',
     builder: (BuildContext context, GoRouterState state) =>
         const AuthRedirector(
-      //homeUrl: '/home/cards',
-      homeUrl: '/login',
+      homeUrl: '/home/cards',
+      //homeUrl: '/login',
     ),
   ),
   GoRoute(
