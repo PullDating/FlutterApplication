@@ -49,8 +49,8 @@ class LoginPage extends HookConsumerWidget {
                         //final authResult = await repository.authenticate(AuthRequest.phone(phoneFieldController.text));
 
                         settings!.put(kSettingsApiToken, natState.state = 'demo token');
-                        context.go('/home/cards');
-                        //context.go('/createProfile/name');
+                        //context.go('/home/cards');
+                        context.go('/createProfile/name');
 
                         /* if (!authResult.userExists) {
                           router.go('/createAccount/add_photos');

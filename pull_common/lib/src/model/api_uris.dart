@@ -6,3 +6,4 @@ final authUri = Uri.parse('$_baseUrl/auth');
 final nextMatchesUri = Uri.parse('$_baseUrl/nextMatches');
 final profileUri = Uri.parse('$_baseUrl/profile');
 final profilePhotoLimitsUri = Uri.parse('$_baseUrl/profile/photoLimits');
+final concurrentMatchLimitUri = Uri.parse('$_baseUrl/global/concurrent-match-limit');
