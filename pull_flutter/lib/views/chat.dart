@@ -29,6 +29,7 @@ class _ChatPageState extends State<ChatPage> {
   var _otheruser;
   late var channel;
 
+
   Object _formMessage(String meta, String? message, String roomID, String clientID, String token){
     var obj = {
       "meta" : meta,
@@ -38,6 +39,8 @@ class _ChatPageState extends State<ChatPage> {
     };
     if(message != null){
       obj['message'] = message!;
+    }else{
+      obj['message'] = '';
     }
     return obj;
   }
@@ -67,6 +70,10 @@ class _ChatPageState extends State<ChatPage> {
     Object request = _formMessage("join_or_create_room", null, "testroom", "311b8f93-a76e-48ba-97cb-c995d0dc918c", 'f46aa34a-76ff-4ae6-b8dd-2e72ff67e86e');
     //print(request.toString());
     channel.sink.add(jsonEncode(request));
+
+    channel.stream.listen((data) {
+      print("!!!new message: ${data}");
+    });
 
     //TODO get the uuid of the logged in user and replace the id here.
     _user = types.User(id: "-1"); //the use of the application
@@ -99,8 +106,11 @@ class _ChatPageState extends State<ChatPage> {
     _addMessages(textMessage);
   }
 
+
+
   @override
   Widget build(BuildContext context) {
+
     return Material(
       child: SafeArea(
         child: Scaffold(
@@ -113,23 +123,18 @@ class _ChatPageState extends State<ChatPage> {
               ),
               onPressed: () {
                 context.go('/home/chats');
+                channel.sink.close();
               },
             ),
           ),
-          body: StreamBuilder(
-            stream: channel.stream,
-            builder: (context, snapshot) {
-              return Chat(
-                theme: const DefaultChatTheme(
-                  inputBackgroundColor: Colors.black,
-                  primaryColor: Colors.lightBlueAccent,
-                  secondaryColor: Colors.pinkAccent,
-                ),
-                messages: _messages,
-                onSendPressed: _handleSendPressed,
-                user: _user,
-              );
-            }
+          body: Chat(
+            theme: const DefaultChatTheme(
+              inputBackgroundColor: Colors.black,
+              primaryColor: Colors.lightBlueAccent,
+              secondaryColor: Colors.pinkAccent,),
+            messages: _messages,
+            onSendPressed: _handleSendPressed,
+            user: _user,
           ),
         ),
       ),
