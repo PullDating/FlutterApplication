@@ -71,9 +71,7 @@ class _ChatPageState extends State<ChatPage> {
     //print(request.toString());
     channel.sink.add(jsonEncode(request));
 
-    channel.stream.listen((data) {
-      print("!!!new message: ${data}");
-    });
+
 
     //TODO get the uuid of the logged in user and replace the id here.
     _user = types.User(id: "-1"); //the use of the application
@@ -93,6 +91,28 @@ class _ChatPageState extends State<ChatPage> {
     _addMessages(textMessage);
 
      */
+
+    channel.stream.listen((data) {
+      print("!!!new message: ${data}");
+      var response = jsonDecode(data);
+      if(response['status'] == 1){
+        //TODO add this as a message from the other person in the ui.
+        setState(() {
+          final _message = types.PartialText(
+            text: response['message'],
+          );
+          final textMessage = types.TextMessage(
+            author: _otheruser,
+            createdAt: DateTime.now().millisecondsSinceEpoch,
+            id: randomString(),
+            text: _message.text,
+          );
+          _addMessages(textMessage);
+        });
+      } else {
+        print("there was an error with a message received: ${response['message']}");
+      }
+    });
   }
 
   void _handleSendPressed(types.PartialText message) {
