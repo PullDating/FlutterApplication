@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pull_common/pull_common.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -103,6 +104,18 @@ class _ChatPageState extends State<ChatPage> {
     return Material(
       child: SafeArea(
         child: Scaffold(
+          appBar: AppBar(
+            title: Text("Some chat"),
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.grey,
+              ),
+              onPressed: () {
+                context.go('/home/chats');
+              },
+            ),
+          ),
           body: StreamBuilder(
             stream: channel.stream,
             builder: (context, snapshot) {
