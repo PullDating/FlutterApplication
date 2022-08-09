@@ -1,9 +1,10 @@
 
 //AVD uses 10.0.2.2 as an alias for localhost.
-const _baseUrl = 'http://10.0.2.2:3000'; // TODO put the actual URL here
+const baseAddress = '10.0.2.2:3000'; // TODO put the actual URL here
+const baseUrl = 'http://$baseAddress';
 
-final authUri = Uri.parse('$_baseUrl/auth');
-final nextMatchesUri = Uri.parse('$_baseUrl/nextMatches');
-final profileUri = Uri.parse('$_baseUrl/profile');
-final profilePhotoLimitsUri = Uri.parse('$_baseUrl/profile/photoLimits');
-final concurrentMatchLimitUri = Uri.parse('$_baseUrl/global/concurrent-match-limit');
+final authUri = Uri.parse('$baseUrl/auth');
+final nextMatchesUri = Uri.parse('$baseUrl/nextMatches');
+final profileUri = Uri.parse('$baseUrl/profile');
+final profilePhotoLimitsUri = Uri.parse('$baseUrl/profile/photoLimits');
+final concurrentMatchLimitUri = Uri.parse('$baseUrl/global/concurrent-match-limit');

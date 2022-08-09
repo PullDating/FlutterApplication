@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:pull_common/pull_common.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
 String randomString() {
   final random = Random.secure();
@@ -24,16 +26,44 @@ class _ChatPageState extends State<ChatPage> {
   final List<types.Message> _messages = []; //list of messages
   var _user;
   var _otheruser;
+  late var channel;
+
+  Object _formMessage(String meta, String? message, String roomID, String clientID, String token){
+    var obj = {
+      "meta" : meta,
+      "roomID" : roomID,
+      "clientID" : clientID,
+      "token" : token,
+    };
+    if(message != null){
+      obj['message'] = message!;
+    }
+    return obj;
+  }
 
   void _addMessages(types.Message message) {
     setState(() {
       _messages.insert(0, message);
     });
+    //TODO send the data to the server
+    //channel.sink.add();
   }
 
   @override
   void initState() {
     super.initState();
+
+    //create a web_socket_channel
+    channel = WebSocketChannel.connect(
+      Uri.parse('ws://${baseAddress}'),
+    );
+
+    //Send the request to join the room.
+    //TODO replace this with the proper uuid and token.
+    Object request = _formMessage("join_or_create_room", null, "testroom", "311b8f93-a76e-48ba-97cb-c995d0dc918c", 'f46aa34a-76ff-4ae6-b8dd-2e72ff67e86e');
+    //print(request.toString());
+    channel.sink.add(jsonEncode(request));
+
     //TODO get the uuid of the logged in user and replace the id here.
     _user = types.User(id: "-1"); //the use of the application
     _otheruser = types.User(id: widget.uuid); //their match.
@@ -66,15 +96,20 @@ class _ChatPageState extends State<ChatPage> {
     return Material(
       child: SafeArea(
         child: Scaffold(
-          body: Chat(
-            theme: const DefaultChatTheme(
-              inputBackgroundColor: Colors.black,
-              primaryColor: Colors.lightBlueAccent,
-              secondaryColor: Colors.pinkAccent,
-            ),
-            messages: _messages,
-            onSendPressed: _handleSendPressed,
-            user: _user,
+          body: StreamBuilder(
+            stream: channel.stream,
+            builder: (context, snapshot) {
+              return Chat(
+                theme: const DefaultChatTheme(
+                  inputBackgroundColor: Colors.black,
+                  primaryColor: Colors.lightBlueAccent,
+                  secondaryColor: Colors.pinkAccent,
+                ),
+                messages: _messages,
+                onSendPressed: _handleSendPressed,
+                user: _user,
+              );
+            }
           ),
         ),
       ),

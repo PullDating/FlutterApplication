@@ -23,7 +23,6 @@ class ChatsTab extends ConsumerWidget {
           return ListView(
 
             children: [
-              //TODO modify this so that it gets the number of chats from the server. (or for testing a preset list)
               for (var i = 0; i < ((limit.hasData)? limit.data! : 0); i++)
                 InkWell(
                   onTap: () {
