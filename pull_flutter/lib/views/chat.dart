@@ -45,8 +45,11 @@ class _ChatPageState extends State<ChatPage> {
     setState(() {
       _messages.insert(0, message);
     });
-    //TODO send the data to the server
-    //channel.sink.add();
+    //print("about to print message");
+    String text = message.toJson()['text'];
+    //print(text);
+    Object request = _formMessage("send_message", text, "testroom", "311b8f93-a76e-48ba-97cb-c995d0dc918c", 'f46aa34a-76ff-4ae6-b8dd-2e72ff67e86e');
+    channel.sink.add(jsonEncode(request));
   }
 
   @override
@@ -68,6 +71,8 @@ class _ChatPageState extends State<ChatPage> {
     _user = types.User(id: "-1"); //the use of the application
     _otheruser = types.User(id: widget.uuid); //their match.
     //some debug / test print stuff.
+
+    /*
     final _message = types.PartialText(
       text: "hello there, general kenobi",
     );
@@ -78,6 +83,8 @@ class _ChatPageState extends State<ChatPage> {
       text: _message.text,
     );
     _addMessages(textMessage);
+
+     */
   }
 
   void _handleSendPressed(types.PartialText message) {
