@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +19,7 @@ class MatchDisplayInformation{
   final String name;
   final String mostRecentTextString;
   final String mostRecentTextTime;
-  final Image profileImage;
+  final String profileImage;
 }
 
 /// Tab displaying a list of all of your matches/conversations
@@ -41,7 +43,13 @@ class ChatsTab extends ConsumerWidget {
       // String formattedDate = formatter.format(now);
       for(String match in matches){
         //TODO get the relevant information
-        l.add(new MatchDisplayInformation(name: "placeholder name", mostRecentTextString: "This is a placeholder", mostRecentTextTime: DateFormat('yyyy-MM-dd kk:mm a').format(DateTime.now()), profileImage: Image.asset('assets/images/profile_1.webp')));
+        //TODO poll the profile for the name and image
+        Map<String,dynamic> profile = await repo.getProfile();
+        print(profile);
+        //TODO poll the chats for the most recent chat text and time
+
+        l.add(new MatchDisplayInformation(name: "placeholder name", mostRecentTextString: "This is a placeholder", mostRecentTextTime: DateFormat('yyyy-MM-dd kk:mm a').format(DateTime.now()), profileImage: profile['imagePath']['0'] ));
+        //l.add(new MatchDisplayInformation(name: "placeholder name", mostRecentTextString: "This is a placeholder", mostRecentTextTime: DateFormat('yyyy-MM-dd kk:mm a').format(DateTime.now()), profileImage: Image.asset('assets/images/profile_1.webp') ));
       }
       return l;
     }catch (e){
@@ -73,7 +81,7 @@ class ChatsTab extends ConsumerWidget {
                     subtitle: Text(matches.data![i].mostRecentTextString),
                     trailing: Text(matches.data![i].mostRecentTextTime.toString()),
                     leading: CircleAvatar(
-                      child: matches.data![i].profileImage
+                      backgroundImage: NetworkImage(matches.data![i].profileImage),
                     ),
                   ),
                 )

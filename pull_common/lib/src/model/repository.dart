@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:isar/isar.dart';
 import 'package:pull_common/src/model/api_uris.dart';
@@ -97,6 +98,40 @@ class PullRepository {
     _read(activeRefreshProvider.notifier).state = false;
     _read(matchStreamControllerProvider).add(matchList);
   }
+
+  Future<Map<String, dynamic>> getProfile() async {
+    var headers = {
+      'Authorization': 'Bearer 6b7d6e66-734b-495b-b76e-b0dfea8e81ef',
+      'Content-Type': 'application/json'
+    };
+    var request = http.Request('GET', profileUri);
+    request.body = json.encode({
+      "uuid": "b6a9f755-7668-483d-adc8-16b3127b81b8",
+      "target": "b6a9f755-7668-483d-adc8-16b3127b81b8"
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+
+      var responsevalue = await http.Response.fromStream(response);
+      final result = jsonDecode(responsevalue.body) as Map<String, dynamic>;
+      print(responsevalue.toString());
+      return result['profile'];
+    }
+    else {
+      print(response.reasonPhrase);
+      throw Exception(response.reasonPhrase);
+    }
+  }
+
+  Future<Image> getFirstProfileImage() async {
+    Map<String,dynamic> profile = await getProfile();
+    //TODO extract the link to the first minio object and return that.
+    return Image.network(profile['imagePath']['0']);
+  }
+
 
   Future<List<String>> getMatches() async {
 
