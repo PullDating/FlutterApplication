@@ -42,13 +42,10 @@ class ChatsTab extends ConsumerWidget {
       // var now = new DateTime.now();
       // String formattedDate = formatter.format(now);
       for(String match in matches){
-        //TODO get the relevant information
-        //TODO poll the profile for the name and image
         Map<String,dynamic> profile = await repo.getProfile();
         print(profile);
-        //TODO poll the chats for the most recent chat text and time
-
-        l.add(new MatchDisplayInformation(name: "placeholder name", mostRecentTextString: "This is a placeholder", mostRecentTextTime: DateFormat('yyyy-MM-dd kk:mm a').format(DateTime.now()), profileImage: profile['imagePath']['0'] ));
+        //TODO poll the chats for the most recent chat text and time and display them here
+        l.add(new MatchDisplayInformation(name: profile['name'], mostRecentTextString: "This is a placeholder", mostRecentTextTime: DateFormat('yyyy-MM-dd kk:mm a').format(DateTime.now()), profileImage: profile['imagePath']['0'] ));
         //l.add(new MatchDisplayInformation(name: "placeholder name", mostRecentTextString: "This is a placeholder", mostRecentTextTime: DateFormat('yyyy-MM-dd kk:mm a').format(DateTime.now()), profileImage: Image.asset('assets/images/profile_1.webp') ));
       }
       return l;
