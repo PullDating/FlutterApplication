@@ -8,3 +8,4 @@ final nextMatchesUri = Uri.parse('$baseUrl/nextMatches');
 final profileUri = Uri.parse('$baseUrl/profile');
 final profilePhotoLimitsUri = Uri.parse('$baseUrl/profile/photoLimits');
 final concurrentMatchLimitUri = Uri.parse('$baseUrl/global/concurrent-match-limit');
+final getMatchUri = Uri.parse('$baseUrl/matches');

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pull_common/pull_common.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -30,10 +31,11 @@ class _ChatPageState extends State<ChatPage> {
   late var channel;
 
 
-  Object _formMessage(String meta, String? message, String roomID, String clientID, String token){
+  Object _formMessage(String meta, String? message, String targetID, String clientID, String token){
+
     var obj = {
       "meta" : meta,
-      "roomID" : roomID,
+      "targetID" : targetID,
       "clientID" : clientID,
       "token" : token,
     };
@@ -52,7 +54,7 @@ class _ChatPageState extends State<ChatPage> {
     //print("about to print message");
     String text = message.toJson()['text'];
     //print(text);
-    Object request = _formMessage("send_message", text, "testroom", "311b8f93-a76e-48ba-97cb-c995d0dc918c", 'f46aa34a-76ff-4ae6-b8dd-2e72ff67e86e');
+    Object request = _formMessage("send_message", text, "22222222-2222-2222-2222-222222222222", "b6a9f755-7668-483d-adc8-16b3127b81b8", '6b7d6e66-734b-495b-b76e-b0dfea8e81ef');
     channel.sink.add(jsonEncode(request));
   }
 
@@ -67,7 +69,7 @@ class _ChatPageState extends State<ChatPage> {
 
     //Send the request to join the room.
     //TODO replace this with the proper uuid and token.
-    Object request = _formMessage("join_or_create_room", null, "testroom", "311b8f93-a76e-48ba-97cb-c995d0dc918c", 'f46aa34a-76ff-4ae6-b8dd-2e72ff67e86e');
+    Object request = _formMessage("join_or_create_room", null, "22222222-2222-2222-2222-222222222222", "b6a9f755-7668-483d-adc8-16b3127b81b8", '6b7d6e66-734b-495b-b76e-b0dfea8e81ef');
     //print(request.toString());
     channel.sink.add(jsonEncode(request));
 
@@ -111,6 +113,19 @@ class _ChatPageState extends State<ChatPage> {
         });
       } else {
         print("there was an error with a message received: ${response['message']}");
+        //return to the match screen
+        Fluttertoast.showToast(
+            msg: "No match exists between you and this person, please report this error to the dev team.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+        context.go('/home/chats');
+        //display flutter toast.
+        channel.sink.close();
       }
     });
   }

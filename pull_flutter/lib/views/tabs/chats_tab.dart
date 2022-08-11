@@ -4,6 +4,21 @@ import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:pull_common/pull_common.dart';
 
+class MatchDisplayInformation{
+  const MatchDisplayInformation({
+    required this.name,
+    required this.mostRecentTextString,
+    required this.mostRecentTextTime,
+    required this.profileImage,
+
+  });
+
+  final String name;
+  final String mostRecentTextString;
+  final DateTime mostRecentTextTime;
+  final Image profileImage;
+}
+
 /// Tab displaying a list of all of your matches/conversations
 class ChatsTab extends ConsumerWidget {
   const ChatsTab({super.key});
@@ -13,28 +28,48 @@ class ChatsTab extends ConsumerWidget {
     return box.get('concurrentMatchLimit');
   }
 
+  Future<List<MatchDisplayInformation>> _getMatchInformation(WidgetRef ref) async {
+    //call the get/matches endpoint to return the uuids of the matches.
+    try{
+      PullRepository repo = PullRepository(ref.read);
+
+      List<String> matches = await repo.getMatches();
+      List<MatchDisplayInformation> l = [];
+      for(String match in matches){
+        //TODO get the relevant information
+        l.add(new MatchDisplayInformation(name: "placeholder name", mostRecentTextString: "This is a placeholder", mostRecentTextTime: DateTime.now(), profileImage: Image.asset('assets/images/profile_1.webp')));
+      }
+      return l;
+    }catch (e){
+      print("There was an error getting the match information.");
+      print(e);
+      throw Exception("There was an error getting the match information");
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
     return Material(
-      child: FutureBuilder<int>(
-        future: _getLimit(),
-        builder: (BuildContext context, AsyncSnapshot<int> limit) {
+      child: FutureBuilder<List<MatchDisplayInformation>>(
+        future: _getMatchInformation(ref),
+        //future: _getLimit(),
+        builder: (BuildContext context, AsyncSnapshot<List<MatchDisplayInformation>> matches) {
           return ListView(
 
             children: [
-              for (var i = 0; i < ((limit.hasData)? limit.data! : 0); i++)
+              for (var i = 0; i < ((matches.hasData)? matches.data!.length : 0); i++)
                 InkWell(
                   onTap: () {
                     ///TODO go to the corresponding chat.
                     context.go('/chat/$i');
                   },
                   child: ListTile(
-                    title: Text("Person $i"),
-                    subtitle: const Text("You: Most recent text"),
-                    trailing: const Text("Time"),
+                    title: Text(matches.data![i].name),
+                    subtitle: Text(matches.data![i].mostRecentTextString),
+                    trailing: Text(matches.data![i].mostRecentTextTime.toString()),
                     leading: CircleAvatar(
-                      child: Text(i.toString()),
+                      child: matches.data![i].profileImage
                     ),
                   ),
                 )

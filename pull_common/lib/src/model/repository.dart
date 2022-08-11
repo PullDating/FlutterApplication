@@ -98,6 +98,25 @@ class PullRepository {
     _read(matchStreamControllerProvider).add(matchList);
   }
 
+  Future<List<String>> getMatches() async {
+
+    var response = await http.get(getMatchUri, headers: {"Authorization": "Bearer 6b7d6e66-734b-495b-b76e-b0dfea8e81ef", "uuid" : "b6a9f755-7668-483d-adc8-16b3127b81b8"});
+
+    //var response = await http.get(getMatchUri).timeout(const Duration(seconds: 3));
+    if(response.statusCode == 200) {
+      List<String> l = [];
+      print("Success");
+      var decoded = json.decode(response.body);
+      for(String match in decoded){
+        //TODO get the relevant information
+        l.add(match);
+      }
+      return l;
+
+    } else {
+      throw Exception("Non 200 code returned from getMatches");
+    }
+  }
 
   Future<void> createProfile() async {
     //create a multipart form request (needed because we are using files)
