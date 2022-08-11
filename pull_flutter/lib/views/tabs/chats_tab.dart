@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:pull_common/pull_common.dart';
 
 class MatchDisplayInformation{
@@ -15,7 +16,7 @@ class MatchDisplayInformation{
 
   final String name;
   final String mostRecentTextString;
-  final DateTime mostRecentTextTime;
+  final String mostRecentTextTime;
   final Image profileImage;
 }
 
@@ -35,9 +36,12 @@ class ChatsTab extends ConsumerWidget {
 
       List<String> matches = await repo.getMatches();
       List<MatchDisplayInformation> l = [];
+      // var formatter = new DateFormat('yy-MM-dd hh:mm:ss');
+      // var now = new DateTime.now();
+      // String formattedDate = formatter.format(now);
       for(String match in matches){
         //TODO get the relevant information
-        l.add(new MatchDisplayInformation(name: "placeholder name", mostRecentTextString: "This is a placeholder", mostRecentTextTime: DateTime.now(), profileImage: Image.asset('assets/images/profile_1.webp')));
+        l.add(new MatchDisplayInformation(name: "placeholder name", mostRecentTextString: "This is a placeholder", mostRecentTextTime: DateFormat('yyyy-MM-dd kk:mm a').format(DateTime.now()), profileImage: Image.asset('assets/images/profile_1.webp')));
       }
       return l;
     }catch (e){
