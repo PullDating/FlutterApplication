@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,10 +10,13 @@ import 'package:pull_flutter/model/routes.dart';
 import 'package:pull_flutter/model/settings.dart';
 
 void main() {
-  runApp(ProviderScope(
-    overrides: [matchStreamRefreshOverride],
-    child: PullApp(),
-  ));
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp().then((value) {
+    runApp(ProviderScope(
+      overrides: [matchStreamRefreshOverride],
+      child: PullApp(),
+    ));
+  });
 }
 
 class PullApp extends ConsumerWidget {
@@ -31,49 +35,52 @@ class PullApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Pull',
       theme: ThemeData(
-        colorScheme: const ColorScheme(
-          background: Colors.white,
-          brightness: Brightness.light,
-          error: Colors.red,
-          onBackground: Colors.black,
-          onError: Colors.white,
-          onPrimary: Colors.white,
-          onSecondary: Colors.white,
-          onSurface: Colors.black,
-          primary: Colors.lightBlueAccent,
-          secondary: Colors.pinkAccent,
-          surface: Colors.grey,
-        ),
-        brightness: useDarkTheme ? Brightness.dark : Brightness.light,
-        primarySwatch: Colors.deepPurple,
-        textTheme: GoogleFonts.nunitoTextTheme(),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
+          colorScheme: const ColorScheme(
+            background: Colors.white,
+            brightness: Brightness.light,
+            error: Colors.red,
+            onBackground: Colors.black,
+            onError: Colors.white,
+            onPrimary: Colors.white,
+            onSecondary: Colors.white,
+            onSurface: Colors.black,
             primary: Colors.lightBlueAccent,
-            shape: const StadiumBorder(),
+            secondary: Colors.pinkAccent,
+            surface: Colors.grey,
           ),
-        ),
-        appBarTheme: AppBarTheme(
-            backgroundColor: Colors.white,
-            titleTextStyle: GoogleFonts.nunito(
-                fontWeight: FontWeight.bold,
-                color: Colors.pinkAccent,
-                fontSize: 24),
-            centerTitle: true),
-        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-          selectedItemColor: Colors.lightBlueAccent,
-          unselectedItemColor: Color(0xff383838),
-        ),
-        radioTheme: RadioThemeData(
-            fillColor: MaterialStateColor.resolveWith(
-                    (states) => Colors.lightBlueAccent)
-        ),
-        extensions: [
-          MatchCardsTheme(
-              swipeRightColor: Colors.deepPurple,
-              swipeLeftColor: Colors.pinkAccent.shade200,
-              rewindColor: Colors.blueGrey.shade700)
-        ]),
+          brightness: useDarkTheme ? Brightness.dark : Brightness.light,
+          primarySwatch: Colors.deepPurple,
+          textTheme: GoogleFonts.nunitoTextTheme(),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.lightBlueAccent,
+              shape: const StadiumBorder(),
+            ),
+          ),
+          appBarTheme: AppBarTheme(
+              backgroundColor: Colors.white,
+              titleTextStyle: GoogleFonts.nunito(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.pinkAccent,
+                  fontSize: 24),
+              iconTheme: const IconThemeData(
+                  color: Colors.pinkAccent
+              ),
+              centerTitle: true),
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+            selectedItemColor: Colors.lightBlueAccent,
+            unselectedItemColor: Color(0xff383838),
+          ),
+          radioTheme: RadioThemeData(
+              fillColor: MaterialStateColor.resolveWith(
+                      (states) => Colors.lightBlueAccent)
+          ),
+          extensions: [
+            MatchCardsTheme(
+                swipeRightColor: Colors.deepPurple,
+                swipeLeftColor: Colors.pinkAccent.shade200,
+                rewindColor: Colors.blueGrey.shade700)
+          ]),
       routeInformationParser: _router.routeInformationParser,
       routerDelegate: _router.routerDelegate,
     );

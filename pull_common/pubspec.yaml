@@ -19,6 +19,8 @@ dependencies:
   location: ^4.4.0
   flutter_image_compress: ^1.1.0
   flutter_cache_manager: ^3.3.0
+  firebase_auth: ^3.4.0
+  pinput: ^2.2.12
 
 dev_dependencies:
   isar_generator: 2.5.0

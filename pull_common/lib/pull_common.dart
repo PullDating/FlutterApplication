@@ -12,3 +12,4 @@ export 'src/util/auth_redirector.dart';
 export 'src/model/provider/create_account.dart';
 export 'src/model/api_uris.dart';
 export 'src/util/image_compression.dart';
+export 'src/ui/otp.dart';

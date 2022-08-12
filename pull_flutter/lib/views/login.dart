@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:pull_common/pull_common.dart';
 
@@ -10,11 +8,7 @@ class LoginPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final repository = ref.watch(repositoryProvider);
     final phoneFieldController = useTextEditingController();
-
-    final natState = ref.watch(networkAuthTokenProvider.state);
-    final settings = ref.watch(settingsProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -39,25 +33,21 @@ class LoginPage extends HookConsumerWidget {
                     width: 250,
                     child: TextField(
                         controller: phoneFieldController,
+                        keyboardType: TextInputType.number,
                         decoration: const InputDecoration(
                           label: Text("Phone"),
+                          prefix: Padding(
+                            padding: EdgeInsets.all(4),
+                            child: Text('+'),
+                          ),
                         )),
                   ),
                   const Padding(padding: EdgeInsets.only(bottom: 25)),
                   ElevatedButton(
                       onPressed: () async {
-                        //final authResult = await repository.authenticate(AuthRequest.phone(phoneFieldController.text));
-
-                        settings!.put(kSettingsApiToken, natState.state = 'demo token');
-                        context.go('/home/cards');
-                        //context.go('/createProfile/name');
-
-                        /* if (!authResult.userExists) {
-                          router.go('/createAccount/add_photos');
-                          return;
-                        }*/
-
-                        //router.go('/home/cards');
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => OTPScreen(phoneFieldController.text, '/home/cards'))
+                          );
                       },
                       child: const Text("Login"))
                 ],
