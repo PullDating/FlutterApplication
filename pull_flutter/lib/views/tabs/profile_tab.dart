@@ -8,6 +8,7 @@ class ProfileTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print("loading profile tab");
     return Material(
       child: Center(
         child: Column(

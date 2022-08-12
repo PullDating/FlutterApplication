@@ -126,11 +126,11 @@ class PullRepository {
     }
   }
 
-  Future<Image> getFirstProfileImage() async {
-    Map<String,dynamic> profile = await getProfile();
-    //TODO extract the link to the first minio object and return that.
-    return Image.network(profile['imagePath']['0']);
-  }
+  // Future<Image> getFirstProfileImage() async {
+  //   Map<String,dynamic> profile = await getProfile();
+  //   //TODO extract the link to the first minio object and return that.
+  //   return Image.network(profile['imagePath']['0']);
+  // }
 
 
   Future<List<String>> getMatches() async {
