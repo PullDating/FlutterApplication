@@ -20,7 +20,15 @@ final appRoutes = <GoRoute>[
   ),
   GoRoute(
     path: '/login',
-    builder: (BuildContext context, GoRouterState state) => const LoginPage(),
+    builder: (BuildContext context, GoRouterState state) => LoginPage(),
+  ),
+
+  GoRoute(
+    path: '/login/sms/:verificationId',
+    builder: (BuildContext context, GoRouterState state) {
+      final verificationId = state.params['verificationId']!;
+      return OTPScreen(verificationId: verificationId);
+    },
   ),
 
   /// The homepage route has its own sub-routes for different pages accessed via bottom nav bar

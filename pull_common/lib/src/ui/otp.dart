@@ -1,21 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
+import 'package:pull_common/pull_common.dart';
+import 'package:pull_common/src/model/provider/repository.dart';
 
-class OTPScreen extends StatefulWidget {
-  final String phone;
-  final String homeUrl;
+class OTPScreen extends ConsumerStatefulWidget {
 
-  const OTPScreen(this.phone, this.homeUrl);
+  const OTPScreen({Key? key, required this.verificationId}) : super(key: key);
+  final String verificationId;
 
   @override
-  OTPScreenState createState() => OTPScreenState();
+  ConsumerState<OTPScreen> createState() => OTPScreenState();
 }
 
-class OTPScreenState extends State<OTPScreen> {
+class OTPScreenState extends ConsumerState<OTPScreen> {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
-  String? _verificationCode;
   final TextEditingController _pinPutController = TextEditingController();
 
   final defaultPinTheme = PinTheme(
@@ -44,7 +45,7 @@ class OTPScreenState extends State<OTPScreen> {
             margin: const EdgeInsets.only(top: 40),
             child: Center(
               child: Text(
-                'Verify +${widget.phone}',
+                'Verify Phone number',
                 style:
                 const TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
               ),
@@ -59,13 +60,34 @@ class OTPScreenState extends State<OTPScreen> {
               pinAnimationType: PinAnimationType.fade,
               androidSmsAutofillMethod:  AndroidSmsAutofillMethod.smsRetrieverApi,
               onSubmitted: (pin) async {
+
                 try {
                   await FirebaseAuth.instance
                       .signInWithCredential(PhoneAuthProvider.credential(
-                      verificationId: _verificationCode!, smsCode: pin))
-                      .then((value) async {
+                      verificationId: widget.verificationId, smsCode: pin))
+                      .then((value) async
+                  {
+                    print(value);
                     if (value.user != null) {
-                      context.go(widget.homeUrl);
+                      //TODO probably some sort of database access here to connect auth.
+                      //send the ID token to the backend, which verifies using the amin API
+                      //TODO make a request with the ID token.
+                      try{
+                        PullRepository repo = PullRepository(ref.read);
+                        await repo.loginRequest(await value.user!.getIdToken()).then((value) => {
+                          if(value == true){
+                            context.go('/home/cards')
+                          } else {
+                            print("There was an error, so no navigation occured")
+                          }
+
+                        });
+                      }catch (e){
+                        print("There was an error somewhere in the profile creation.");
+                        print(e);
+                        return;
+                      }
+
                     }
                   });
                 } catch (e) {
@@ -84,36 +106,37 @@ class OTPScreenState extends State<OTPScreen> {
   @override
   void initState() {
     super.initState();
-    _verifyPhone();
+    //_verifyPhone();
   }
 
-  _verifyPhone() async {
-    await FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: '+${widget.phone}',
-
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          await FirebaseAuth.instance
-              .signInWithCredential(credential)
-              .then((value) async {
-            _verifyUser(value);
-          });
-        },
-        verificationFailed: (FirebaseAuthException e) {
-           ScaffoldMessenger.of(context)
-             .showSnackBar(const SnackBar(content: Text('Verification Failed')));
-        },
-        codeSent: (String? verificationID, int? resendToken) {
-          setState(() {
-            _verificationCode = verificationID;
-          });
-        },
-        codeAutoRetrievalTimeout: (String verificationID) {
-          setState(() {
-            _verificationCode = verificationID;
-          });
-        },
-        timeout: const Duration(seconds: 120));
-  }
+  //i moved this stuff to login because it needs to happen when they enter their phone number.
+  // _verifyPhone() async {
+  //   await FirebaseAuth.instance.verifyPhoneNumber(
+  //       //phoneNumber: '+${widget.phone}',
+  //
+  //       verificationCompleted: (PhoneAuthCredential credential) async {
+  //         await FirebaseAuth.instance
+  //             .signInWithCredential(credential)
+  //             .then((value) async {
+  //           _verifyUser(value);
+  //         });
+  //       },
+  //       verificationFailed: (FirebaseAuthException e) {
+  //          ScaffoldMessenger.of(context)
+  //            .showSnackBar(const SnackBar(content: Text('Verification Failed')));
+  //       },
+  //       codeSent: (String? verificationID, int? resendToken) {
+  //         setState(() {
+  //           _verificationCode = verificationID;
+  //         });
+  //       },
+  //       codeAutoRetrievalTimeout: (String verificationID) {
+  //         setState(() {
+  //           _verificationCode = verificationID;
+  //         });
+  //       },
+  //       timeout: const Duration(seconds: 120));
+  // }
 
   void _verifyUser(userObject) {
     if (userObject.user != null) {

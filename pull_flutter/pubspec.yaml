@@ -35,6 +35,7 @@ dependencies:
   flutter_cache_manager: ^3.3.0
   firebase_auth: ^3.6.1
   firebase_core: ^1.20.0
+  intl_phone_field: ^3.1.0
 
 dev_dependencies:
   flutter_test:
@@ -48,3 +49,4 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/images/decorations/
+    - assets/intl_phone_field/

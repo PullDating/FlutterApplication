@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:isar/isar.dart';
 import 'package:pull_common/src/model/api_uris.dart';
 import 'package:pull_common/src/model/entity/auth_request.dart';
@@ -98,6 +99,31 @@ class PullRepository {
     _read(matchStreamControllerProvider).add(matchList);
   }
 
+  //the return string will be the auth token
+  Future<bool> loginRequest(String idToken) async {
+    var request = http.Request('GET', loginUri);
+    request.headers.addAll({"id" : idToken});
+
+    try {
+      var response = await request.send().timeout(const Duration(seconds: 5));
+      var object = response.toString();
+      print(object);
+      if(response.statusCode == 200){
+        print("Success");
+        return true;
+      }else{
+        print("Something wrong");
+        return false;
+      }
+    } on TimeoutException catch (e) {
+      print('Timeout');
+      return false;
+    } on Error catch (e) {
+      print('Error: $e');
+      return false;
+    }
+
+  }
 
   Future<void> createProfile() async {
     //create a multipart form request (needed because we are using files)

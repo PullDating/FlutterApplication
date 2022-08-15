@@ -21,7 +21,9 @@ class AuthRedirector extends ConsumerWidget {
     ref.listen<AsyncValue<Box>>(settingsFutureProvider, (previous, next) {
       // Navigate based on the presence of the stored auth token
       next.whenData((value) =>
-          context.go(FirebaseAuth.instance.currentUser != null ? homeUrl : authUrl));
+          context.go(authUrl));
+          //todo switch this back to depend on if there is a user already.
+          //context.go(FirebaseAuth.instance.currentUser != null ? homeUrl : authUrl));
     });
     return Material(child: Center(child: child ?? CircularProgressIndicator()));
   }
