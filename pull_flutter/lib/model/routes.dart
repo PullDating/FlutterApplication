@@ -8,6 +8,7 @@ import 'package:pull_flutter/views/home.dart';
 import 'package:pull_flutter/views/login.dart';
 import 'package:pull_flutter/views/settings.dart';
 
+import '../development_utils/devLogin.dart';
 import '../views/profile_creation/profile_creation_parent.dart';
 
 final appRoutes = <GoRoute>[
@@ -17,8 +18,18 @@ final appRoutes = <GoRoute>[
         const AuthRedirector(
       authUrl: '/login',
       homeUrl: '/home/cards',
+      devUrl: '/devlogin', //comment out for production
+      dev: true, //comment out for production.
     ),
   ),
+
+  //this route is just for developers to be able to get around the login mechanics if they aren't working on that part.
+  //comment out before production.
+  GoRoute(
+    path: '/devlogin',
+    builder: (BuildContext context, GoRouterState state) => const DevLogin(),
+  ),
+
   GoRoute(
     path: '/login',
     builder: (BuildContext context, GoRouterState state) => LoginPage(),
