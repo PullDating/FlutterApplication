@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
@@ -20,7 +21,9 @@ class AuthRedirector extends ConsumerWidget {
     ref.listen<AsyncValue<Box>>(settingsFutureProvider, (previous, next) {
       // Navigate based on the presence of the stored auth token
       next.whenData((value) =>
-          context.go(value.get(kSettingsApiToken) == null ? authUrl : homeUrl));
+          context.go(authUrl));
+          //todo switch this back to depend on if there is a user already.
+          //context.go(FirebaseAuth.instance.currentUser != null ? homeUrl : authUrl));
     });
     return Material(child: Center(child: child ?? CircularProgressIndicator()));
   }

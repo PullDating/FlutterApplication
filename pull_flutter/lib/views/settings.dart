@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Setting page of this app, containing a link for our github and website
@@ -60,6 +62,17 @@ class _PullSettingsPageState extends ConsumerState<SettingsPage> {
               onTap: () {
                 launchUrl(Uri.parse(
                     'https://github.com/PullDating/FlutterApplication'));
+              },
+            ),
+            ListTile(
+              title: Text(
+                'Sign Out',
+                style: Theme.of(context).textTheme.headline5,
+              ),
+              onTap: () async {
+                final router = GoRouter.of(context);
+                  await FirebaseAuth.instance.signOut();
+                  router.go('/login');
               },
             )
           ]),

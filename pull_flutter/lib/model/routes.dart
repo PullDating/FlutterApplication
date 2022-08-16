@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl_phone_field/phone_number.dart';
 import 'package:pull_common/pull_common.dart';
 import 'package:pull_flutter/views/chat.dart';
 import 'package:pull_flutter/views/filters.dart';
@@ -14,13 +15,21 @@ final appRoutes = <GoRoute>[
     path: '/',
     builder: (BuildContext context, GoRouterState state) =>
         const AuthRedirector(
+      authUrl: '/login',
       homeUrl: '/home/cards',
-      //homeUrl: '/login',
     ),
   ),
   GoRoute(
     path: '/login',
-    builder: (BuildContext context, GoRouterState state) => const LoginPage(),
+    builder: (BuildContext context, GoRouterState state) => LoginPage(),
+  ),
+
+  GoRoute(
+    path: '/login/sms/:verificationId',
+    builder: (BuildContext context, GoRouterState state) {
+      final verificationId = state.params['verificationId']!;
+      return OTPScreen(verificationId: verificationId, phone: state.extra! as PhoneNumber);
+    },
   ),
 
   /// The homepage route has its own sub-routes for different pages accessed via bottom nav bar
