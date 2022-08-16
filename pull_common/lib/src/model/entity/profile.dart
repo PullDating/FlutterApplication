@@ -1,7 +1,6 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 //import 'package:isar/isar.dart';
-import 'package:location/location.dart';
 
 part 'profile.freezed.dart';
 part 'profile.g.dart';

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
 import 'package:pull_common/pull_common.dart';
-import 'package:pull_common/src/model/provider/repository.dart';
 import 'package:intl_phone_field/phone_number.dart';
 
 class OTPScreen extends ConsumerStatefulWidget {

@@ -5,19 +5,12 @@ import 'dart:io';
 
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:isar/isar.dart';
 import 'package:pull_common/pull_common.dart';
-import 'package:pull_common/src/model/api_uris.dart';
-import 'package:pull_common/src/model/entity/auth_request.dart';
 import 'package:pull_common/src/model/entity/auth_response.dart';
 import 'package:pull_common/src/model/exception/response_exception.dart';
-import 'package:pull_common/src/model/provider/auth.dart';
 import 'package:pull_common/src/model/provider/config.dart';
-import 'package:pull_common/src/model/provider/create_account.dart';
 import 'package:pull_common/src/model/provider/match_stream.dart';
 import 'package:riverpod/riverpod.dart';
-
-import 'entity/match.dart';
 
 /// Using a [Provider] for access to [http.Client] allows easy overriding during tests, if necessary
 final httpClientProvider = Provider<http.Client>((_) => http.Client());
@@ -37,7 +30,6 @@ class PullRepository {
     }else{
       throw Exception("couldn't retrieve the Authorization Token");
     }
-    return {if (token != null) 'Authorization': 'Bearer $token'};
   }
 
 
@@ -134,6 +126,7 @@ class PullRepository {
       }
     } on TimeoutException catch (e) {
       print('Timeout');
+      print(e);
       return false;
     } on Error catch (e) {
       print('Error: $e');
@@ -243,6 +236,7 @@ class PullRepository {
       }
     } on TimeoutException catch (e) {
       print('Timeout');
+      print(e);
     } on Error catch (e) {
       print('Error: $e');
     }

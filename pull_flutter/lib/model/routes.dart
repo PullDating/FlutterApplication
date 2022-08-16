@@ -66,8 +66,12 @@ final appRoutes = <GoRoute>[
           const SettingsPage()),
   GoRoute(
       path: '/filters',
-      builder: (BuildContext context, GoRouterState state) =>
-          const FilterPage()),
+      builder: (BuildContext context, GoRouterState state) {
+        final FilterPageInput input = state.extra! as FilterPageInput;
+        return FilterPage(onDone: input.onDone, cancelable: input.cancelable,onCancel: input.onCancel);
+      }
+
+  ),
   //TODO add /chat route that goes to the correct chat depending on which user was clicked on on the match list page
   GoRoute(
       path: '/chat/:uuid',
@@ -79,3 +83,10 @@ final appRoutes = <GoRoute>[
         );
       }),
 ];
+
+class FilterPageInput {
+  final Function onDone;
+  final bool cancelable;
+  final Function onCancel;
+  const FilterPageInput(this.onDone, this.cancelable, this.onCancel);
+}

@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 
 class FilterPage extends StatefulWidget {
-  const FilterPage({Key? key}) : super(key: key);
+  const FilterPage({
+    Key? key,
+    required this.onDone,
+    this.cancelable = true,
+    this.onCancel,
+  }) : super(key: key);
+
+  //pass in a callback for what should happen when the done button is pressed.
+  //pass in a boolean of whether they should be able to cancel or not.
+  final Function onDone;
+  final bool cancelable;
+  final Function? onCancel;
 
   @override
   State<FilterPage> createState() => _FilterPageState();
@@ -158,8 +169,8 @@ class _FilterPageState extends State<FilterPage> {
                                 upperHeight = values.end;
                               });
                             },
-                            labels: RangeLabels((metricImperial == false)? "${lowerHeight.round()} cm" : "${(lowerHeight!~/30.48).round().toString()}\'${(((lowerHeight! / 30.48)-(lowerHeight! ~/ 30.48))*12).toInt().toString()}\""
-                                , (metricImperial == false)? "${upperHeight.round()} cm" : "${(upperHeight!~/30.48).round().toString()}\'${(((upperHeight! / 30.48)-(upperHeight! ~/ 30.48))*12).toInt().toString()}\"" ),
+                            labels: RangeLabels((metricImperial == false)? "${lowerHeight.round()} cm" : "${(lowerHeight~/30.48).round().toString()}\'${(((lowerHeight / 30.48)-(lowerHeight ~/ 30.48))*12).toInt().toString()}\""
+                                , (metricImperial == false)? "${upperHeight.round()} cm" : "${(upperHeight~/30.48).round().toString()}\'${(((upperHeight / 30.48)-(upperHeight ~/ 30.48))*12).toInt().toString()}\"" ),
                           ),
                         )
                     ),
@@ -274,10 +285,12 @@ class _FilterPageState extends State<FilterPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(
-                      icon: Icon(Icons.cancel),
-                      onPressed: () {},
-                    ),
+                    if(widget.cancelable && widget.onCancel != null) ...[
+                      IconButton(
+                        icon: const Icon(Icons.cancel),
+                        onPressed: () => widget.onCancel!(context),
+                      ),
+                    ],
                     Row(
                       children: [
                         Text("Metric"),
@@ -296,7 +309,7 @@ class _FilterPageState extends State<FilterPage> {
                     ),
                     IconButton(
                       icon: Icon(Icons.done),
-                      onPressed: () {},
+                      onPressed: () => widget.onDone(context),
                     )
                   ],
                 ),
