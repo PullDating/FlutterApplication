@@ -26,12 +26,11 @@ class _FilterPageState extends State<FilterPage> {
   double upperHeight = 275;
   double maxDistance = 15;
 
-  bool HeavySet = false;
-  bool Stocky = false;
-  bool AFewExtraPounds = false;
-  bool Average = false;
-  bool Athletic = false;
-  bool Slender = false;
+  bool Obese = true;
+  bool Heavy = true;
+  bool Muscular = true;
+  bool Average = true;
+  bool Lean = true;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +49,7 @@ class _FilterPageState extends State<FilterPage> {
                 child: ListView(
                   children: [
                     SizedBox(height: 20,),
-                    FilterListItem(icon: Icon(Icons.transgender),title: "Gender",
+                    FilterListItem(icon: Icon(Icons.transgender),title: "Gender(s)",
                         widget: Row(
                           children: [
                             SizedBox(
@@ -178,11 +177,11 @@ class _FilterPageState extends State<FilterPage> {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       setState(() {
-                                        HeavySet = !HeavySet;
+                                        Obese = !Obese;
                                       });
-                                    }, child: Text('HeavySet'),
+                                    }, child: Text('Obese'),
                                     style: ElevatedButton.styleFrom(
-                                      primary: (HeavySet == false) ? Colors.grey : Colors.lightBlueAccent,
+                                      primary: (Obese == false) ? Colors.grey : Colors.lightBlueAccent,
                                     ),
                                   ),
                                 ),
@@ -193,12 +192,12 @@ class _FilterPageState extends State<FilterPage> {
                                   fit: BoxFit.fitHeight,
                                   child: ElevatedButton(onPressed: () {
                                     setState(() {
-                                      Stocky = !Stocky;
+                                      Heavy = !Heavy;
                                     });
 
-                                  }, child: Text('Stocky'),
+                                  }, child: Text('Heavy'),
                                     style: ElevatedButton.styleFrom(
-                                      primary: (Stocky == false) ? Colors.grey : Colors.lightBlueAccent,
+                                      primary: (Heavy == false) ? Colors.grey : Colors.lightBlueAccent,
                                     ),
                                   ),
                                 ),
@@ -210,12 +209,12 @@ class _FilterPageState extends State<FilterPage> {
                                   child: ElevatedButton(onPressed: () {
                                     setState(() {
                                       setState(() {
-                                        AFewExtraPounds = !AFewExtraPounds;
+                                        Muscular = !Muscular;
                                       });
                                     });
-                                  }, child: Text('AFewExtraPounds'),
+                                  }, child: Text('Muscular'),
                                     style: ElevatedButton.styleFrom(
-                                      primary: (AFewExtraPounds == false) ? Colors.grey : Colors.lightBlueAccent,
+                                      primary: (Muscular == false) ? Colors.grey : Colors.lightBlueAccent,
                                     ),
                                   ),
                                 ),
@@ -244,29 +243,12 @@ class _FilterPageState extends State<FilterPage> {
                                   child: ElevatedButton(onPressed: () {
                                     setState(() {
                                       setState(() {
-                                        Athletic = !Athletic;
+                                        Lean = !Lean;
                                       });
                                     });
-                                  }, child: Text('Athletic'),
+                                  }, child: Text('Lean'),
                                     style: ElevatedButton.styleFrom(
-                                      primary: (Athletic == false) ? Colors.grey : Colors.lightBlueAccent,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 30,
-                                child: FittedBox(
-                                  fit: BoxFit.fitHeight,
-                                  child: ElevatedButton(onPressed: () {
-                                    setState(() {
-                                      setState(() {
-                                        Slender = !Slender;
-                                      });
-                                    });
-                                  }, child: Text('Slender'),
-                                    style: ElevatedButton.styleFrom(
-                                      primary: (Slender == false) ? Colors.grey : Colors.lightBlueAccent,
+                                      primary: (Lean == false) ? Colors.grey : Colors.lightBlueAccent,
                                     ),
                                   ),
                                 ),
