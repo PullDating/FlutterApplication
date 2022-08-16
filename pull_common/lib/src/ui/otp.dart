@@ -5,11 +5,13 @@ import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
 import 'package:pull_common/pull_common.dart';
 import 'package:pull_common/src/model/provider/repository.dart';
+import 'package:intl_phone_field/phone_number.dart';
 
 class OTPScreen extends ConsumerStatefulWidget {
 
-  const OTPScreen({Key? key, required this.verificationId}) : super(key: key);
+  const OTPScreen({Key? key, required this.verificationId, required this.phone}) : super(key: key);
   final String verificationId;
+  final PhoneNumber phone;
 
   @override
   ConsumerState<OTPScreen> createState() => OTPScreenState();
@@ -74,7 +76,7 @@ class OTPScreenState extends ConsumerState<OTPScreen> {
                       //TODO make a request with the ID token.
                       try{
                         PullRepository repo = PullRepository(ref.read);
-                        await repo.loginRequest(await value.user!.getIdToken()).then((value) => {
+                        await repo.loginRequest(await value.user!.getIdToken(),widget.phone.completeNumber).then((value) => {
                           if(value == true){
                             context.go('/home/cards')
                           } else {

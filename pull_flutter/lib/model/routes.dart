@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl_phone_field/phone_number.dart';
 import 'package:pull_common/pull_common.dart';
 import 'package:pull_flutter/views/chat.dart';
 import 'package:pull_flutter/views/filters.dart';
@@ -27,7 +28,7 @@ final appRoutes = <GoRoute>[
     path: '/login/sms/:verificationId',
     builder: (BuildContext context, GoRouterState state) {
       final verificationId = state.params['verificationId']!;
-      return OTPScreen(verificationId: verificationId);
+      return OTPScreen(verificationId: verificationId, phone: state.extra! as PhoneNumber);
     },
   ),
 

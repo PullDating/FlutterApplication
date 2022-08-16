@@ -44,7 +44,7 @@ class LoginPage extends HookConsumerWidget {
             codeSent: (String verificationId, int? resendToken) {
               print("A verification code was sent. ");
               //pass on the verification id to the next screen
-              context.go('/login/sms/${verificationId.toString()}');
+              context.go('/login/sms/${verificationId.toString()}',extra: phoneNumber);
             },
             codeAutoRetrievalTimeout: (String verificationId) {
               //Auto Resolution Timed Out...

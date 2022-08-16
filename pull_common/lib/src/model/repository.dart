@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+//import 'dart:html';
 import 'dart:io';
 
+import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import 'package:isar/isar.dart';
+import 'package:pull_common/pull_common.dart';
 import 'package:pull_common/src/model/api_uris.dart';
 import 'package:pull_common/src/model/entity/auth_request.dart';
 import 'package:pull_common/src/model/entity/auth_response.dart';
@@ -100,19 +102,34 @@ class PullRepository {
   }
 
   //the return string will be the auth token
-  Future<bool> loginRequest(String idToken) async {
+  Future<bool> loginRequest(String idToken, String phone) async {
     var request = http.Request('GET', loginUri);
-    request.headers.addAll({"id" : idToken});
+    request.headers.addAll({"id" : idToken, "phone" : phone});
 
     try {
-      var response = await request.send().timeout(const Duration(seconds: 5));
-      var object = response.toString();
-      print(object);
+      var streamedResponse = await request.send().timeout(const Duration(seconds: 5));
+      var response = await http.Response.fromStream(streamedResponse);
       if(response.statusCode == 200){
         print("Success");
+        //TODO decode response to get the uuid and token fields.
+        //var pdfText= await json.decode(json.encode(response.databody);
+        final Map parsed = json.decode(response.body);
+        print("response uuid: " + parsed['uuid']);
+        print("response token " + parsed['token']);
+        //TODO set the returned uuid and auth token in hive.
+        try {
+          var Box = await Hive.openBox(kSettingsBox);
+          Box.put(kSettingsApiToken,parsed['token']);
+          Box.put(kSettingsUUID,parsed['uuid']);
+        } catch (error) {
+          print("Couldn't update the hive boxes for uuid and token");
+          print(error);
+          return false;
+        }
         return true;
       }else{
-        print("Something wrong");
+        print("Something's wrong");
+        print(response);
         return false;
       }
     } on TimeoutException catch (e) {
