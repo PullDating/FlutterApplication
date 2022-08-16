@@ -24,10 +24,12 @@ mixin _$Profile {
   DateTime? get birthdate => throw _privateConstructorUsedError;
   String? get bodytype => throw _privateConstructorUsedError;
   String? get gender => throw _privateConstructorUsedError;
-  double? get height => throw _privateConstructorUsedError;
-  List<String> get imagesPaths => throw _privateConstructorUsedError;
+  double? get height =>
+      throw _privateConstructorUsedError; //Height is stored in cm
   String? get datinggoal => throw _privateConstructorUsedError;
   String? get biography => throw _privateConstructorUsedError;
+  double? get latitude => throw _privateConstructorUsedError;
+  double? get longitude => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -44,9 +46,10 @@ abstract class $ProfileCopyWith<$Res> {
       String? bodytype,
       String? gender,
       double? height,
-      List<String> imagesPaths,
       String? datinggoal,
-      String? biography});
+      String? biography,
+      double? latitude,
+      double? longitude});
 }
 
 /// @nodoc
@@ -64,9 +67,10 @@ class _$ProfileCopyWithImpl<$Res> implements $ProfileCopyWith<$Res> {
     Object? bodytype = freezed,
     Object? gender = freezed,
     Object? height = freezed,
-    Object? imagesPaths = freezed,
     Object? datinggoal = freezed,
     Object? biography = freezed,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
   }) {
     return _then(_value.copyWith(
       name: name == freezed
@@ -89,10 +93,6 @@ class _$ProfileCopyWithImpl<$Res> implements $ProfileCopyWith<$Res> {
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
               as double?,
-      imagesPaths: imagesPaths == freezed
-          ? _value.imagesPaths
-          : imagesPaths // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       datinggoal: datinggoal == freezed
           ? _value.datinggoal
           : datinggoal // ignore: cast_nullable_to_non_nullable
@@ -101,6 +101,14 @@ class _$ProfileCopyWithImpl<$Res> implements $ProfileCopyWith<$Res> {
           ? _value.biography
           : biography // ignore: cast_nullable_to_non_nullable
               as String?,
+      latitude: latitude == freezed
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      longitude: longitude == freezed
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double?,
     ));
   }
 }
@@ -117,9 +125,10 @@ abstract class _$$_ProfileCopyWith<$Res> implements $ProfileCopyWith<$Res> {
       String? bodytype,
       String? gender,
       double? height,
-      List<String> imagesPaths,
       String? datinggoal,
-      String? biography});
+      String? biography,
+      double? latitude,
+      double? longitude});
 }
 
 /// @nodoc
@@ -138,9 +147,10 @@ class __$$_ProfileCopyWithImpl<$Res> extends _$ProfileCopyWithImpl<$Res>
     Object? bodytype = freezed,
     Object? gender = freezed,
     Object? height = freezed,
-    Object? imagesPaths = freezed,
     Object? datinggoal = freezed,
     Object? biography = freezed,
+    Object? latitude = freezed,
+    Object? longitude = freezed,
   }) {
     return _then(_$_Profile(
       name: name == freezed
@@ -163,10 +173,6 @@ class __$$_ProfileCopyWithImpl<$Res> extends _$ProfileCopyWithImpl<$Res>
           ? _value.height
           : height // ignore: cast_nullable_to_non_nullable
               as double?,
-      imagesPaths: imagesPaths == freezed
-          ? _value._imagesPaths
-          : imagesPaths // ignore: cast_nullable_to_non_nullable
-              as List<String>,
       datinggoal: datinggoal == freezed
           ? _value.datinggoal
           : datinggoal // ignore: cast_nullable_to_non_nullable
@@ -175,6 +181,14 @@ class __$$_ProfileCopyWithImpl<$Res> extends _$ProfileCopyWithImpl<$Res>
           ? _value.biography
           : biography // ignore: cast_nullable_to_non_nullable
               as String?,
+      latitude: latitude == freezed
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double?,
+      longitude: longitude == freezed
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double?,
     ));
   }
 }
@@ -188,10 +202,10 @@ class _$_Profile implements _Profile {
       this.bodytype,
       this.gender,
       this.height,
-      final List<String> imagesPaths = const [],
       this.datinggoal,
-      this.biography})
-      : _imagesPaths = imagesPaths;
+      this.biography,
+      this.latitude,
+      this.longitude});
 
   factory _$_Profile.fromJson(Map<String, dynamic> json) =>
       _$$_ProfileFromJson(json);
@@ -206,22 +220,19 @@ class _$_Profile implements _Profile {
   final String? gender;
   @override
   final double? height;
-  final List<String> _imagesPaths;
-  @override
-  @JsonKey()
-  List<String> get imagesPaths {
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_imagesPaths);
-  }
-
+//Height is stored in cm
   @override
   final String? datinggoal;
   @override
   final String? biography;
+  @override
+  final double? latitude;
+  @override
+  final double? longitude;
 
   @override
   String toString() {
-    return 'Profile(name: $name, birthdate: $birthdate, bodytype: $bodytype, gender: $gender, height: $height, imagesPaths: $imagesPaths, datinggoal: $datinggoal, biography: $biography)';
+    return 'Profile(name: $name, birthdate: $birthdate, bodytype: $bodytype, gender: $gender, height: $height, datinggoal: $datinggoal, biography: $biography, latitude: $latitude, longitude: $longitude)';
   }
 
   @override
@@ -235,10 +246,10 @@ class _$_Profile implements _Profile {
             const DeepCollectionEquality().equals(other.gender, gender) &&
             const DeepCollectionEquality().equals(other.height, height) &&
             const DeepCollectionEquality()
-                .equals(other._imagesPaths, _imagesPaths) &&
-            const DeepCollectionEquality()
                 .equals(other.datinggoal, datinggoal) &&
-            const DeepCollectionEquality().equals(other.biography, biography));
+            const DeepCollectionEquality().equals(other.biography, biography) &&
+            const DeepCollectionEquality().equals(other.latitude, latitude) &&
+            const DeepCollectionEquality().equals(other.longitude, longitude));
   }
 
   @JsonKey(ignore: true)
@@ -250,9 +261,10 @@ class _$_Profile implements _Profile {
       const DeepCollectionEquality().hash(bodytype),
       const DeepCollectionEquality().hash(gender),
       const DeepCollectionEquality().hash(height),
-      const DeepCollectionEquality().hash(_imagesPaths),
       const DeepCollectionEquality().hash(datinggoal),
-      const DeepCollectionEquality().hash(biography));
+      const DeepCollectionEquality().hash(biography),
+      const DeepCollectionEquality().hash(latitude),
+      const DeepCollectionEquality().hash(longitude));
 
   @JsonKey(ignore: true)
   @override
@@ -272,9 +284,10 @@ abstract class _Profile implements Profile {
       final String? bodytype,
       final String? gender,
       final double? height,
-      final List<String> imagesPaths,
       final String? datinggoal,
-      final String? biography}) = _$_Profile;
+      final String? biography,
+      final double? latitude,
+      final double? longitude}) = _$_Profile;
 
   factory _Profile.fromJson(Map<String, dynamic> json) = _$_Profile.fromJson;
 
@@ -288,12 +301,14 @@ abstract class _Profile implements Profile {
   String? get gender => throw _privateConstructorUsedError;
   @override
   double? get height => throw _privateConstructorUsedError;
-  @override
-  List<String> get imagesPaths => throw _privateConstructorUsedError;
-  @override
+  @override //Height is stored in cm
   String? get datinggoal => throw _privateConstructorUsedError;
   @override
   String? get biography => throw _privateConstructorUsedError;
+  @override
+  double? get latitude => throw _privateConstructorUsedError;
+  @override
+  double? get longitude => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileCopyWith<_$_Profile> get copyWith =>

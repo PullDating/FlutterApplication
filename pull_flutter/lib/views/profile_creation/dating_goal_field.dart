@@ -1,33 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:pull_common/src/model/provider/create_account.dart';
+import 'package:pull_common/pull_common.dart';
 
 class ProfileDatingGoalField extends ConsumerStatefulWidget {
   const ProfileDatingGoalField({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ProfileDatingGoalField> createState() => _ProfileDatingGoalFieldState();
+  ConsumerState<ProfileDatingGoalField> createState() =>
+      _ProfileDatingGoalFieldState();
 }
 
-class _ProfileDatingGoalFieldState extends ConsumerState<ProfileDatingGoalField> {
+class _ProfileDatingGoalFieldState
+    extends ConsumerState<ProfileDatingGoalField> {
   String? datinggoal;
 
-  void changeRadioButton(String? value){
+  void changeRadioButton(String? value) {
     setState(() {
       datinggoal = value;
-      if(value != null){
-        ref.read(accountCreationProvider.notifier).setDatingGoal(value);
+      if (value != null) {
+        ref.read(AccountCreationProvider.notifier).setDatingGoal(value);
       }
-
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    datinggoal = ref.read(accountCreationProvider).datinggoal;
+    datinggoal = ref.read(AccountCreationProvider).datinggoal;
   }
 
   @override
@@ -37,8 +36,16 @@ class _ProfileDatingGoalFieldState extends ConsumerState<ProfileDatingGoalField>
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           RadioListTile<String>(
+            title: const Text('Marriage'),
+            value: 'marriage',
+            groupValue: datinggoal,
+            onChanged: (String? value) {
+              changeRadioButton(value);
+            },
+          ),
+          RadioListTile<String>(
             title: const Text('Long-term Relationship'),
-            value: 'ltr',
+            value: 'longterm',
             groupValue: datinggoal,
             onChanged: (String? value) {
               changeRadioButton(value);
@@ -46,7 +53,7 @@ class _ProfileDatingGoalFieldState extends ConsumerState<ProfileDatingGoalField>
           ),
           RadioListTile<String>(
             title: const Text('Short-term Relationship'),
-            value: 'str',
+            value: 'shortterm',
             groupValue: datinggoal,
             onChanged: (String? value) {
               changeRadioButton(value);
@@ -62,7 +69,7 @@ class _ProfileDatingGoalFieldState extends ConsumerState<ProfileDatingGoalField>
           ),
           RadioListTile<String>(
             title: const Text('Just Chatting'),
-            value: 'chatting',
+            value: 'justchatting',
             groupValue: datinggoal,
             onChanged: (String? value) {
               changeRadioButton(value);

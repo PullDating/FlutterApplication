@@ -29,13 +29,24 @@ dependencies:
   fluttertoast: ^8.0.9
   flutter_chat_ui: ^1.6.3
   flutter_chat_types: ^3.4.3
+  location: ^4.4.0
+  http: ^0.13.4
+  flutter_image_compress: ^1.1.0
+  flutter_cache_manager: ^3.3.0
+  firebase_auth: ^3.6.1
+  firebase_core: ^1.20.0
+  intl_phone_field: ^3.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  build_runner: ^2.2.0
 
 flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/icons/
+    - assets/images/decorations/
+    - assets/intl_phone_field/
