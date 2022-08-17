@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pull_common/pull_common.dart';
 
-class FilterPage extends StatefulWidget {
+class FilterPage extends ConsumerStatefulWidget {
   const FilterPage({
     Key? key,
     required this.onDone,
@@ -15,33 +17,18 @@ class FilterPage extends StatefulWidget {
   final Function? onCancel;
 
   @override
-  State<FilterPage> createState() => _FilterPageState();
+  ConsumerState<FilterPage> createState() => _FilterPageState();
 }
 
-class _FilterPageState extends State<FilterPage> {
-  double? distance = 10; //distance from user in km
+class _FilterPageState extends ConsumerState<FilterPage> {
+  bool metricImperial = false; //to use metric or imperial
 
   @override
   void initState() {
     super.initState();
   }
 
-  bool metricImperial = false;
-
-  bool menChecked = false;
-  bool womenChecked = false;
-  bool nonBinaryChecked = false;
-  double lowerAge = 18;
-  double upperAge = 100;
-  double lowerHeight = 55;
-  double upperHeight = 275;
-  double maxDistance = 15;
-
-  bool Obese = true;
-  bool Heavy = true;
-  bool Muscular = true;
-  bool Average = true;
-  bool Lean = true;
+  Filters filters = Filters();
 
   @override
   Widget build(BuildContext context) {
@@ -70,11 +57,11 @@ class _FilterPageState extends State<FilterPage> {
                                 child: ElevatedButton(
                                     onPressed: () {
                                       setState(() {
-                                        menChecked = !menChecked;
+                                        filters.menChecked = !filters.menChecked;
                                       });
                                     }, child: Text('Men'),
                                   style: ElevatedButton.styleFrom(
-                                    primary: (menChecked == false) ? Colors.grey : Colors.lightBlueAccent,
+                                    primary: (filters.menChecked == false) ? Colors.grey : Colors.lightBlueAccent,
                                   ),
                                 ),
                               ),
@@ -85,12 +72,12 @@ class _FilterPageState extends State<FilterPage> {
                                 fit: BoxFit.fitHeight,
                                 child: ElevatedButton(onPressed: () {
                                   setState(() {
-                                    womenChecked = !womenChecked;
+                                    filters.womenChecked = !filters.womenChecked;
                                   });
 
                                 }, child: Text('Women'),
                                   style: ElevatedButton.styleFrom(
-                                    primary: (womenChecked == false) ? Colors.grey : Colors.lightBlueAccent,
+                                    primary: (filters.womenChecked == false) ? Colors.grey : Colors.lightBlueAccent,
                                   ),
                                 ),
                               ),
@@ -102,12 +89,12 @@ class _FilterPageState extends State<FilterPage> {
                                 child: ElevatedButton(onPressed: () {
                                   setState(() {
                                     setState(() {
-                                      nonBinaryChecked = !nonBinaryChecked;
+                                      filters.nonBinaryChecked = !filters.nonBinaryChecked;
                                     });
                                   });
                                 }, child: Text('Non-Binary'),
                                   style: ElevatedButton.styleFrom(
-                                    primary: (nonBinaryChecked == false) ? Colors.grey : Colors.lightBlueAccent,
+                                    primary: (filters.nonBinaryChecked == false) ? Colors.grey : Colors.lightBlueAccent,
                                   ),
                                 ),
                               ),
@@ -127,14 +114,14 @@ class _FilterPageState extends State<FilterPage> {
                             min: 18,
                             max: 120,
                             divisions: 120-18,
-                            values: RangeValues(lowerAge,upperAge),
+                            values: RangeValues(filters.lowerAge,filters.upperAge),
                             onChanged: (values) {
                               setState(() {
-                                lowerAge = values.start;
-                                upperAge = values.end;
+                                filters.lowerAge = values.start;
+                                filters.upperAge = values.end;
                               });
                             },
-                            labels: RangeLabels(lowerAge.round().toString(),upperAge.round().toString()),
+                            labels: RangeLabels(filters.lowerAge.round().toString(),filters.upperAge.round().toString()),
                           ),
                         )
                     ),
@@ -145,13 +132,13 @@ class _FilterPageState extends State<FilterPage> {
                             min: 0,
                             max: 100,
                             divisions: 100,
-                            value: maxDistance,
+                            value: filters.maxDistance,
                             onChanged: (value) {
                               setState(() {
-                                maxDistance = value;
+                                filters.maxDistance = value;
                               });
                             },
-                            label: (metricImperial == false) ? "${maxDistance.round().toString()} km" : "${(maxDistance*0.621371).round().toString()} miles",
+                            label: (metricImperial == false) ? "${filters.maxDistance.round().toString()} km" : "${(filters.maxDistance*0.621371).round().toString()} miles",
                           ),
                         )
                     ),
@@ -162,15 +149,15 @@ class _FilterPageState extends State<FilterPage> {
                             min: 55,
                             max: 275,
                             divisions: 275-55,
-                            values: RangeValues(lowerHeight,upperHeight),
+                            values: RangeValues(filters.lowerHeight,filters.upperHeight),
                             onChanged: (values) {
                               setState(() {
-                                lowerHeight = values.start;
-                                upperHeight = values.end;
+                                filters.lowerHeight = values.start;
+                                filters.upperHeight = values.end;
                               });
                             },
-                            labels: RangeLabels((metricImperial == false)? "${lowerHeight.round()} cm" : "${(lowerHeight~/30.48).round().toString()}\'${(((lowerHeight / 30.48)-(lowerHeight ~/ 30.48))*12).toInt().toString()}\""
-                                , (metricImperial == false)? "${upperHeight.round()} cm" : "${(upperHeight~/30.48).round().toString()}\'${(((upperHeight / 30.48)-(upperHeight ~/ 30.48))*12).toInt().toString()}\"" ),
+                            labels: RangeLabels((metricImperial == false)? "${filters.lowerHeight.round()} cm" : "${(filters.lowerHeight~/30.48).round().toString()}\'${(((filters.lowerHeight / 30.48)-(filters.lowerHeight ~/ 30.48))*12).toInt().toString()}\""
+                                , (metricImperial == false)? "${filters.upperHeight.round()} cm" : "${(filters.upperHeight~/30.48).round().toString()}\'${(((filters.upperHeight / 30.48)-(filters.upperHeight ~/ 30.48))*12).toInt().toString()}\"" ),
                           ),
                         )
                     ),
@@ -188,11 +175,11 @@ class _FilterPageState extends State<FilterPage> {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       setState(() {
-                                        Obese = !Obese;
+                                        filters.obese = !filters.obese;
                                       });
                                     }, child: Text('Obese'),
                                     style: ElevatedButton.styleFrom(
-                                      primary: (Obese == false) ? Colors.grey : Colors.lightBlueAccent,
+                                      primary: (filters.obese == false) ? Colors.grey : Colors.lightBlueAccent,
                                     ),
                                   ),
                                 ),
@@ -203,12 +190,12 @@ class _FilterPageState extends State<FilterPage> {
                                   fit: BoxFit.fitHeight,
                                   child: ElevatedButton(onPressed: () {
                                     setState(() {
-                                      Heavy = !Heavy;
+                                      filters.heavy = !filters.heavy;
                                     });
 
                                   }, child: Text('Heavy'),
                                     style: ElevatedButton.styleFrom(
-                                      primary: (Heavy == false) ? Colors.grey : Colors.lightBlueAccent,
+                                      primary: (filters.heavy == false) ? Colors.grey : Colors.lightBlueAccent,
                                     ),
                                   ),
                                 ),
@@ -220,12 +207,12 @@ class _FilterPageState extends State<FilterPage> {
                                   child: ElevatedButton(onPressed: () {
                                     setState(() {
                                       setState(() {
-                                        Muscular = !Muscular;
+                                        filters.muscular = !filters.muscular;
                                       });
                                     });
                                   }, child: Text('Muscular'),
                                     style: ElevatedButton.styleFrom(
-                                      primary: (Muscular == false) ? Colors.grey : Colors.lightBlueAccent,
+                                      primary: (filters.muscular == false) ? Colors.grey : Colors.lightBlueAccent,
                                     ),
                                   ),
                                 ),
@@ -237,12 +224,12 @@ class _FilterPageState extends State<FilterPage> {
                                   child: ElevatedButton(onPressed: () {
                                     setState(() {
                                       setState(() {
-                                        Average = !Average;
+                                        filters.average = !filters.average;
                                       });
                                     });
                                   }, child: Text('Average'),
                                     style: ElevatedButton.styleFrom(
-                                      primary: (Average == false) ? Colors.grey : Colors.lightBlueAccent,
+                                      primary: (filters.average == false) ? Colors.grey : Colors.lightBlueAccent,
                                     ),
                                   ),
                                 ),
@@ -254,12 +241,12 @@ class _FilterPageState extends State<FilterPage> {
                                   child: ElevatedButton(onPressed: () {
                                     setState(() {
                                       setState(() {
-                                        Lean = !Lean;
+                                        filters.lean = !filters.lean;
                                       });
                                     });
                                   }, child: Text('Lean'),
                                     style: ElevatedButton.styleFrom(
-                                      primary: (Lean == false) ? Colors.grey : Colors.lightBlueAccent,
+                                      primary: (filters.lean == false) ? Colors.grey : Colors.lightBlueAccent,
                                     ),
                                   ),
                                 ),
@@ -309,7 +296,7 @@ class _FilterPageState extends State<FilterPage> {
                     ),
                     IconButton(
                       icon: Icon(Icons.done),
-                      onPressed: () => widget.onDone(context),
+                      onPressed: () => widget.onDone(context,ref),
                     )
                   ],
                 ),

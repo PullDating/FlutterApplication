@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pull_common/pull_common.dart';
 
 import '../../model/routes.dart';
 
-updateFilters(BuildContext context){
+updateFilters(BuildContext context, WidgetRef ref, Filters filters) async {
   print("updating the filters!!!");
+  try{
+    PullRepository repo = PullRepository(ref.read);
+    await repo.updateFilterRequest(filters).then((value) => {
+      if(value == true){
+        context.go('/home/cards')
+      } else {
+        print("There was an error, so no navigation occured")
+      }
+    });
+  }catch (e){
+    print("There was an error somewhere in the profile creation.");
+    print(e);
+    return;
+  }
   context.go('/home/profile');
 }
 

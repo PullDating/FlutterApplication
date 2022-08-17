@@ -70,13 +70,12 @@ class OTPScreenState extends ConsumerState<OTPScreen> {
                   {
                     print(value);
                     if (value.user != null) {
-                      //TODO probably some sort of database access here to connect auth.
-                      //send the ID token to the backend, which verifies using the amin API
-                      //TODO make a request with the ID token.
                       try{
                         PullRepository repo = PullRepository(ref.read);
                         await repo.loginRequest(await value.user!.getIdToken(),widget.phone.completeNumber).then((value) => {
                           if(value == true){
+
+                            //TODO check to see if they have a profile associated with that account.
                             context.go('/home/cards')
                           } else {
                             print("There was an error, so no navigation occured")
