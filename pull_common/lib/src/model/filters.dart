@@ -3,8 +3,8 @@ class Filters{
   bool menChecked = false;
   bool womenChecked = false;
   bool nonBinaryChecked = false;
-  double lowerAge = 18;
-  double upperAge = 100;
+  int lowerAge = 18;
+  int upperAge = 100;
   double lowerHeight = 55;
   double upperHeight = 275;
   double maxDistance = 15;

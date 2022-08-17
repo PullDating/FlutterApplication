@@ -74,11 +74,9 @@ class OTPScreenState extends ConsumerState<OTPScreen> {
                         PullRepository repo = PullRepository(ref.read);
                         await repo.loginRequest(await value.user!.getIdToken(),widget.phone.completeNumber).then((value) => {
                           if(value == true){
-
-                            //TODO check to see if they have a profile associated with that account.
                             context.go('/home/cards')
                           } else {
-                            print("There was an error, so no navigation occured")
+                            context.go('/createProfile/name')
                           }
 
                         });

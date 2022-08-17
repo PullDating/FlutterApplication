@@ -114,11 +114,11 @@ class _FilterPageState extends ConsumerState<FilterPage> {
                             min: 18,
                             max: 120,
                             divisions: 120-18,
-                            values: RangeValues(filters.lowerAge,filters.upperAge),
+                            values: RangeValues(filters.lowerAge.toDouble(),filters.upperAge.toDouble()),
                             onChanged: (values) {
                               setState(() {
-                                filters.lowerAge = values.start;
-                                filters.upperAge = values.end;
+                                filters.lowerAge = values.start.toInt();
+                                filters.upperAge = values.end.toInt();
                               });
                             },
                             labels: RangeLabels(filters.lowerAge.round().toString(),filters.upperAge.round().toString()),
@@ -278,6 +278,9 @@ class _FilterPageState extends ConsumerState<FilterPage> {
                         onPressed: () => widget.onCancel!(context),
                       ),
                     ],
+                    if(!widget.cancelable) ...[
+                      SizedBox(width: 0,)
+                    ],
                     Row(
                       children: [
                         Text("Metric"),
@@ -296,7 +299,7 @@ class _FilterPageState extends ConsumerState<FilterPage> {
                     ),
                     IconButton(
                       icon: Icon(Icons.done),
-                      onPressed: () => widget.onDone(context,ref),
+                      onPressed: () => widget.onDone(context,ref,filters),
                     )
                   ],
                 ),

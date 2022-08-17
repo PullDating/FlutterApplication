@@ -19,7 +19,7 @@ final appRoutes = <GoRoute>[
       authUrl: '/login',
       homeUrl: '/home/cards',
       devUrl: '/devlogin', //comment out for production
-      dev: true, //comment out for production.
+      dev: false, //comment out for production.
     ),
   ),
 
@@ -87,6 +87,6 @@ final appRoutes = <GoRoute>[
 class FilterPageInput {
   final Function onDone;
   final bool cancelable;
-  final Function onCancel;
+  final Function? onCancel;
   const FilterPageInput(this.onDone, this.cancelable, this.onCancel);
 }

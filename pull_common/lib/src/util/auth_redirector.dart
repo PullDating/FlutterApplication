@@ -20,23 +20,22 @@ class AuthRedirector extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
+    if(!dev){
+      // Wait for the local settings data to be available
+      ref.listen<AsyncValue<Box>>(settingsFutureProvider, (previous, next) {
+        // Navigate based on the presence of the stored auth token
+        next.whenData((value) =>
+            context.go(authUrl));
+        //todo switch this back to depend on if there is a user already.
+        //context.go(FirebaseAuth.instance.currentUser != null ? homeUrl : authUrl));
+      });
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // executes after build
       if(dev){
         //developer login path
-
         context.go(devUrl);
-      } else {
-        //production login path.
-
-        // Wait for the local settings data to be available
-        ref.listen<AsyncValue<Box>>(settingsFutureProvider, (previous, next) {
-          // Navigate based on the presence of the stored auth token
-          next.whenData((value) =>
-              context.go(authUrl));
-          //todo switch this back to depend on if there is a user already.
-          //context.go(FirebaseAuth.instance.currentUser != null ? homeUrl : authUrl));
-        });
       }
     });
     return Material(child: Center(child: child ?? CircularProgressIndicator()));

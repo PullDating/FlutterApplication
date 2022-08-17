@@ -7,21 +7,21 @@ import '../../model/routes.dart';
 
 updateFilters(BuildContext context, WidgetRef ref, Filters filters) async {
   print("updating the filters!!!");
-  try{
-    PullRepository repo = PullRepository(ref.read);
-    await repo.updateFilterRequest(filters).then((value) => {
-      if(value == true){
-        context.go('/home/cards')
-      } else {
-        print("There was an error, so no navigation occured")
-      }
-    });
-  }catch (e){
-    print("There was an error somewhere in the profile creation.");
-    print(e);
-    return;
-  }
-  context.go('/home/profile');
+  // try{
+  //   PullRepository repo = PullRepository(ref.read);
+  //   await repo.updateFilterRequest(filters).then((value) => {
+  //     if(value == true){
+  //       context.go('/home/cards')
+  //     } else {
+  //       print("There was an error, so no navigation occured")
+  //     }
+  //   });
+  // }catch (e){
+  //   print("There was an error somewhere in the profile creation.");
+  //   print(e);
+  //   return;
+  // }
+  // context.go('/home/profile');
 }
 
 cancelUpdateFilters(BuildContext context){

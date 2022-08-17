@@ -94,55 +94,118 @@ class PullRepository {
     _read(matchStreamControllerProvider).add(matchList);
   }
 
-  //the return string will be the auth token
+  //the return is true if a profile already exists, false if a profile doesn't exist.
   Future<bool> loginRequest(String idToken, String phone) async {
     var request = http.Request('GET', loginUri);
     request.headers.addAll({"id" : idToken, "phone" : phone});
-
-    try {
-      var streamedResponse = await request.send().timeout(const Duration(seconds: 5));
-      var response = await http.Response.fromStream(streamedResponse);
-      if(response.statusCode == 200){
-        print("Success");
-        //TODO decode response to get the uuid and token fields.
-        //var pdfText= await json.decode(json.encode(response.databody);
-        final Map parsed = json.decode(response.body);
-        print("response uuid: " + parsed['uuid']);
-        print("response token " + parsed['token']);
-        //TODO set the returned uuid and auth token in hive.
-        try {
-          var Box = await Hive.openBox(kSettingsBox);
-          Box.put(kSettingsApiToken,parsed['token']);
-          Box.put(kSettingsUUID,parsed['uuid']);
-        } catch (error) {
-          print("Couldn't update the hive boxes for uuid and token");
-          print(error);
-          return false;
-        }
-        return true;
-      }else{
-        print("Something's wrong");
-        print(response);
+    var streamedResponse = await request.send().timeout(const Duration(seconds: 5));
+    var response = await http.Response.fromStream(streamedResponse);
+    if(response.statusCode == 200){
+      print("Success");
+      //TODO decode response to get the uuid and token fields.
+      //var pdfText= await json.decode(json.encode(response.databody);
+      final Map parsed = json.decode(response.body);
+      print("response uuid: " + parsed['uuid']);
+      print("response token " + parsed['token']);
+      print("state: "  + parsed['state'].toString());
+      //TODO set the returned uuid and auth token in hive.
+      var Box = await Hive.openBox(kSettingsBox);
+      Box.put(kSettingsApiToken,parsed['token']);
+      Box.put(kSettingsUUID,parsed['uuid']);
+      if(parsed['state'] == 0){
         return false;
+      } else {
+        return true;
       }
-    } on TimeoutException catch (e) {
-      print('Timeout');
-      print(e);
-      return false;
-    } on Error catch (e) {
-      print('Error: $e');
-      return false;
+    }else{
+      print("Something's wrong");
+      print(response);
+      throw Exception('Login attempt failed.');
     }
-
   }
 
-  Future<bool> updateFilterRequest(Filters filters) async {
-    var request = http.Request('GET', filterUri);
-    //TODO modify this request to actually go to the correct endpoint /filters
 
+  //TODO add the createFilterRequest
+  Future<void> createFilterRequest(Filters filters) async {
+    //calculate the correct date values based on the inputted ages.
+    DateTime currentDate = DateTime.now();
+    DateTime minBirthDate = DateTime(currentDate.year - filters.upperAge, currentDate.month, currentDate.day);
+    DateTime maxBirthDate = DateTime(currentDate.year - filters.lowerAge, currentDate.month, currentDate.day);
+
+    Map<String,String> headers = {};
+    headers.addAll(_authHeader);
+    headers.addAll(_uuid);
+    headers.addAll({"content-type" : "application/json"});
+
+    //create the request.
+    var response = await http.post(
+        filterUri,
+        body: jsonEncode(<String,String>
+        {
+          "minBirthDate" : minBirthDate.toString(),
+          "maxBirthDate" : maxBirthDate.toString(),
+          "minHeight" : filters.lowerHeight.toString(),
+          "maxHeight" : filters.upperHeight.toString(),
+          "genderMan" : filters.menChecked.toString(),
+          "genderWoman" : filters.womenChecked.toString(),
+          "genderNonBinary" : filters.nonBinaryChecked.toString(),
+          "btLean" : filters.lean.toString(),
+          "btAverage" : filters.average.toString(),
+          "btMuscular" : filters.muscular.toString(),
+          "btHeavy" : filters.heavy.toString(),
+          "btObese" : filters.obese.toString(),
+          "maxDistance" : filters.maxDistance.toString(),
+        }
+      ),
+      headers: headers
+    );
+
+    //interpret the response.
+    if(response.statusCode == 200){
+      print("Success");
+      final Map parsed = json.decode(response.body);
+      print(parsed['message']);
+      return;
+    }else{
+      print("Something's wrong");
+      print(response);
+      throw Exception("Error sending filter information to the server.");
+      return;
+    }
+  }
+
+  /*
+  Future<bool> updateFilterRequest(Filters filters) async {
+
+    return false;
+    //TODO calculate the minBirthDate and maxBirthDate from the filters input.
+    DateTime? maxBirthDate = DateTime.now();
+    DateTime? minBirthDate = DateTime.now();
+    //TODO make sure that the correct format for date.tostring is used.
+    var request = http.post(filterUri, body: jsonEncode(<String,String>{
+      "minBirthDate" : minBirthDate.toString(),
+      "maxBirthDate" : maxBirthDate.toString(),
+      "minHeight" : filters.lowerHeight.toString(),
+      "maxHeight" : filters.upperHeight.toString(),
+      "genderMan" : filters.menChecked.toString(),
+      "genderWoman" : filters.womenChecked.toString(),
+      "genderNonBinary" : filters.nonBinaryChecked.toString(),
+      "btLean" : filters.lean.toString(),
+      "btAverage" : filters.average.toString(),
+      "btMuscular" : filters.muscular.toString(),
+      "btHeavy" : filters.heavy.toString(),
+      "btObese" : filters.obese.toString(),
+      "maxDistance" : filters.maxDistance.toString(),
+    }));
+    //TODO fix this to be part of the request.
     request.headers.addAll(_authHeader);
     request.headers.addAll(_uuid);
 
+
+
+    //TODO add the body to the request.
+
+
     try {
       var streamedResponse = await request.send().timeout(const Duration(seconds: 5));
       var response = await http.Response.fromStream(streamedResponse);
@@ -151,18 +214,7 @@ class PullRepository {
         //TODO decode response to get the uuid and token fields.
         //var pdfText= await json.decode(json.encode(response.databody);
         final Map parsed = json.decode(response.body);
-        print("response uuid: " + parsed['uuid']);
-        print("response token " + parsed['token']);
-        //TODO set the returned uuid and auth token in hive.
-        try {
-          var Box = await Hive.openBox(kSettingsBox);
-          Box.put(kSettingsApiToken,parsed['token']);
-          Box.put(kSettingsUUID,parsed['uuid']);
-        } catch (error) {
-          print("Couldn't update the hive boxes for uuid and token");
-          print(error);
-          return false;
-        }
+        print(parsed['message']);
         return true;
       }else{
         print("Something's wrong");
@@ -179,6 +231,7 @@ class PullRepository {
     }
 
   }
+  */
 
   Future<void> createProfile() async {
     //create a multipart form request (needed because we are using files)
@@ -186,7 +239,8 @@ class PullRepository {
     //get the auth headers.
     //TODO fix this, right now it only returns "demo token" which is wrong.
     //request.headers.addAll(await _authHeader);
-    request.headers.addAll({"Authorization" : 'Bearer f46aa34a-76ff-4ae6-b8dd-2e72ff67e86e'});
+
+    request.headers.addAll(_authHeader);
 
     //list to hold the files we'll upload
     List<http.MultipartFile> filestoupload = [];
@@ -209,7 +263,9 @@ class PullRepository {
     request.files.addAll(filestoupload);
     //TODO fix this to properly get the uuid.
     //request.fields['uuid']= await _uuid;
-    request.fields['uuid'] = "311b8f93-a76e-48ba-97cb-c995d0dc918c";
+
+    var uuid = _uuid;
+    request.fields.addAll(uuid);
 
     String? name = _read(AccountCreationProvider.notifier).getName();
     if(name != null){
