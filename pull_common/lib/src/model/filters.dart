@@ -54,17 +54,11 @@ class Filters{
     print("Attempting to get the Filters from json");
 
     //convert the birthDates to ages
-    DateTime minBirthDate = DateTime.parse(json['minBirthDate'] as String);
-    DateTime maxBirthDate = DateTime.parse(json['maxBirthDate'] as String);
+    //DateTime minBirthDate = DateTime.parse(json['minBirthDate'] as String);
+    //DateTime maxBirthDate = DateTime.parse(json['maxBirthDate'] as String);
 
-    print("minBirthDate: " + minBirthDate.toString());
-    print("maxBirthDate: " + maxBirthDate.toString());
-
-    int upperAge = ((DateTime.now().difference(minBirthDate).inDays)/365.26).truncate();
-    int lowerAge = ((DateTime.now().difference(maxBirthDate).inDays)/365.26).truncate();
-
-    print("upperAge: " + upperAge.toString());
-    print("lowerAge: " + lowerAge.toString());
+    //int upperAge = ((DateTime.now().difference(minBirthDate).inDays)/365.26).truncate();
+    //int lowerAge = ((DateTime.now().difference(maxBirthDate).inDays)/365.26).truncate();
 
     //print("type of json['maxDistance]: " + json['maxDistance'].runtimeType.toString());
 
@@ -73,8 +67,8 @@ class Filters{
       menChecked: StringtoBool(json['genderMan']),
       womenChecked: StringtoBool(json['genderWoman']),
       nonBinaryChecked: StringtoBool(json['genderNonBinary']),
-      lowerAge: lowerAge,
-      upperAge: upperAge,
+      lowerAge: int.parse(json['minAge']),
+      upperAge: int.parse(json['maxAge']),
       lowerHeight: int.parse(json['minHeight']),
       upperHeight: int.parse(json['maxHeight']),
       obese: StringtoBool(json['btObese']),
@@ -86,13 +80,17 @@ class Filters{
   }
 
   Map<String,dynamic> toJson(){
+    //DateTime now = DateTime.now();
+    //DateTime minBirthDate = DateTime(now.year - upperAge,now.month,now.day,now.hour);
+    //DateTime maxBirthDate = DateTime(now.year - lowerAge,now.month,now.day,now.hour);
+
     return <String,String>{
       'maxDistance' : this.maxDistance.toString(),
       'genderMan' : this.menChecked.toString(),
       'genderWoman' : this.womenChecked.toString(),
       'genderNonBinary' : this.nonBinaryChecked.toString(),
-      'lowerAge' : this.lowerAge.toString(),
-      'upperAge' : this.upperAge.toString(),
+      'minAge' : this.lowerAge.toString(),
+      'maxAge' : this.upperAge.toString(),
       'minHeight' : this.lowerHeight.toString(),
       'maxHeight' : this.upperHeight.toString(),
       'btObese' : this.obese.toString(),

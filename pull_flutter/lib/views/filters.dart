@@ -39,6 +39,7 @@ class _FilterPageState extends ConsumerState<FilterPage> {
           filters = tempFilters;
         });
       } catch (e) {
+        //TODO show the user some error about their connectivity.
         print(e);
       }
     }

@@ -147,6 +147,7 @@ class PullRepository {
     Map<String,String> headers = {};
     headers.addAll(_authHeader);
     headers.addAll(_uuid);
+    headers.addAll({"content-type" : "application/json"});
     var response = await http.put(
       filterUri,
       headers: headers,
@@ -162,9 +163,9 @@ class PullRepository {
 
   Future<void> createFilterRequest(Filters filters) async {
     //calculate the correct date values based on the inputted ages.
-    DateTime currentDate = DateTime.now();
-    DateTime minBirthDate = DateTime(currentDate.year - filters.upperAge, currentDate.month, currentDate.day);
-    DateTime maxBirthDate = DateTime(currentDate.year - filters.lowerAge, currentDate.month, currentDate.day);
+    //DateTime currentDate = DateTime.now();
+    //DateTime minBirthDate = DateTime(currentDate.year - filters.upperAge, currentDate.month, currentDate.day);
+    //DateTime maxBirthDate = DateTime(currentDate.year - filters.lowerAge, currentDate.month, currentDate.day);
 
     Map<String,String> headers = {};
     headers.addAll(_authHeader);
@@ -176,8 +177,8 @@ class PullRepository {
         filterUri,
         body: jsonEncode(<String,String>
         {
-          "minBirthDate" : minBirthDate.toString(),
-          "maxBirthDate" : maxBirthDate.toString(),
+          "minAge" : filters.lowerAge.toString(),
+          "maxAge" : filters.upperAge.toString(),
           "minHeight" : filters.lowerHeight.toString(),
           "maxHeight" : filters.upperHeight.toString(),
           "genderMan" : filters.menChecked.toString(),
