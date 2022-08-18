@@ -173,6 +173,7 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
     print("about to set the images watch");
 
     getPhotoLimits();
+
     tabs = <String, Widget>{
       'name': ProfileCreationTemplate(
           entryField: const ProfileNameField(),

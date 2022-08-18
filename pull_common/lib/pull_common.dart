@@ -14,3 +14,4 @@ export 'src/model/api_uris.dart';
 export 'src/util/image_compression.dart';
 export 'src/ui/otp.dart';
 export 'src/model/filters.dart';
+export 'src/model/entity/profile.dart';

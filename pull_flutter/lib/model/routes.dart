@@ -9,6 +9,7 @@ import 'package:pull_flutter/views/login.dart';
 import 'package:pull_flutter/views/settings.dart';
 
 import '../development_utils/devLogin.dart';
+import '../views/edit_profile.dart';
 import '../views/profile_creation/profile_creation_parent.dart';
 
 final appRoutes = <GoRoute>[
@@ -60,6 +61,14 @@ final appRoutes = <GoRoute>[
       return ProfileCreationParent(title: 'Pull', path: page);
     },
   ),
+
+  GoRoute(
+    path: '/profile/edit',
+    builder: (BuildContext context, GoRouterState state) {
+      return const EditProfile();
+    },
+  ),
+
   GoRoute(
       path: '/settings',
       builder: (BuildContext context, GoRouterState state) =>

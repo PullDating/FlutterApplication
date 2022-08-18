@@ -62,7 +62,13 @@ class ProfileTab extends ConsumerWidget {
                   bottom: 0,
                   right: 0,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      //TODO add functionality to edit the profile.
+                      //need to populate the profileprovider for the next page to use.
+                      //TODO create populateProfile()
+                      //populateProfile();
+                      context.go('/profile/edit');
+                    },
                     child: Icon(Icons.edit, color: Colors.white),
                     style: ElevatedButton.styleFrom(
                       shape: CircleBorder(),
