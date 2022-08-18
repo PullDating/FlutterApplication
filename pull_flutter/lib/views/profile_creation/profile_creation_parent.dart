@@ -21,6 +21,7 @@ import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
 
 import '../../model/profile_creation_base.dart';
+import '../../model/routes.dart';
 
 class ProfileCreationParent extends ConsumerStatefulWidget {
   const ProfileCreationParent(
@@ -91,21 +92,41 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
       print("error: " + e.toString());
     }
 
+    // try{
+    //   PullRepository repo = PullRepository(ref.read);
+    //   await repo.createProfile();
+    // }catch (e){
+    //   print("There was an error somewhere in the profile creation.");
+    //   print(e);
+    //   return;
+    // }
+
+    setState(() async {
+
+      //go to the filter creation process.
+      context.go('/filters', extra: FilterPageInput(filterPageDone, false, null));
+
+    });
+  }
+
+  void filterPageDone(BuildContext context, WidgetRef ref, Filters filters) async {
+
+    print("Filter page done");
+
+    //TODO create a profile
     try{
       PullRepository repo = PullRepository(ref.read);
+      await repo.createFilterRequest(filters);
       await repo.createProfile();
+      context.go('/home/cards');
     }catch (e){
       print("There was an error somewhere in the profile creation.");
       print(e);
       return;
     }
+    //TODO set the filters for that profile.
+    //TODO call the createFilterRequest.
 
-    setState(() async {
-
-
-      context.go('/home/cards');
-
-    });
   }
 
   void getPhotoLimits() async {
@@ -152,6 +173,7 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
     print("about to set the images watch");
 
     getPhotoLimits();
+
     tabs = <String, Widget>{
       'name': ProfileCreationTemplate(
           entryField: const ProfileNameField(),

@@ -5,19 +5,13 @@ import 'dart:io';
 
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:isar/isar.dart';
 import 'package:pull_common/pull_common.dart';
-import 'package:pull_common/src/model/api_uris.dart';
-import 'package:pull_common/src/model/entity/auth_request.dart';
+import 'package:pull_common/src/model/filters.dart';
 import 'package:pull_common/src/model/entity/auth_response.dart';
 import 'package:pull_common/src/model/exception/response_exception.dart';
-import 'package:pull_common/src/model/provider/auth.dart';
 import 'package:pull_common/src/model/provider/config.dart';
-import 'package:pull_common/src/model/provider/create_account.dart';
 import 'package:pull_common/src/model/provider/match_stream.dart';
 import 'package:riverpod/riverpod.dart';
-
-import 'entity/match.dart';
 
 /// Using a [Provider] for access to [http.Client] allows easy overriding during tests, if necessary
 final httpClientProvider = Provider<http.Client>((_) => http.Client());
@@ -37,7 +31,6 @@ class PullRepository {
     }else{
       throw Exception("couldn't retrieve the Authorization Token");
     }
-    return {if (token != null) 'Authorization': 'Bearer $token'};
   }
 
 
@@ -46,10 +39,10 @@ class PullRepository {
     return {..._authHeader, 'Content-Type': 'application/json'};
   }
 
-  String get _uuid {
+  Map<String, String> get _uuid {
     final uuid = _read(UUIDProvider);
     if(uuid != null){
-      return uuid;
+      return {"uuid" : uuid};
     } else {
       throw Exception("Couldn't get the uuid");
     }
@@ -101,45 +94,119 @@ class PullRepository {
     _read(matchStreamControllerProvider).add(matchList);
   }
 
-  //the return string will be the auth token
+  //the return is true if a profile already exists, false if a profile doesn't exist.
   Future<bool> loginRequest(String idToken, String phone) async {
     var request = http.Request('GET', loginUri);
     request.headers.addAll({"id" : idToken, "phone" : phone});
-
-    try {
-      var streamedResponse = await request.send().timeout(const Duration(seconds: 5));
-      var response = await http.Response.fromStream(streamedResponse);
-      if(response.statusCode == 200){
-        print("Success");
-        //TODO decode response to get the uuid and token fields.
-        //var pdfText= await json.decode(json.encode(response.databody);
-        final Map parsed = json.decode(response.body);
-        print("response uuid: " + parsed['uuid']);
-        print("response token " + parsed['token']);
-        //TODO set the returned uuid and auth token in hive.
-        try {
-          var Box = await Hive.openBox(kSettingsBox);
-          Box.put(kSettingsApiToken,parsed['token']);
-          Box.put(kSettingsUUID,parsed['uuid']);
-        } catch (error) {
-          print("Couldn't update the hive boxes for uuid and token");
-          print(error);
-          return false;
-        }
-        return true;
-      }else{
-        print("Something's wrong");
-        print(response);
+    var streamedResponse = await request.send().timeout(const Duration(seconds: 5));
+    var response = await http.Response.fromStream(streamedResponse);
+    if(response.statusCode == 200){
+      print("Success");
+      //TODO decode response to get the uuid and token fields.
+      //var pdfText= await json.decode(json.encode(response.databody);
+      final Map parsed = json.decode(response.body);
+      print("response uuid: " + parsed['uuid']);
+      print("response token " + parsed['token']);
+      print("state: "  + parsed['state'].toString());
+      //TODO set the returned uuid and auth token in hive.
+      var Box = await Hive.openBox(kSettingsBox);
+      Box.put(kSettingsApiToken,parsed['token']);
+      Box.put(kSettingsUUID,parsed['uuid']);
+      if(parsed['state'] == 0){
         return false;
+      } else {
+        return true;
       }
-    } on TimeoutException catch (e) {
-      print('Timeout');
-      return false;
-    } on Error catch (e) {
-      print('Error: $e');
-      return false;
+    }else{
+      print("Something's wrong");
+      print(response);
+      throw Exception('Login attempt failed.');
     }
+  }
 
+  Future<Filters> getFilterRequest() async {
+    Map<String,String> headers = {};
+    headers.addAll(_authHeader);
+    headers.addAll(_uuid);
+
+    http.Response response = await http.get(filterUri, headers: headers);
+
+    if(response.statusCode == 200){
+      print('valid response code');
+      print(jsonDecode(response.body));
+      Filters filters = Filters.fromJson(jsonDecode(response.body));
+      //print(filters.obese);
+      return filters;
+    } else {
+      print("Error trying to get filters.");
+      throw Exception("Error trying to get filters from server");
+    }
+  }
+
+  Future<void> updateFilterRequest(Filters filters) async {
+    Map<String,String> headers = {};
+    headers.addAll(_authHeader);
+    headers.addAll(_uuid);
+    headers.addAll({"content-type" : "application/json"});
+    var response = await http.put(
+      filterUri,
+      headers: headers,
+      body: jsonEncode(filters.toJson())
+    );
+    if(response.statusCode == 200){
+      return;
+    } else {
+      throw Exception("Updating filters to the server failed.");
+    }
+  }
+
+
+  Future<void> createFilterRequest(Filters filters) async {
+    //calculate the correct date values based on the inputted ages.
+    //DateTime currentDate = DateTime.now();
+    //DateTime minBirthDate = DateTime(currentDate.year - filters.upperAge, currentDate.month, currentDate.day);
+    //DateTime maxBirthDate = DateTime(currentDate.year - filters.lowerAge, currentDate.month, currentDate.day);
+
+    Map<String,String> headers = {};
+    headers.addAll(_authHeader);
+    headers.addAll(_uuid);
+    headers.addAll({"content-type" : "application/json"});
+
+    //create the request.
+    var response = await http.post(
+        filterUri,
+        body: jsonEncode(<String,String>
+        {
+          "minAge" : filters.lowerAge.toString(),
+          "maxAge" : filters.upperAge.toString(),
+          "minHeight" : filters.lowerHeight.toString(),
+          "maxHeight" : filters.upperHeight.toString(),
+          "genderMan" : filters.menChecked.toString(),
+          "genderWoman" : filters.womenChecked.toString(),
+          "genderNonBinary" : filters.nonBinaryChecked.toString(),
+          "btLean" : filters.lean.toString(),
+          "btAverage" : filters.average.toString(),
+          "btMuscular" : filters.muscular.toString(),
+          "btHeavy" : filters.heavy.toString(),
+          "btObese" : filters.obese.toString(),
+          "maxDistance" : filters.maxDistance.toString(),
+        }
+      ),
+      headers: headers
+    );
+
+    //interpret the response.
+    if(response.statusCode == 200){
+      print("Success");
+      final Map parsed = json.decode(response.body);
+      print(parsed['message']);
+      return;
+    }else{
+      print("Something's wrong");
+      print(response);
+      throw Exception("Error sending filter information to the server.");
+      return;
+    }
   }
 
   Future<void> createProfile() async {
@@ -148,7 +215,8 @@ class PullRepository {
     //get the auth headers.
     //TODO fix this, right now it only returns "demo token" which is wrong.
     //request.headers.addAll(await _authHeader);
-    request.headers.addAll({"Authorization" : 'Bearer f46aa34a-76ff-4ae6-b8dd-2e72ff67e86e'});
+
+    request.headers.addAll(_authHeader);
 
     //list to hold the files we'll upload
     List<http.MultipartFile> filestoupload = [];
@@ -171,7 +239,9 @@ class PullRepository {
     request.files.addAll(filestoupload);
     //TODO fix this to properly get the uuid.
     //request.fields['uuid']= await _uuid;
-    request.fields['uuid'] = "311b8f93-a76e-48ba-97cb-c995d0dc918c";
+
+    var uuid = _uuid;
+    request.fields.addAll(uuid);
 
     String? name = _read(AccountCreationProvider.notifier).getName();
     if(name != null){
@@ -243,6 +313,7 @@ class PullRepository {
       }
     } on TimeoutException catch (e) {
       print('Timeout');
+      print(e);
     } on Error catch (e) {
       print('Error: $e');
     }

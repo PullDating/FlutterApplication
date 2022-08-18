@@ -9,6 +9,7 @@ import 'package:pull_flutter/views/login.dart';
 import 'package:pull_flutter/views/settings.dart';
 
 import '../development_utils/devLogin.dart';
+import '../views/edit_profile.dart';
 import '../views/profile_creation/profile_creation_parent.dart';
 
 final appRoutes = <GoRoute>[
@@ -19,7 +20,7 @@ final appRoutes = <GoRoute>[
       authUrl: '/login',
       homeUrl: '/home/cards',
       devUrl: '/devlogin', //comment out for production
-      dev: true, //comment out for production.
+      dev: false, //comment out for production.
     ),
   ),
 
@@ -60,14 +61,26 @@ final appRoutes = <GoRoute>[
       return ProfileCreationParent(title: 'Pull', path: page);
     },
   ),
+
+  GoRoute(
+    path: '/profile/edit',
+    builder: (BuildContext context, GoRouterState state) {
+      return const EditProfile();
+    },
+  ),
+
   GoRoute(
       path: '/settings',
       builder: (BuildContext context, GoRouterState state) =>
           const SettingsPage()),
   GoRoute(
       path: '/filters',
-      builder: (BuildContext context, GoRouterState state) =>
-          const FilterPage()),
+      builder: (BuildContext context, GoRouterState state) {
+        final FilterPageInput input = state.extra! as FilterPageInput;
+        return FilterPage(onDone: input.onDone, cancelable: input.cancelable,onCancel: input.onCancel);
+      }
+
+  ),
   //TODO add /chat route that goes to the correct chat depending on which user was clicked on on the match list page
   GoRoute(
       path: '/chat/:uuid',
@@ -79,3 +92,10 @@ final appRoutes = <GoRoute>[
         );
       }),
 ];
+
+class FilterPageInput {
+  final Function onDone;
+  final bool cancelable;
+  final Function? onCancel;
+  const FilterPageInput(this.onDone, this.cancelable, this.onCancel);
+}

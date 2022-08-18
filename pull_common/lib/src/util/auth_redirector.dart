@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
@@ -17,16 +16,11 @@ class AuthRedirector extends ConsumerWidget {
   final Widget? child;
   final bool dev;
 
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    if(dev){
-      //developer login path
-
-      context.go(devUrl);
-    } else {
-      //production login path.
-
+    if(!dev){
       // Wait for the local settings data to be available
       ref.listen<AsyncValue<Box>>(settingsFutureProvider, (previous, next) {
         // Navigate based on the presence of the stored auth token
@@ -36,6 +30,14 @@ class AuthRedirector extends ConsumerWidget {
         //context.go(FirebaseAuth.instance.currentUser != null ? homeUrl : authUrl));
       });
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // executes after build
+      if(dev){
+        //developer login path
+        context.go(devUrl);
+      }
+    });
     return Material(child: Center(child: child ?? CircularProgressIndicator()));
   }
 }

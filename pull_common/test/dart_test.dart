@@ -2,10 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pull_common/pull_common.dart';
-import 'package:pull_common/src/model/api_uris.dart';
-import 'package:pull_common/src/model/entity/auth_request.dart';
 import 'package:pull_common/src/model/exception/response_exception.dart';
-import 'package:pull_common/src/model/provider/repository.dart';
 import 'package:test/test.dart';
 
 import 'mocks.dart';

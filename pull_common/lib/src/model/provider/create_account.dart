@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pull_common/src/model/entity/profile.dart';
-import 'package:location/location.dart';
 
 
 class ProfileImages{
