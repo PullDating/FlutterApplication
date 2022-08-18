@@ -29,7 +29,7 @@ class OTPScreenState extends ConsumerState<OTPScreen> {
         fontWeight: FontWeight.w600),
     decoration: BoxDecoration(
       border: Border.all(color: Colors.black),
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(10),
     ),
   );
 
@@ -56,6 +56,7 @@ class OTPScreenState extends ConsumerState<OTPScreen> {
             padding: const EdgeInsets.all(30.0),
             child: Pinput(
               length: 6,
+              closeKeyboardWhenCompleted: false,
               defaultPinTheme: defaultPinTheme,
               controller: _pinPutController,
               pinAnimationType: PinAnimationType.fade,

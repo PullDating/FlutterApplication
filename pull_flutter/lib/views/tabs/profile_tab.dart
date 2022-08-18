@@ -7,21 +7,16 @@ import '../../model/routes.dart';
 
 updateFilters(BuildContext context, WidgetRef ref, Filters filters) async {
   print("updating the filters!!!");
-  // try{
-  //   PullRepository repo = PullRepository(ref.read);
-  //   await repo.updateFilterRequest(filters).then((value) => {
-  //     if(value == true){
-  //       context.go('/home/cards')
-  //     } else {
-  //       print("There was an error, so no navigation occured")
-  //     }
-  //   });
-  // }catch (e){
-  //   print("There was an error somewhere in the profile creation.");
-  //   print(e);
-  //   return;
-  // }
-  // context.go('/home/profile');
+  try{
+    PullRepository repo = PullRepository(ref.read);
+    await repo.updateFilterRequest(filters);
+    context.go('/home/cards');
+  }catch (e){
+    print("There was an error somewhere in the profile creation.");
+    print(e);
+    return;
+  }
+  context.go('/home/profile');
 }
 
 cancelUpdateFilters(BuildContext context){
@@ -29,12 +24,16 @@ cancelUpdateFilters(BuildContext context){
   context.go('/home/profile');
 }
 
+
 /// Tab displaying a list of all of your matches/conversations
 class ProfileTab extends ConsumerWidget {
   const ProfileTab({super.key});
 
   //they should be allowed to update their filters, and they should be able to cancel.
 
+
+  //get the most recent filters of the user
+  //TODO modify this function to be cached after login
 
 
   final FilterPageInput filterinput = const FilterPageInput(updateFilters, true, cancelUpdateFilters);

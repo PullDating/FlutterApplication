@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pull_common/pull_common.dart';
 
 class FilterPage extends ConsumerStatefulWidget {
-  const FilterPage({
+  FilterPage({
     Key? key,
     required this.onDone,
     this.cancelable = true,
@@ -20,15 +20,41 @@ class FilterPage extends ConsumerStatefulWidget {
   ConsumerState<FilterPage> createState() => _FilterPageState();
 }
 
+
+
 class _FilterPageState extends ConsumerState<FilterPage> {
   bool metricImperial = false; //to use metric or imperial
 
-  @override
-  void initState() {
-    super.initState();
+  late Filters filters = Filters.basic();
+
+  void getFilters() async{
+    //make request to the server to get the filters.
+    if(widget.cancelable == true){
+      //this means that a filter should exist already
+      //TODO retrieve the filters from the server.
+      try {
+        PullRepository repo = PullRepository(ref.read);
+        Filters tempFilters = await repo.getFilterRequest();
+        setState((){
+          filters = tempFilters;
+        });
+      } catch (e) {
+        print(e);
+      }
+    }
   }
 
-  Filters filters = Filters();
+
+
+  @override
+  void initState() {
+    //get the most recent filters from the server for that user.
+
+    super.initState();
+    getFilters();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -132,10 +158,11 @@ class _FilterPageState extends ConsumerState<FilterPage> {
                             min: 0,
                             max: 100,
                             divisions: 100,
-                            value: filters.maxDistance,
+                            value: filters.maxDistance.toDouble(),
                             onChanged: (value) {
                               setState(() {
-                                filters.maxDistance = value;
+                                filters.maxDistance = value.toInt();
+                                //print(filters.maxDistance);
                               });
                             },
                             label: (metricImperial == false) ? "${filters.maxDistance.round().toString()} km" : "${(filters.maxDistance*0.621371).round().toString()} miles",
@@ -149,11 +176,11 @@ class _FilterPageState extends ConsumerState<FilterPage> {
                             min: 55,
                             max: 275,
                             divisions: 275-55,
-                            values: RangeValues(filters.lowerHeight,filters.upperHeight),
+                            values: RangeValues(filters.lowerHeight.toDouble(),filters.upperHeight.toDouble()),
                             onChanged: (values) {
                               setState(() {
-                                filters.lowerHeight = values.start;
-                                filters.upperHeight = values.end;
+                                filters.lowerHeight = values.start.toInt();
+                                filters.upperHeight = values.end.toInt();
                               });
                             },
                             labels: RangeLabels((metricImperial == false)? "${filters.lowerHeight.round()} cm" : "${(filters.lowerHeight~/30.48).round().toString()}\'${(((filters.lowerHeight / 30.48)-(filters.lowerHeight ~/ 30.48))*12).toInt().toString()}\""

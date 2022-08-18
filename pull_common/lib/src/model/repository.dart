@@ -124,8 +124,42 @@ class PullRepository {
     }
   }
 
+  Future<Filters> getFilterRequest() async {
+    Map<String,String> headers = {};
+    headers.addAll(_authHeader);
+    headers.addAll(_uuid);
 
-  //TODO add the createFilterRequest
+    http.Response response = await http.get(filterUri, headers: headers);
+
+    if(response.statusCode == 200){
+      print('valid response code');
+      print(jsonDecode(response.body));
+      Filters filters = Filters.fromJson(jsonDecode(response.body));
+      //print(filters.obese);
+      return filters;
+    } else {
+      print("Error trying to get filters.");
+      throw Exception("Error trying to get filters from server");
+    }
+  }
+
+  Future<void> updateFilterRequest(Filters filters) async {
+    Map<String,String> headers = {};
+    headers.addAll(_authHeader);
+    headers.addAll(_uuid);
+    var response = await http.put(
+      filterUri,
+      headers: headers,
+      body: jsonEncode(filters.toJson())
+    );
+    if(response.statusCode == 200){
+      return;
+    } else {
+      throw Exception("Updating filters to the server failed.");
+    }
+  }
+
+
   Future<void> createFilterRequest(Filters filters) async {
     //calculate the correct date values based on the inputted ages.
     DateTime currentDate = DateTime.now();
@@ -173,65 +207,6 @@ class PullRepository {
       return;
     }
   }
-
-  /*
-  Future<bool> updateFilterRequest(Filters filters) async {
-
-    return false;
-    //TODO calculate the minBirthDate and maxBirthDate from the filters input.
-    DateTime? maxBirthDate = DateTime.now();
-    DateTime? minBirthDate = DateTime.now();
-    //TODO make sure that the correct format for date.tostring is used.
-    var request = http.post(filterUri, body: jsonEncode(<String,String>{
-      "minBirthDate" : minBirthDate.toString(),
-      "maxBirthDate" : maxBirthDate.toString(),
-      "minHeight" : filters.lowerHeight.toString(),
-      "maxHeight" : filters.upperHeight.toString(),
-      "genderMan" : filters.menChecked.toString(),
-      "genderWoman" : filters.womenChecked.toString(),
-      "genderNonBinary" : filters.nonBinaryChecked.toString(),
-      "btLean" : filters.lean.toString(),
-      "btAverage" : filters.average.toString(),
-      "btMuscular" : filters.muscular.toString(),
-      "btHeavy" : filters.heavy.toString(),
-      "btObese" : filters.obese.toString(),
-      "maxDistance" : filters.maxDistance.toString(),
-    }));
-    //TODO fix this to be part of the request.
-    request.headers.addAll(_authHeader);
-    request.headers.addAll(_uuid);
-
-
-
-    //TODO add the body to the request.
-
-
-    try {
-      var streamedResponse = await request.send().timeout(const Duration(seconds: 5));
-      var response = await http.Response.fromStream(streamedResponse);
-      if(response.statusCode == 200){
-        print("Success");
-        //TODO decode response to get the uuid and token fields.
-        //var pdfText= await json.decode(json.encode(response.databody);
-        final Map parsed = json.decode(response.body);
-        print(parsed['message']);
-        return true;
-      }else{
-        print("Something's wrong");
-        print(response);
-        return false;
-      }
-    } on TimeoutException catch (e) {
-      print('Timeout');
-      print(e);
-      return false;
-    } on Error catch (e) {
-      print('Error: $e');
-      return false;
-    }
-
-  }
-  */
 
   Future<void> createProfile() async {
     //create a multipart form request (needed because we are using files)
