@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -55,6 +57,8 @@ class OTPScreenState extends ConsumerState<OTPScreen> {
           Padding(
             padding: const EdgeInsets.all(30.0),
             child: Pinput(
+              useNativeKeyboard: true,
+              keyboardType: TextInputType.numberWithOptions(signed: true, decimal: true),
               length: 6,
               closeKeyboardWhenCompleted: false,
               defaultPinTheme: defaultPinTheme,
@@ -73,7 +77,9 @@ class OTPScreenState extends ConsumerState<OTPScreen> {
                     if (value.user != null) {
                       try{
                         PullRepository repo = PullRepository(ref.read);
+                        print("about to send login request");
                         await repo.loginRequest(await value.user!.getIdToken(),widget.phone.completeNumber).then((value) => {
+                          print("login request fired"),
                           if(value == true){
                             context.go('/home/cards')
                           } else {
@@ -81,7 +87,9 @@ class OTPScreenState extends ConsumerState<OTPScreen> {
                           }
 
                         });
-                      }catch (e){
+                      } on TimeoutException catch(e){
+                        print("there was a timout exception trying to read firebase exception");
+                      } catch (e){
                         print("There was an error somewhere in the profile creation.");
                         print(e);
                         return;

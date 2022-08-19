@@ -1,10 +1,23 @@
 
 //AVD uses 10.0.2.2 as an alias for localhost.
-const _baseUrl = 'http://10.0.2.2:3000'; // TODO put the actual URL here
+import 'package:flutter/foundation.dart';
 
-final authUri = Uri.parse('$_baseUrl/auth');
-final nextMatchesUri = Uri.parse('$_baseUrl/nextMatches');
-final profileUri = Uri.parse('$_baseUrl/profile');
-final profilePhotoLimitsUri = Uri.parse('$_baseUrl/profile/photoLimits');
-final loginUri = Uri.parse('$_baseUrl/auth/login');
-final filterUri = Uri.parse('$_baseUrl/filter');
+
+String _getBaseUrl(){
+  if(defaultTargetPlatform == TargetPlatform.android){
+    print("Using DEV android baseuri");
+    return 'http://10.0.2.2:3000';
+  }else if (defaultTargetPlatform == TargetPlatform.iOS){
+    print("Using DEV ios baseuri");
+    return 'http://localhost:3000';
+  } else {
+    throw Exception("There was an error retrieving the correct baseurl");
+  }
+}
+
+final authUri = Uri.parse('${_getBaseUrl()}/auth');
+final nextMatchesUri = Uri.parse('${_getBaseUrl()}/nextMatches');
+final profileUri = Uri.parse('${_getBaseUrl()}/profile');
+final profilePhotoLimitsUri = Uri.parse('${_getBaseUrl()}/profile/photoLimits');
+final loginUri = Uri.parse('${_getBaseUrl()}/auth/login');
+final filterUri = Uri.parse('${_getBaseUrl()}/filter');

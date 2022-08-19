@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/FlutterApplication.iml" filepath="$PROJECT_DIR$/.idea/FlutterApplication.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pull_common/pull_common.iml" filepath="$PROJECT_DIR$/pull_common/pull_common.iml" />
     </modules>
   </component>
 </project>
