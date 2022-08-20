@@ -2,7 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 //import 'dart:html';
 import 'dart:io';
+import 'dart:ui';
 
+import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:pull_common/pull_common.dart';
@@ -209,6 +215,126 @@ class PullRepository {
     }
   }
 
+  //use a get request to get the file from the presigned url.
+  Future<File> _fileFromImageUrl(String presignedUrl,String filename) async {
+    print("got into _fileFromImageUrl");
+    try {
+      Uri presignedUri = Uri.parse(presignedUrl);
+      final response = await http.get(presignedUri);
+      final documentDirectory = await getApplicationDocumentsDirectory();
+      final file = File(join(documentDirectory.path, filename));
+      file.writeAsBytesSync(response.bodyBytes);
+      return file;
+    } catch (e){
+      print(e);
+      throw Exception("Couldn't get the file from the url given.");
+    }
+  }
+
+  //takes in the imagePath from a profile get request in this format
+  /*
+  {
+    "0": "https://minio.dev.pull.dating/nanortheast/2022-08-18T08%3A27%3A52.668-04%3A002c50be864dcccc3c1a4e?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=stomp3574%2F20220820%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220820T011205Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=bcfefda58d5ea34330bbbce2d6bc8e5b5178704301feadca04e7644d1eb1296c",
+    "1": "https://minio.dev.pull.dating/nanortheast/2022-08-18T08%3A27%3A53.297-04%3A003c8b6ac16dd8f9c760d0?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=stomp3574%2F20220820%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220820T011205Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=9582919207ce2eaa964482bb7a200f5c4fd95c96032d229c008cf334715c0565",
+    "2": "https://minio.dev.pull.dating/nanortheast/2022-08-18T08%3A27%3A54.162-04%3A0054476da8913d18a28e1a?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=stomp3574%2F20220820%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220820T011205Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=cf78158d0164cd96f4ce7f03915638f3c21b54ba27dc072be273515ad8aa1788",
+    "bucket": "nanortheast"
+   }
+   */
+  //then it parses it to return a list of files.
+  Future<List<File>> _filesFromImagePaths(Map<String,dynamic> imagePath) async {
+    print("got into filesFromImagePaths");
+    //print("image Path" + imagePath.toString());
+    imagePath.remove('bucket');
+    int length = imagePath.keys.length;
+    print("number of presigned urls to get: ${length}");
+    List<File> files = [];
+
+    for(String element in imagePath.keys){
+      print("looking at a presigned url...");
+      //for each numbered element, add it to the list.
+      try{
+        await _fileFromImageUrl(imagePath[element]!,'profileImage${element}').then((newfile) => {
+          print('adding element: ${element}'),
+          files.add(newfile),
+        });
+      }catch(e){
+        print(e);
+        throw Exception("Couldn't get _fileFromImageUrl");
+      }
+    }
+    return files;
+  }
+
+  //sets the profile images provder and the account creation provider with the relevant information
+  Future<void> getProfile(WidgetRef ref) async {
+    Map<String,String> headers = {};
+    headers.addAll(_authHeader);
+    headers.addAll(_uuid);
+    http.Response response = await http.get(profileUri, headers: headers);
+
+    if(response.statusCode == 200){
+      print('valid response code');
+      var json = jsonDecode(response.body);
+      print(json);
+      print("name");
+      print(json['name']);
+
+      //print("coordinates");
+      var coordinates = json['lastLocation']['coordinates'];
+      //print(coordinates);
+      //create a profile object using the values.
+
+      //convert the birthDates to ages
+      print("attemping to parse the birthdate");
+      DateTime birthdate = DateTime.parse(json['birthDate']);
+      print("attemping to create the profile from json");
+      Profile profile = Profile(
+        name: json['name'],
+        birthdate: birthdate,
+        bodytype: json['bodyType'],
+        gender: json['gender'],
+        height: double.parse(json['height'].toString()),
+        datinggoal: json['datingGoal'],
+        biography: json['biography'],
+        latitude: double.parse(coordinates[0].toString()),
+        longitude: double.parse(coordinates[1].toString()),
+      );
+      print("created profile from json");
+      ref.read(AccountCreationProvider.notifier).setProfile(profile);
+
+      //update the min an max values
+
+      try{
+        await getPhotoLimits(ref);
+      }catch (e) {
+        print("error getting photo limits: ${e.toString()}");
+        throw Exception("Couldn't get the photo limits");
+      }
+
+      try {
+        List<File?> images = await _filesFromImagePaths(json['imagePath']);
+        print("images.length ${images.length}");
+        if(images.length < ref.read(ProfilePhotosProvider.notifier).getMin() || images.length > ref.read(ProfilePhotosProvider.notifier).getMax()){
+          throw Exception('The server returned an invalid number of images. You may need to update the min and max profile photos first');
+        }
+
+        //update the images.
+        ref.read(ProfilePhotosProvider.notifier).setImages(images);
+        //update the number of images
+        ref.read(ProfilePhotosProvider.notifier).setNumFilled(images.length);
+        //update numfilled.
+        ref.read(ProfilePhotosProvider.notifier).setMandatoryFilled(true);
+
+      } catch (e) {
+        print("problem getting the images: ${e.toString()}");
+        throw Exception("problem getting the images for profile.");
+      }
+    } else {
+      print("Error trying to get filters.");
+      throw Exception("Error trying to get filters from server");
+    }
+  }
+
   Future<void> createProfile() async {
     //create a multipart form request (needed because we are using files)
     var request = http.MultipartRequest('POST', profileUri);
@@ -319,6 +445,22 @@ class PullRepository {
     }
   }
 
+  Future<void> getPhotoLimits(WidgetRef ref) async {
+    print("got into getPhotoLimits");
+    var url = profilePhotoLimitsUri;
+    var decoded;
+    var response = await http.get(url).timeout(const Duration(seconds: 3));
+    if(response.statusCode == 200){
+      print("Success");
+      decoded = json.decode(response.body);
+      print("attemping to set state with new photo limits");
+      ref.read(ProfilePhotosProvider.notifier).setMax(decoded['maxProfilePhotos']);
+      ref.read(ProfilePhotosProvider.notifier).setMin(decoded['minProfilePhotos']);
+      ref.read(ProfilePhotosProvider.notifier).setImages(List<File?>.filled(ref.read(ProfilePhotosProvider.notifier).getMax(), null));
+    } else {
+      throw Exception("The status code on getting photos limits was not 200");
+    }
+  }
 }
 
 extension _StatusCode on int {
