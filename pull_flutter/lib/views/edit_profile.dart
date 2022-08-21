@@ -8,8 +8,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pull_common/pull_common.dart';
+import 'package:pull_flutter/views/filters.dart';
 import 'package:pull_flutter/views/profile_creation/photo_field.dart';
 import 'package:tuple/tuple.dart';
+
+import '../ui/match_card.dart';
 
 //TODO modify this in order to get the stored profile instead of database access.
 class EditProfile extends ConsumerStatefulWidget {
@@ -38,6 +41,16 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     super.initState();
   }
 
+  List<bool> datingGoalChecked = [true, false, false, false, false, false];
+  List<String> datingGoalOptionNames = ['Long-term Relationship', 'Short-term Relationship', 'Hookup/Casual', 'Marriage', 'Just Chatting', 'Unsure'];
+  List<String> datingGoalValues = ['longterm', 'shortterm', 'hookup', 'marriage', 'justchatting', 'unsure'];
+  List<bool> bodyTypeChecked = [true,false,false,false,false];
+  List<String> bodyTypeOptionNames = ['Lean', 'Average', 'Muscular', 'Heavy', 'Obese'];
+  List<String> bodyTypeValues = ['lean', 'average', 'muscular', 'heavy', 'obese'];
+  List<bool> genderChecked = [true, false, false];
+  List<String> genderOptionNames = ["Man","Woman","Non-Binary"];
+  List<String> genderValues = ["man","woman","non-binary"];
+
   //get the information from the database, and write it to profile.
   Future<void> _initialize() async {
     try {
@@ -48,11 +61,13 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       // now update the local copies of everything accordingly
       profileImages = await ref.read(ProfilePhotosProvider);
       profile = await ref.read(AccountCreationProvider);
-      print("profile and profileimages loaded");
-      print(profile);
-      print(profileImages);
+      //print("profile and profileimages loaded");
+      //print(profile);
+      //print(profileImages);
       //load in to the relevant text controllers
       biographyController.text = (profile.biography == null)? '' : profile.biography!;
+      //TODO get the rest of the varables for the other fields and update them.
+
     } catch (e) {
       print("Failed to get a profile from the backend.");
       print(e);
@@ -60,6 +75,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     }
   }
 
+  //todo implement submit
   //they it should update the database, and then navigate back to /home/profile.
   Future<void> submit() async {
     print("submit pressed");
@@ -69,6 +85,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     context.go('/home/profile');
   }
 
+  //TODO implement reorder photos
   _reorderPhotos(int oldIndex, int newIndex) {
     setState(() {
       // //check to make sure they aren't arranging the empty ones
@@ -85,12 +102,43 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     });
   }
 
+  //TODO implement pick photo
   _pickPhoto() {
     print("_pickPhoto pressed");
   }
-
+  //TODO implement delete photo
   _deletePhoto() {
     print("_deletePhoto pressed");
+  }
+
+
+
+  _datingGoalPressed(int index){
+    print("dating goal pressed with index: ${index}");
+    setState(() {
+      for(int i = 0; i < datingGoalChecked.length; i++){
+        datingGoalChecked[i] = false;
+      }
+      datingGoalChecked[index] = true;
+    });
+  }
+  _bodyTypePressed(int index){
+    print("bodyType pressed with index: ${index}");
+    setState(() {
+      for(int i = 0; i < bodyTypeChecked.length; i++){
+        bodyTypeChecked[i] = false;
+      }
+      bodyTypeChecked[index] = true;
+    });
+  }
+  _genderPressed(int index){
+    print("gender pressed with index: ${index}");
+    setState(() {
+      for(int i = 0; i < genderChecked.length; i++){
+        genderChecked[i] = false;
+      }
+      genderChecked[index] = true;
+    });
   }
 
   //Things they should be able to change
@@ -117,13 +165,15 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         MediaQuery.of(context).padding.bottom -
         kTextTabBarHeight;
 
+    var tiles = <ImageThumbnailV2>[];
+
     try {
 
       print("profileImages.min: ${profileImages.min}");
       print("profileImages.max: ${profileImages.max}");
       print("profileImages.images.length: ${profileImages.images.length}");
 
-      var tiles = <ImageThumbnailV2>[];
+
 
       for (int i = 0; i < profileImages.min; i++) {
         if (profileImages.images.length > i) {
@@ -203,23 +253,70 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                     children: [
                       //edit
                       Container(
-                        child: Column(
+                        child: ListView(
                           children: [
+                            //edit photos.
                             PhotoField(
                               onReorder: _reorderPhotos,
-                              tiles: [],
+                              tiles: tiles,
                             ),
+                            //edit biography
                             BiographyBox(
                               maxCharacters: biographyMaxCharacters,
                               controller: biographyController,
                             ),
-                            
+                            //edit dating goals
+                            FilterListItem(
+                                icon: const Icon(Icons.search),
+                                title: "Dating Goal",
+                                widget: SingleSelectRow(
+                                  onPressed: (int index) {
+                                    _datingGoalPressed(index);
+                                  },
+                                  checked: datingGoalChecked,
+                                  optionNames: datingGoalOptionNames,
+                                ),
+                            ),
+                            FilterListItem(
+                              icon: const Icon(Icons.man),
+                              title: "Body Type",
+                              widget: SingleSelectRow(
+                                onPressed: (int index) {
+                                  _bodyTypePressed(index);
+                                },
+                                checked: bodyTypeChecked,
+                                optionNames: bodyTypeOptionNames,
+                              ),
+                            ),
+                            FilterListItem(
+                              icon: const Icon(Icons.transgender),
+                              title: "Gender",
+                              widget: SingleSelectRow(
+                                onPressed: (int index) {
+                                  _genderPressed(index);
+                                },
+                                checked: genderChecked,
+                                optionNames: genderOptionNames,
+                              ),
+                            ),
                           ],
                         ),
                       ),
+
                       //preview
                       Container(
                         color: Colors.orange,
+                        // child: PullMatchCard(
+                        //   match: Match(
+                        //     id: 0,
+                        //     displayName: profile.name!,
+                        //     bio: profile.biography!,
+                        //     pronouns: "He/Him",
+                        //     media: [],
+                        //     gender: profile.gender!,
+                        //     interests: ["I have no interested","I'm boring"]
+                        //   ),
+                        // ),
                       ),
                     ],
                   ),
@@ -332,5 +429,57 @@ class BiographyBox extends StatelessWidget {
       ),
     );
     ;
+  }
+}
+
+class SingleSelectRow extends StatelessWidget {
+  SingleSelectRow(
+      {
+        Key? key,
+        required this.checked,
+        required this.onPressed(int index),
+        required this.optionNames,
+      }) : super(key: key);
+
+  //String is the name, bool is whether it is selected or not.
+
+  //these should have the same length
+  //TODO convert these to a tuple.
+  List<String> optionNames;
+  List<bool> checked;
+
+  Function onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+
+    //generate the children widgets.
+    List<Widget> displayWidgets = [];
+    for(int i = 0; i < checked.length; i++){
+      displayWidgets.add(
+        SizedBox(
+          height: 30,
+          child: FittedBox(
+            fit: BoxFit.fitHeight,
+            child: ElevatedButton(
+              onPressed: () {
+                onPressed(i);
+              },
+              child: Text(optionNames[i]),
+              style: ElevatedButton.styleFrom(
+                primary: (checked[i] == false) ? Colors.grey : Colors.lightBlueAccent,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    return Expanded(
+      child: Wrap(
+        spacing: 5,
+        
+        children: displayWidgets,
+      ),
+    );
   }
 }
