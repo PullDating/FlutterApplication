@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:pull_common/pull_common.dart';
 
@@ -5,10 +7,13 @@ import 'package:pull_common/pull_common.dart';
 class PullMatchCard extends StatelessWidget {
   const PullMatchCard({
     required this.match,
+    required this.fromFile,
     Key? key,
   }) : super(key: key);
 
   final Match match;
+  //true if it is from a file on the device, false if not (network probably)
+  final bool fromFile;
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +38,7 @@ class PullMatchCard extends StatelessWidget {
                   child: ListView(
                     scrollDirection: Axis.vertical,
                     children: [
-                      Image(
-                          image: AssetImage(match.media.first.uri.toString())),
+                      (fromFile)? Image.file(File(match.media.first.uri.path)) : Image(image: AssetImage(match.media.first.uri.toString())),
                       if (match.bio.isNotEmpty)
                         Container(
                           color: theme.canvasColor,

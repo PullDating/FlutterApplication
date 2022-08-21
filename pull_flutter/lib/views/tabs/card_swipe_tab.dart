@@ -10,7 +10,7 @@ class CardSwipeTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MatchCards(cardBuilder: (context, match) {
-      return PullMatchCard(match: match);
+      return PullMatchCard(match: match, fromFile: false,);
     });
   }
 }

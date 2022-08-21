@@ -11,6 +11,7 @@ import 'package:pull_common/pull_common.dart';
 import 'package:pull_flutter/views/filters.dart';
 import 'package:pull_flutter/views/profile_creation/photo_field.dart';
 import 'package:tuple/tuple.dart';
+import 'package:pull_common/src/model/entity/media.dart';
 
 import '../ui/match_card.dart';
 
@@ -139,6 +140,25 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       }
       genderChecked[index] = true;
     });
+  }
+
+  List<Media> _getMedia(){
+    //for each item in the list of images, find the path and add to a list of uris
+
+    List<Media> values = [];
+    try {
+      for (int i = 0; i < profileImages.images.length; i++) {
+        values.add(Media(
+          //pass in the path to the file
+          uri: Uri.file(profileImages.images[i]!.path)
+        ));
+      }
+    } catch (e){
+      print(e);
+      throw Exception("unable to load the profile photo media.");
+    }
+    print("values: ${values}");
+    return values;
   }
 
   //Things they should be able to change
@@ -306,17 +326,24 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                       //preview
                       Container(
                         color: Colors.orange,
-                        // child: PullMatchCard(
-                        //   match: Match(
-                        //     id: 0,
-                        //     displayName: profile.name!,
-                        //     bio: profile.biography!,
-                        //     pronouns: "He/Him",
-                        //     media: [],
-                        //     gender: profile.gender!,
-                        //     interests: ["I have no interested","I'm boring"]
-                        //   ),
-                        // ),
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: PullMatchCard(
+                                fromFile: true,
+                                match: Match(
+                                  id: 0,
+                                  displayName: profile.name!,
+                                  bio: profile.biography!,
+                                  pronouns: "He/Him",
+                                  media: _getMedia(),
+                                  gender: profile.gender!,
+                                  interests: ["I have no interested","I'm boring"]
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

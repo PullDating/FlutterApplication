@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:ui';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 import 'package:pull_common/src/model/entity/media.dart';
@@ -14,9 +17,11 @@ class Match with _$Match {
       required String displayName,
       @Default('') String bio,
       @Default([]) List<Media> media,
+      //@Default([]) List<Image> media,
       String? pronouns,
       String? gender,
       @Default([]) List<String> interests}) = _Match;
 
   factory Match.fromJson(Map<String, Object?> json) => _$MatchFromJson(json);
 }
+
