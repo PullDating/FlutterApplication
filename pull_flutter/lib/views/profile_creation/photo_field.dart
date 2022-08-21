@@ -144,8 +144,6 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: WrapList(
-                  minProfilePhotos: minProfilePhotos,
-                  maxProfilePhotos: maxProfilePhotos,
                   onReorder: _onReorder,
                   tiles: tiles,
                 ),
@@ -162,15 +160,10 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
 
 class WrapList extends StatelessWidget {
   List<Widget> tiles;
-  int maxProfilePhotos;
-  int minProfilePhotos;
   Function(int,int) onReorder;
-
   WrapList(
       {
         Key? key,
-        required int this.minProfilePhotos,
-        required int this.maxProfilePhotos,
         required List<Widget> this.tiles,
         required Function(int,int) this.onReorder,
       }) : super(key: key);
