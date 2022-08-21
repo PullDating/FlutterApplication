@@ -12,15 +12,16 @@ part 'match.g.dart';
 @freezed
 @Collection()
 class Match with _$Match {
-  const factory Match(
-      {required int id,
+  const factory Match({
+      required int id,
       required String displayName,
       @Default('') String bio,
       @Default([]) List<Media> media,
       //@Default([]) List<Image> media,
       String? pronouns,
       String? gender,
-      @Default([]) List<String> interests}) = _Match;
+      @Default([]) List<String> interests
+  }) = _Match;
 
   factory Match.fromJson(Map<String, Object?> json) => _$MatchFromJson(json);
 }

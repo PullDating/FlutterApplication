@@ -24,7 +24,15 @@ class EditProfile extends ConsumerStatefulWidget {
 }
 
 class _EditProfileState extends ConsumerState<EditProfile> {
-  late Profile profile = Profile();
+  late Profile profile = Profile(
+    name: "placeholder",
+    birthdate: DateTime.now(),
+    bodytype: "average",
+    gender: "man",
+    height: 165,
+    biography: ""
+
+  );
   late ProfileImages profileImages = ProfileImages(
       images: [],
       mandatoryFilled: false,
@@ -38,7 +46,6 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   @override
   void initState() {
     _initialize();
-    //TODO get the profile information from the backend.
     super.initState();
   }
 
@@ -60,8 +67,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       print("get profile done, attempting to set the profile and ProfileImages");
       //get the information from the profile providers
       // now update the local copies of everything accordingly
-      profileImages = await ref.read(ProfilePhotosProvider);
-      profile = await ref.read(AccountCreationProvider);
+      profileImages = await ref.watch(ProfilePhotosProvider);
+      profile = await ref.watch(AccountCreationProvider);
       //print("profile and profileimages loaded");
       //print(profile);
       //print(profileImages);
@@ -325,8 +332,9 @@ class _EditProfileState extends ConsumerState<EditProfile> {
 
                       //preview
                       Container(
-                        color: Colors.orange,
+                        color: Colors.grey,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Expanded(
                               child: PullMatchCard(
