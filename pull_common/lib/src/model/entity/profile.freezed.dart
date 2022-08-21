@@ -273,7 +273,9 @@ class _$_Profile implements _Profile {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ProfileToJson(this);
+    return _$$_ProfileToJson(
+      this,
+    );
   }
 }
 
@@ -292,23 +294,23 @@ abstract class _Profile implements Profile {
   factory _Profile.fromJson(Map<String, dynamic> json) = _$_Profile.fromJson;
 
   @override
-  String? get name => throw _privateConstructorUsedError;
+  String? get name;
   @override
-  DateTime? get birthdate => throw _privateConstructorUsedError;
+  DateTime? get birthdate;
   @override
-  String? get bodytype => throw _privateConstructorUsedError;
+  String? get bodytype;
   @override
-  String? get gender => throw _privateConstructorUsedError;
+  String? get gender;
   @override
-  double? get height => throw _privateConstructorUsedError;
+  double? get height;
   @override //Height is stored in cm
-  String? get datinggoal => throw _privateConstructorUsedError;
+  String? get datinggoal;
   @override
-  String? get biography => throw _privateConstructorUsedError;
+  String? get biography;
   @override
-  double? get latitude => throw _privateConstructorUsedError;
+  double? get latitude;
   @override
-  double? get longitude => throw _privateConstructorUsedError;
+  double? get longitude;
   @override
   @JsonKey(ignore: true)
   _$$_ProfileCopyWith<_$_Profile> get copyWith =>

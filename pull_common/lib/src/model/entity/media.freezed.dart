@@ -137,7 +137,9 @@ class _$_Media implements _Media {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MediaToJson(this);
+    return _$$_MediaToJson(
+      this,
+    );
   }
 }
 
@@ -148,9 +150,9 @@ abstract class _Media implements Media {
   factory _Media.fromJson(Map<String, dynamic> json) = _$_Media.fromJson;
 
   @override
-  Uri get uri => throw _privateConstructorUsedError;
+  Uri get uri;
   @override
-  String? get blurHash => throw _privateConstructorUsedError;
+  String? get blurHash;
   @override
   @JsonKey(ignore: true)
   _$$_MediaCopyWith<_$_Media> get copyWith =>

@@ -22,8 +22,11 @@ Match _$MatchFromJson(Map<String, dynamic> json) {
 mixin _$Match {
   int get id => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
+  int get age => throw _privateConstructorUsedError;
+  String? get bodyType => throw _privateConstructorUsedError;
   String get bio => throw _privateConstructorUsedError;
-  List<Media> get media => throw _privateConstructorUsedError;
+  List<Media> get media =>
+      throw _privateConstructorUsedError; //@Default([]) List<Image> media,
   String? get pronouns => throw _privateConstructorUsedError;
   String? get gender => throw _privateConstructorUsedError;
   List<String> get interests => throw _privateConstructorUsedError;
@@ -40,6 +43,8 @@ abstract class $MatchCopyWith<$Res> {
   $Res call(
       {int id,
       String displayName,
+      int age,
+      String? bodyType,
       String bio,
       List<Media> media,
       String? pronouns,
@@ -59,6 +64,8 @@ class _$MatchCopyWithImpl<$Res> implements $MatchCopyWith<$Res> {
   $Res call({
     Object? id = freezed,
     Object? displayName = freezed,
+    Object? age = freezed,
+    Object? bodyType = freezed,
     Object? bio = freezed,
     Object? media = freezed,
     Object? pronouns = freezed,
@@ -74,6 +81,14 @@ class _$MatchCopyWithImpl<$Res> implements $MatchCopyWith<$Res> {
           ? _value.displayName
           : displayName // ignore: cast_nullable_to_non_nullable
               as String,
+      age: age == freezed
+          ? _value.age
+          : age // ignore: cast_nullable_to_non_nullable
+              as int,
+      bodyType: bodyType == freezed
+          ? _value.bodyType
+          : bodyType // ignore: cast_nullable_to_non_nullable
+              as String?,
       bio: bio == freezed
           ? _value.bio
           : bio // ignore: cast_nullable_to_non_nullable
@@ -106,6 +121,8 @@ abstract class _$$_MatchCopyWith<$Res> implements $MatchCopyWith<$Res> {
   $Res call(
       {int id,
       String displayName,
+      int age,
+      String? bodyType,
       String bio,
       List<Media> media,
       String? pronouns,
@@ -126,6 +143,8 @@ class __$$_MatchCopyWithImpl<$Res> extends _$MatchCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? displayName = freezed,
+    Object? age = freezed,
+    Object? bodyType = freezed,
     Object? bio = freezed,
     Object? media = freezed,
     Object? pronouns = freezed,
@@ -141,6 +160,14 @@ class __$$_MatchCopyWithImpl<$Res> extends _$MatchCopyWithImpl<$Res>
           ? _value.displayName
           : displayName // ignore: cast_nullable_to_non_nullable
               as String,
+      age: age == freezed
+          ? _value.age
+          : age // ignore: cast_nullable_to_non_nullable
+              as int,
+      bodyType: bodyType == freezed
+          ? _value.bodyType
+          : bodyType // ignore: cast_nullable_to_non_nullable
+              as String?,
       bio: bio == freezed
           ? _value.bio
           : bio // ignore: cast_nullable_to_non_nullable
@@ -171,6 +198,8 @@ class _$_Match implements _Match {
   const _$_Match(
       {required this.id,
       required this.displayName,
+      required this.age,
+      this.bodyType,
       this.bio = '',
       final List<Media> media = const [],
       this.pronouns,
@@ -187,6 +216,10 @@ class _$_Match implements _Match {
   @override
   final String displayName;
   @override
+  final int age;
+  @override
+  final String? bodyType;
+  @override
   @JsonKey()
   final String bio;
   final List<Media> _media;
@@ -197,6 +230,7 @@ class _$_Match implements _Match {
     return EqualUnmodifiableListView(_media);
   }
 
+//@Default([]) List<Image> media,
   @override
   final String? pronouns;
   @override
@@ -211,7 +245,7 @@ class _$_Match implements _Match {
 
   @override
   String toString() {
-    return 'Match(id: $id, displayName: $displayName, bio: $bio, media: $media, pronouns: $pronouns, gender: $gender, interests: $interests)';
+    return 'Match(id: $id, displayName: $displayName, age: $age, bodyType: $bodyType, bio: $bio, media: $media, pronouns: $pronouns, gender: $gender, interests: $interests)';
   }
 
   @override
@@ -222,6 +256,8 @@ class _$_Match implements _Match {
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality()
                 .equals(other.displayName, displayName) &&
+            const DeepCollectionEquality().equals(other.age, age) &&
+            const DeepCollectionEquality().equals(other.bodyType, bodyType) &&
             const DeepCollectionEquality().equals(other.bio, bio) &&
             const DeepCollectionEquality().equals(other._media, _media) &&
             const DeepCollectionEquality().equals(other.pronouns, pronouns) &&
@@ -236,6 +272,8 @@ class _$_Match implements _Match {
       runtimeType,
       const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(displayName),
+      const DeepCollectionEquality().hash(age),
+      const DeepCollectionEquality().hash(bodyType),
       const DeepCollectionEquality().hash(bio),
       const DeepCollectionEquality().hash(_media),
       const DeepCollectionEquality().hash(pronouns),
@@ -249,7 +287,9 @@ class _$_Match implements _Match {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_MatchToJson(this);
+    return _$$_MatchToJson(
+      this,
+    );
   }
 }
 
@@ -257,6 +297,8 @@ abstract class _Match implements Match {
   const factory _Match(
       {required final int id,
       required final String displayName,
+      required final int age,
+      final String? bodyType,
       final String bio,
       final List<Media> media,
       final String? pronouns,
@@ -266,19 +308,23 @@ abstract class _Match implements Match {
   factory _Match.fromJson(Map<String, dynamic> json) = _$_Match.fromJson;
 
   @override
-  int get id => throw _privateConstructorUsedError;
+  int get id;
   @override
-  String get displayName => throw _privateConstructorUsedError;
+  String get displayName;
   @override
-  String get bio => throw _privateConstructorUsedError;
+  int get age;
   @override
-  List<Media> get media => throw _privateConstructorUsedError;
+  String? get bodyType;
   @override
-  String? get pronouns => throw _privateConstructorUsedError;
+  String get bio;
   @override
-  String? get gender => throw _privateConstructorUsedError;
+  List<Media> get media;
+  @override //@Default([]) List<Image> media,
+  String? get pronouns;
   @override
-  List<String> get interests => throw _privateConstructorUsedError;
+  String? get gender;
+  @override
+  List<String> get interests;
   @override
   @JsonKey(ignore: true)
   _$$_MatchCopyWith<_$_Match> get copyWith =>

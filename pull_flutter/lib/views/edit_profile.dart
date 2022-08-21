@@ -65,17 +65,11 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       PullRepository repo = PullRepository(ref.read);
       await repo.getProfile(ref);
       print("get profile done, attempting to set the profile and ProfileImages");
-      //get the information from the profile providers
-      // now update the local copies of everything accordingly
-      profileImages = await ref.watch(ProfilePhotosProvider);
-      profile = await ref.watch(AccountCreationProvider);
-      //print("profile and profileimages loaded");
-      //print(profile);
-      //print(profileImages);
-      //load in to the relevant text controllers
-      biographyController.text = (profile.biography == null)? '' : profile.biography!;
-      //TODO get the rest of the varables for the other fields and update them.
-
+      profileImages = await ref.read(ProfilePhotosProvider);
+      profile = await ref.read(AccountCreationProvider);
+      setState(()  {
+        biographyController.text = (profile.biography == null)? '' : profile.biography!;
+      });
     } catch (e) {
       print("Failed to get a profile from the backend.");
       print(e);
@@ -87,6 +81,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   //they it should update the database, and then navigate back to /home/profile.
   Future<void> submit() async {
     print("submit pressed");
+    //send a request to the database to update the
   }
 
   cancel() {
@@ -96,17 +91,17 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   //TODO implement reorder photos
   _reorderPhotos(int oldIndex, int newIndex) {
     setState(() {
-      // //check to make sure they aren't arranging the empty ones
-      // if(imageList[oldIndex] == null){
-      //   print("cannot move an empty image tile.");
-      //   return;
-      // }
-      //
-      // File? temp = imageList[oldIndex];
-      // imageList[oldIndex] = imageList[newIndex];
-      // imageList[newIndex] = temp;
-      // //TODO save the new order in riverpods
-      //
+      //check to make sure they aren't arranging the empty ones
+      if(profileImages.images[oldIndex] == null){
+        print("cannot move an empty image tile.");
+        return;
+      }
+
+      File? temp = profileImages.images[oldIndex];
+      profileImages.images[oldIndex] = profileImages.images[newIndex];
+      profileImages.images[newIndex] = temp;
+      //TODO save the new order in riverpods
+
     });
   }
 
@@ -340,9 +335,14 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                               child: PullMatchCard(
                                 fromFile: true,
                                 match: Match(
+                                  //TODO get the age from the birthDate
+                                  //int upperAge = ((DateTime.now().difference(minBirthDate).inDays)/365.26).truncate();
+                                  //int lowerAge = ((DateTime.now().difference(maxBirthDate).inDays)/365.26).truncate();
+                                  age: ((DateTime.now().difference(profile.birthdate!).inDays)/365.26).truncate(),
                                   id: 0,
                                   displayName: profile.name!,
                                   bio: profile.biography!,
+                                  bodyType: profile.bodytype,
                                   pronouns: "He/Him",
                                   media: _getMedia(),
                                   gender: profile.gender!,

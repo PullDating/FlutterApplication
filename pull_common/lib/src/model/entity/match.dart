@@ -15,6 +15,8 @@ class Match with _$Match {
   const factory Match({
       required int id,
       required String displayName,
+      required int age,
+      String? bodyType,
       @Default('') String bio,
       @Default([]) List<Media> media,
       //@Default([]) List<Image> media,

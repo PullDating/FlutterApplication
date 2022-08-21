@@ -140,9 +140,9 @@ abstract class _ResponseException implements ResponseException {
       _$_ResponseException;
 
   @override
-  int get code => throw _privateConstructorUsedError;
+  int get code;
   @override
-  String? get message => throw _privateConstructorUsedError;
+  String? get message;
   @override
   @JsonKey(ignore: true)
   _$$_ResponseExceptionCopyWith<_$_ResponseException> get copyWith =>
