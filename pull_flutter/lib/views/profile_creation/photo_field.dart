@@ -72,7 +72,7 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
       File? temp = imageList[oldIndex];
       imageList[oldIndex] = imageList[newIndex];
       imageList[newIndex] = temp;
-      //TODO save the new order in riverpods
+      //TODO check to make sure the rearrange is working properly. It doesn't seem to be here
 
 
     });

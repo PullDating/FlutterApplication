@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pull_common/pull_common.dart';
 import 'package:pull_flutter/views/filters.dart';
 import 'package:pull_flutter/views/profile_creation/photo_field.dart';
@@ -96,25 +97,71 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         print("cannot move an empty image tile.");
         return;
       }
-
-      File? temp = profileImages.images[oldIndex];
-      profileImages.images[oldIndex] = profileImages.images[newIndex];
-      profileImages.images[newIndex] = temp;
-      //TODO save the new order in riverpods
-
+      ProfileImages tempImages = profileImages;
+      File? temp = tempImages.images[oldIndex];
+      //remove at the old index
+      tempImages.images.removeAt(oldIndex);
+      //insert at the new index
+      tempImages.images.insert(newIndex, temp);
+      profileImages = tempImages;
     });
   }
 
   //TODO implement pick photo
-  _pickPhoto() {
-    print("_pickPhoto pressed");
+  _pickPhoto(int index) async {
+    try {
+      print("trying to pick image.");
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image == null){
+        print("image was null, didn't pick image.");
+        return;
+      }
+
+      List<File?> tempimages = profileImages.images;
+      int tempnumfilled = profileImages.numFilled;
+      bool tempmandatory = profileImages.mandatoryFilled;
+      if(index < profileImages.max && index >= 0){
+        if(tempimages.length <= index){
+          //need to append an empty value first
+          tempimages.add(File(image.path));
+        } else {
+          tempimages[index] = File(image.path);
+        }
+
+        print("temp images");
+        print(tempimages);
+
+        tempimages[index] = File(image.path);
+        tempnumfilled++;
+        if(tempnumfilled >= profileImages.min){
+          tempmandatory = true;
+        }
+        setState(() {
+          profileImages = profileImages.copyWith(
+              images: tempimages,
+              numFilled: tempnumfilled,
+              mandatoryFilled: tempmandatory
+          );
+        });
+      } else {
+        throw "The index you tried to replace is out of range";
+      }
+
+      //profileImages.images[index] = File(image.path);
+    } on PlatformException catch (e) {
+      print("Failed to pick image: $e");
+    } catch (e) {
+      print("Error picking image: $e");
+    }
   }
   //TODO implement delete photo
-  _deletePhoto() {
+  _deletePhoto(int index) {
     print("_deletePhoto pressed");
+    setState((){
+      profileImages.images.removeAt(index);
+    });
+
   }
-
-
 
   _datingGoalPressed(int index){
     print("dating goal pressed with index: ${index}");
