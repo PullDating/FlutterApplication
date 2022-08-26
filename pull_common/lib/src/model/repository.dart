@@ -363,8 +363,6 @@ class PullRepository {
     }
     //append the image files to the request.
     request.files.addAll(filestoupload);
-    //TODO fix this to properly get the uuid.
-    //request.fields['uuid']= await _uuid;
 
     var uuid = _uuid;
     request.fields.addAll(uuid);
@@ -443,6 +441,103 @@ class PullRepository {
     } on Error catch (e) {
       print('Error: $e');
     }
+  }
+
+  //TODO implement the functionality to call based on the reorder_photos, add_photos, and delete_photos.
+  Future<void> updateProfile(WidgetRef ref, Profile newprofile, ProfileImages newprofileimages, List<int> change_photos) async {
+    //TODO rework this to just use change photos instead of all 3 of them.
+
+    var request = http.MultipartRequest('PUT', profileUri);
+    request.headers.addAll(_authHeader);
+
+    //list to hold the files we'll upload
+    List<http.MultipartFile> filestoupload = [];
+    //get the number of images they actually selected.
+    int numFilled = newprofileimages.numFilled;
+    int min = newprofileimages.min;
+    int max = newprofileimages.max;
+
+    if(numFilled > max || numFilled < min){
+      throw Exception("you cannot create a profile with an invalid number of photos");
+    }
+
+    try{
+
+      print("numfilled: ${numFilled}");
+      print("change_photos length: ${change_photos.length}");
+      for(int i = 0; i < numFilled; i++){
+        //if at position i, there is a -1 in the change_photos, do we want to upload it.
+        if(change_photos[i] == -1){
+          File tempfile = newprofileimages.images[i]!;
+          http.MultipartFile multifile = await http.MultipartFile.fromPath('photos', tempfile.path);
+          filestoupload.add(multifile);
+        }
+      }
+      //append the image files to the request.
+      request.files.addAll(filestoupload);
+    } catch (e){
+      print(e);
+      throw Exception("problem adding the images to the put profile request.");
+    }
+    //add the uuid to the request
+    //todo modify the endpoint to accept the uuid in the header instead of in the body.
+    var uuid = _uuid;
+    request.fields.addAll(uuid);
+
+    //add the reorderphotos functionality. Convert the list to json first.
+    Map<String, String> changePhotoJson = {};
+    for(int i = 0; i < change_photos.length; i++){
+       changePhotoJson.addAll({"\"${i}\"" : "\"${change_photos.elementAt(i)}\""});
+    }
+    changePhotoJson;
+
+    print("change Photo Json string");
+    print(changePhotoJson);
+
+    request.fields.addAll({"change_photos" : changePhotoJson.toString()});
+
+    String? gender = newprofile.gender;
+    if(gender != null){
+      request.fields['gender']= gender;
+    }else{
+      throw Exception("gender was not provided.");
+    }
+
+    String? datingGoal = newprofile.datinggoal;
+    if(datingGoal != null){
+      request.fields['datingGoal'] = datingGoal;
+    } else {
+      throw Exception("datingGoal was not provided.");
+    }
+
+    String? biography = newprofile.biography;
+    if(biography != null){
+      request.fields['biography'] = biography;
+    } else {
+      throw Exception("biography was not provided.");
+    }
+
+    String? bodyType = newprofile.bodytype;
+    if(bodyType != null){
+      request.fields['bodyType'] = bodyType;
+    } else {
+      throw Exception("bodyType was not provided");
+    }
+
+    try {
+      var response = await request.send().timeout(const Duration(seconds: 3));
+      if(response.statusCode == 200){
+        print("Success");
+      }else{
+        print("Something wrong");
+      }
+    } on TimeoutException catch (e) {
+      print('Timeout');
+      print(e);
+    } on Error catch (e) {
+      print('Error: $e');
+    }
+
   }
 
   Future<void> getPhotoLimits(WidgetRef ref) async {

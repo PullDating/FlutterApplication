@@ -30,7 +30,6 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     birthdate: DateTime.now(),
     bodytype: "average",
     gender: "man",
-    height: 165,
     biography: ""
 
   );
@@ -43,6 +42,12 @@ class _EditProfileState extends ConsumerState<EditProfile> {
 
   //display variables:
   bool edit = true; //true for edit mode, false for preview mode.
+
+  /// Stores the reordering information for the profile update call.
+  /// The key is the new position in the update photo list.
+  /// The value is the old position from the photo list
+  /// If the old value is -1 that means that it is a newly updated photo.
+  late List<int> reorderPhotos;
 
   @override
   void initState() {
@@ -62,6 +67,9 @@ class _EditProfileState extends ConsumerState<EditProfile> {
 
   //get the information from the database, and write it to profile.
   Future<void> _initialize() async {
+
+    //TODO save the initial reorder, add, and delete maps for later api use.
+
     try {
       PullRepository repo = PullRepository(ref.read);
       await repo.getProfile(ref);
@@ -71,6 +79,15 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       setState(()  {
         biographyController.text = (profile.biography == null)? '' : profile.biography!;
       });
+
+      //Set the reorder photos to what is already in the database.
+      reorderPhotos = [];
+      for(int i = 0; i < profileImages.images.length; i++){
+        reorderPhotos.add(i);
+      }
+      print("reorderPhotos:");
+      print(reorderPhotos);
+
     } catch (e) {
       print("Failed to get a profile from the backend.");
       print(e);
@@ -82,18 +99,41 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   //they it should update the database, and then navigate back to /home/profile.
   Future<void> submit() async {
     print("submit pressed");
-    //send a request to the database to update the
+    //send a request to the database to update the profile based on the profile that is here
+    try {
+      PullRepository repo = PullRepository(ref.read);
+      await repo.updateProfile(ref, profile, profileImages, reorderPhotos).then((value) => {
+        context.go('/home/profile')
+      });
+    } on TimeoutException catch (e) {
+      print('Timeout');
+      Fluttertoast.showToast(
+          msg: "You're having connectivity issues, please check connection and reset your app.",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+    } on Error catch (e) {
+      print('Error: $e');
+    }
   }
 
   cancel() {
     context.go('/home/profile');
   }
 
-  //TODO implement reorder photos
+  //need to keep track of these for the api request
+
+  //TODO keep track of the reorders to send to api call.
   _reorderPhotos(int oldIndex, int newIndex) {
     setState(() {
       //check to make sure they aren't arranging the empty ones
-      if(profileImages.images[oldIndex] == null){
+
+      //if length is 6, then an invalid old index would be 6 so greater than or equal to
+      if(profileImages.images[oldIndex] == null || oldIndex >= profileImages.images.length){
         print("cannot move an empty image tile.");
         return;
       }
@@ -101,41 +141,69 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       File? temp = tempImages.images[oldIndex];
       //remove at the old index
       tempImages.images.removeAt(oldIndex);
+
+      //remove from reorderPhotos
+      int reorderTemp = reorderPhotos.removeAt(oldIndex);
+
       //insert at the new index
       tempImages.images.insert(newIndex, temp);
+
+      //add to reorderPhotos
+      reorderPhotos.insert(newIndex, reorderTemp);
+      print("reordePhotos");
+      print(reorderPhotos);
+
       profileImages = tempImages;
+
+      //handle the update to reorder photos
+      //It should get the new old location from the previous old location
+
     });
   }
 
-  //TODO implement pick photo
+  //TODO keep track of the added photos for the api.
   _pickPhoto(int index) async {
     try {
       print("trying to pick image.");
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      //check to make sure it didn't pick an empty file, or fail.
       if (image == null){
         print("image was null, didn't pick image.");
         return;
       }
 
+      //store a temporary list while the rearranging is done, as well as some temp variables.
       List<File?> tempimages = profileImages.images;
       int tempnumfilled = profileImages.numFilled;
       bool tempmandatory = profileImages.mandatoryFilled;
+
+      //check to make sure that is is within the valid range of indexes.
       if(index < profileImages.max && index >= 0){
         if(tempimages.length <= index){
           //need to append an empty value first
           tempimages.add(File(image.path));
         } else {
+          //otherwise, just set the right place to the new value.
           tempimages[index] = File(image.path);
         }
 
-        print("temp images");
-        print(tempimages);
+        //handle the add to reorderPhotos
+        reorderPhotos.insert(index, -1);
 
-        tempimages[index] = File(image.path);
+        print("reorderPhotos");
+        print(reorderPhotos);
+
+        //todo I don't think that this line is necessary, as we already handled it.
+        //tempimages[index] = File(image.path);
+
+        //adjust tempnumfilled and the tempmandatory variables.
         tempnumfilled++;
         if(tempnumfilled >= profileImages.min){
           tempmandatory = true;
         }
+
+        //set state with the new values for the photos.
         setState(() {
           profileImages = profileImages.copyWith(
               images: tempimages,
@@ -154,11 +222,34 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       print("Error picking image: $e");
     }
   }
-  //TODO implement delete photo
+
+  //TODO keep track of the deleted photos for the api.
   _deletePhoto(int index) {
     print("_deletePhoto pressed");
     setState((){
-      profileImages.images.removeAt(index);
+
+      List<File?> tempimages = profileImages.images;
+      int tempnumfilled = profileImages.numFilled;
+      bool tempmandatory = profileImages.mandatoryFilled;
+
+      tempimages.removeAt(index);
+      tempnumfilled = tempnumfilled - 1;
+
+      if(tempnumfilled < profileImages.min){
+        tempmandatory = false;
+      }
+
+      reorderPhotos.removeAt(index);
+
+      //copy with the new image list.
+      profileImages = profileImages.copyWith(
+          images: tempimages,
+          numFilled: tempnumfilled,
+          mandatoryFilled: tempmandatory
+      );
+
+      print("reorderPhotos");
+      print(reorderPhotos);
     });
 
   }
@@ -206,7 +297,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       print(e);
       throw Exception("unable to load the profile photo media.");
     }
-    print("values: ${values}");
+    //print("values: ${values}");
     return values;
   }
 
@@ -237,13 +328,6 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     var tiles = <ImageThumbnailV2>[];
 
     try {
-
-      print("profileImages.min: ${profileImages.min}");
-      print("profileImages.max: ${profileImages.max}");
-      print("profileImages.images.length: ${profileImages.images.length}");
-
-
-
       for (int i = 0; i < profileImages.min; i++) {
         if (profileImages.images.length > i) {
           tiles.add(ImageThumbnailV2(
@@ -269,7 +353,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
       for (int i = profileImages.min; i < min(
           max(profileImages.min + 1, profileImages.numFilled + 1),
           profileImages.max); i++) {
-        print("i: $i");
+        //print("i: $i");
 
         if (profileImages.images.length > i) {
           tiles.add(ImageThumbnailV2(
@@ -416,7 +500,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                       ),
                       IconButton(
                         icon: Icon(Icons.done),
-                        onPressed: () => {print("updating profile")},
+                        onPressed: () => {submit()},
                       )
                     ],
                   ),
