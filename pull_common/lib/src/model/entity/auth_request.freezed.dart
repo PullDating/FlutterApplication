@@ -216,7 +216,9 @@ class _$_Phone implements _Phone {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PhoneToJson(this);
+    return _$$_PhoneToJson(
+      this,
+    );
   }
 }
 
@@ -225,7 +227,7 @@ abstract class _Phone implements AuthRequest {
 
   factory _Phone.fromJson(Map<String, dynamic> json) = _$_Phone.fromJson;
 
-  String get phone => throw _privateConstructorUsedError;
+  String get phone;
   @JsonKey(ignore: true)
   _$$_PhoneCopyWith<_$_Phone> get copyWith =>
       throw _privateConstructorUsedError;
@@ -375,7 +377,9 @@ class _$_EmailPassword implements _EmailPassword {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_EmailPasswordToJson(this);
+    return _$$_EmailPasswordToJson(
+      this,
+    );
   }
 }
 
@@ -386,8 +390,8 @@ abstract class _EmailPassword implements AuthRequest {
   factory _EmailPassword.fromJson(Map<String, dynamic> json) =
       _$_EmailPassword.fromJson;
 
-  String get email => throw _privateConstructorUsedError;
-  String get password => throw _privateConstructorUsedError;
+  String get email;
+  String get password;
   @JsonKey(ignore: true)
   _$$_EmailPasswordCopyWith<_$_EmailPassword> get copyWith =>
       throw _privateConstructorUsedError;

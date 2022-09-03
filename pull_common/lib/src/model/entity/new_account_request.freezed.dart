@@ -212,7 +212,9 @@ class _$_Phone implements _Phone {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_PhoneToJson(this);
+    return _$$_PhoneToJson(
+      this,
+    );
   }
 }
 
@@ -222,7 +224,7 @@ abstract class _Phone implements NewAccountRequest {
   factory _Phone.fromJson(Map<String, dynamic> json) = _$_Phone.fromJson;
 
   @override
-  String get phone => throw _privateConstructorUsedError;
+  String get phone;
   @override
   @JsonKey(ignore: true)
   _$$_PhoneCopyWith<_$_Phone> get copyWith =>

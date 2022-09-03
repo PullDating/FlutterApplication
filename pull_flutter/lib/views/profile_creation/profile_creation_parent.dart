@@ -130,23 +130,9 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
   }
 
   void getPhotoLimits() async {
-    print("got into getPhotoLimits");
-    var url = profilePhotoLimitsUri;
-    var decoded;
-
-
     try {
-      var response = await http.get(url).timeout(const Duration(seconds: 3));
-      if(response.statusCode == 200){
-        print("Success");
-        decoded = json.decode(response.body);
-        print("attemping to set state with new photo limits");
-        ref.read(ProfilePhotosProvider.notifier).setMax(decoded['maxProfilePhotos']);
-        ref.read(ProfilePhotosProvider.notifier).setMin(decoded['minProfilePhotos']);
-        ref.read(ProfilePhotosProvider.notifier).setImages(List<File?>.filled(ref.read(ProfilePhotosProvider.notifier).getMax(), null));
-      }else{
-        print("Something wrong");
-      }
+      PullRepository repo = PullRepository(ref.read);
+      await repo.getPhotoLimits(ref);
     } on TimeoutException catch (e) {
       print('Timeout');
       Fluttertoast.showToast(

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:isar/isar.dart';
 import 'package:pull_common/src/model/entity/profile.dart';
 
 
@@ -44,6 +45,14 @@ class ProfilePhotosNotifier extends StateNotifier<ProfileImages> {
 
   void setImages(List<File?> images){
     state = state.copyWith(images: images);
+  }
+
+  void setNumFilled(int num){
+    state = state.copyWith(numFilled: num);
+  }
+
+  void setMandatoryFilled(bool isfilled){
+    state = state.copyWith(mandatoryFilled: isfilled);
   }
 
   void setMax(int max){
@@ -190,6 +199,21 @@ class AccountCreationNotifier extends StateNotifier<Profile> {
 
   void setLongitude(double longitude) {
     state = state.copyWith(longitude: longitude);
+  }
+
+  //this should only be called to get the profile from remote, not to set, because it allows invalid parameters such as name.
+  void setProfile(Profile profile){
+    state = state.copyWith(
+      name: profile.name,
+      birthdate: profile.birthdate,
+      bodytype: profile.bodytype,
+      gender: profile.gender,
+      height: profile.height,
+      datinggoal: profile.datinggoal,
+      biography: profile.biography,
+      latitude: profile.latitude,
+      longitude: profile.longitude,
+    );
   }
 }
 

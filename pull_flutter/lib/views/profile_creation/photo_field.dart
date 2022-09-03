@@ -39,10 +39,15 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
     try {
       print("trying to pick image.");
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image == null) return;
+      if (image == null){
+        print("image was null, didn't pick image.");
+        return;
+      }
       ref.read(ProfilePhotosProvider.notifier).setImage(File(image.path), index);
     } on PlatformException catch (e) {
       print("Failed to pick image: $e");
+    } catch (e) {
+      print("Error picking image: $e");
     }
   }
 
@@ -67,7 +72,7 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
       File? temp = imageList[oldIndex];
       imageList[oldIndex] = imageList[newIndex];
       imageList[newIndex] = temp;
-      //TODO save the new order in riverpods
+      //TODO check to make sure the rearrange is working properly. It doesn't seem to be here
 
 
     });
@@ -100,15 +105,34 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
     }
 
     //add the correct number of optional photos
+    //print("must be less than: ${min(max(minProfilePhotos+1, totalFilled+1),maxProfilePhotos)}");
+    print("image list length: ${imageList.length}");
+
+    //shouldn't it just be the difference between the total possible number and the number you have now.
     for(int i = minProfilePhotos; i < min(max(minProfilePhotos+1, totalFilled+1),maxProfilePhotos); i++){
-      tiles.add(ImageThumbnailV2(
-        image: imageList[i],
-        pickImage: pickImage,
-        deleteImageCallback: deleteImageCallback,
-        index: i,
-        required: false,
-        mandatoryFilled: mandatoryFilled,
-      ));
+      print("i: $i");
+
+      if(imageList.length > i){
+        tiles.add(ImageThumbnailV2(
+          image: imageList[i],
+          pickImage: pickImage,
+          deleteImageCallback: deleteImageCallback,
+          index: i,
+          required: false,
+          mandatoryFilled: mandatoryFilled,
+        ));
+      } else {
+        tiles.add(ImageThumbnailV2(
+          image: null,
+          pickImage: pickImage,
+          deleteImageCallback: deleteImageCallback,
+          index: i,
+          required: false,
+          mandatoryFilled: mandatoryFilled,
+        ));
+      }
+
+
     }
 
     return Material(
@@ -120,8 +144,6 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: WrapList(
-                  minProfilePhotos: minProfilePhotos,
-                  maxProfilePhotos: maxProfilePhotos,
                   onReorder: _onReorder,
                   tiles: tiles,
                 ),
@@ -138,15 +160,10 @@ class _ProfilePhotoFieldState extends ConsumerState<ProfilePhotoField> {
 
 class WrapList extends StatelessWidget {
   List<Widget> tiles;
-  int maxProfilePhotos;
-  int minProfilePhotos;
   Function(int,int) onReorder;
-
   WrapList(
       {
         Key? key,
-        required int this.minProfilePhotos,
-        required int this.maxProfilePhotos,
         required List<Widget> this.tiles,
         required Function(int,int) this.onReorder,
       }) : super(key: key);

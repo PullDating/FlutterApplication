@@ -170,7 +170,9 @@ class _$_AuthResponse implements _AuthResponse {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_AuthResponseToJson(this);
+    return _$$_AuthResponseToJson(
+      this,
+    );
   }
 }
 
@@ -185,11 +187,11 @@ abstract class _AuthResponse implements AuthResponse {
 
   @override
   @JsonKey(name: 'user_exists')
-  bool get userExists => throw _privateConstructorUsedError;
+  bool get userExists;
   @override
-  String? get token => throw _privateConstructorUsedError;
+  String? get token;
   @override
-  String? get uuid => throw _privateConstructorUsedError;
+  String? get uuid;
   @override
   @JsonKey(ignore: true)
   _$$_AuthResponseCopyWith<_$_AuthResponse> get copyWith =>
