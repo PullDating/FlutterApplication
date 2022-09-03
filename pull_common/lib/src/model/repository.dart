@@ -18,6 +18,7 @@ import 'package:pull_common/src/model/exception/response_exception.dart';
 import 'package:pull_common/src/model/provider/config.dart';
 import 'package:pull_common/src/model/provider/match_stream.dart';
 import 'package:riverpod/riverpod.dart';
+import 'package:tuple/tuple.dart';
 
 /// Using a [Provider] for access to [http.Client] allows easy overriding during tests, if necessary
 final httpClientProvider = Provider<http.Client>((_) => http.Client());
@@ -265,8 +266,10 @@ class PullRepository {
     return files;
   }
 
+
+  //todo instead of uploading directly to the provider, maybe this should just return the profile and profileImages.
   //sets the profile images provder and the account creation provider with the relevant information
-  Future<void> getProfile(WidgetRef ref) async {
+  Future<Tuple2<Profile, ProfileImages>> getProfile(WidgetRef ref) async {
     Map<String,String> headers = {};
     headers.addAll(_authHeader);
     headers.addAll(_uuid);
@@ -300,7 +303,9 @@ class PullRepository {
         longitude: double.parse(coordinates[1].toString()),
       );
       print("created profile from json");
-      ref.read(AccountCreationProvider.notifier).setProfile(profile);
+      //ref.read(AccountCreationProvider.notifier).setProfile(profile);
+      //instead return the profile.
+
 
       //update the min an max values
 
@@ -318,12 +323,24 @@ class PullRepository {
           throw Exception('The server returned an invalid number of images. You may need to update the min and max profile photos first');
         }
 
-        //update the images.
-        ref.read(ProfilePhotosProvider.notifier).setImages(images);
-        //update the number of images
-        ref.read(ProfilePhotosProvider.notifier).setNumFilled(images.length);
-        //update numfilled.
-        ref.read(ProfilePhotosProvider.notifier).setMandatoryFilled(true);
+        ProfileImages profileImages = ProfileImages(
+          min: ref.read(ProfilePhotosProvider.notifier).getMin(),
+          max: ref.read(ProfilePhotosProvider).max,
+          images: images,
+          numFilled: images.length,
+          mandatoryFilled: true,
+        );
+
+
+        // //update the images.
+        // ref.read(ProfilePhotosProvider.notifier).setImages(images);
+        // //update the number of images
+        // ref.read(ProfilePhotosProvider.notifier).setNumFilled(images.length);
+        // //update numfilled.
+        // ref.read(ProfilePhotosProvider.notifier).setMandatoryFilled(true);
+
+        print("done with profile get.");
+        return Tuple2(profile, profileImages);
 
       } catch (e) {
         print("problem getting the images: ${e.toString()}");
@@ -445,7 +462,6 @@ class PullRepository {
 
   //TODO implement the functionality to call based on the reorder_photos, add_photos, and delete_photos.
   Future<void> updateProfile(WidgetRef ref, Profile newprofile, ProfileImages newprofileimages, List<int> change_photos) async {
-    //TODO rework this to just use change photos instead of all 3 of them.
 
     var request = http.MultipartRequest('PUT', profileUri);
     request.headers.addAll(_authHeader);

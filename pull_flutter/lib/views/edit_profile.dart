@@ -70,14 +70,47 @@ class _EditProfileState extends ConsumerState<EditProfile> {
 
     //TODO save the initial reorder, add, and delete maps for later api use.
 
+    //TODO fix this function, it is not getting the accurate values from the database, just the old values.
+
     try {
       PullRepository repo = PullRepository(ref.read);
-      await repo.getProfile(ref);
+      Tuple2<Profile,ProfileImages> profileGet = await repo.getProfile(ref);
       print("get profile done, attempting to set the profile and ProfileImages");
-      profileImages = await ref.read(ProfilePhotosProvider);
-      profile = await ref.read(AccountCreationProvider);
-      setState(()  {
+      setState((){
+        print("calling set state on edit page.");
+        profileImages = profileGet.item2;
+        print(profileImages);
+        profile = profileGet.item1;
         biographyController.text = (profile.biography == null)? '' : profile.biography!;
+        //for the other settings, need to set the correct starting values.
+
+        //dating goal
+        for(int i = 0; i < datingGoalValues.length; i++){
+          if(datingGoalValues[i] == profile.datinggoal){
+            datingGoalChecked[i] = true;
+          } else {
+            datingGoalChecked[i] = false;
+          }
+        }
+
+        //gender
+        for(int i = 0; i < genderValues.length; i++){
+          if(genderValues[i] == profile.gender){
+            genderChecked[i] = true;
+          } else {
+            genderChecked[i] = false;
+          }
+        }
+
+        //body type
+        for(int i = 0; i < bodyTypeValues.length; i++){
+          if(bodyTypeValues[i] == profile.bodytype){
+            bodyTypeChecked[i] = true;
+          } else {
+            bodyTypeChecked[i] = false;
+          }
+        }
+
       });
 
       //Set the reorder photos to what is already in the database.
@@ -99,6 +132,10 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   //they it should update the database, and then navigate back to /home/profile.
   Future<void> submit() async {
     print("submit pressed");
+    print("reorder photos:" + reorderPhotos.toString());
+    print("profile images: " + profileImages.toString());
+    profile = profile.copyWith(biography: biographyController.text);
+
     //send a request to the database to update the profile based on the profile that is here
     try {
       PullRepository repo = PullRepository(ref.read);
@@ -261,6 +298,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         datingGoalChecked[i] = false;
       }
       datingGoalChecked[index] = true;
+      profile = profile.copyWith(datinggoal: datingGoalValues[index]);
     });
   }
   _bodyTypePressed(int index){
@@ -270,6 +308,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         bodyTypeChecked[i] = false;
       }
       bodyTypeChecked[index] = true;
+      profile = profile.copyWith(datinggoal: bodyTypeValues[index]);
     });
   }
   _genderPressed(int index){
@@ -279,6 +318,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         genderChecked[i] = false;
       }
       genderChecked[index] = true;
+      profile = profile.copyWith(datinggoal: genderValues[index]);
     });
   }
 
