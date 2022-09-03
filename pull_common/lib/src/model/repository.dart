@@ -352,6 +352,26 @@ class PullRepository {
     }
   }
 
+  //if uuid is null, it should use their uuid
+  //todo modify the functionality to allow them to use another person's uuid.
+  Future<String> getFirstPhoto(String? uuid) async {
+    print("getFirstPhoto called");
+    Map<String,String> headers = {};
+    headers.addAll(_authHeader);
+    headers.addAll(_uuid);
+    http.Response response = await http.get(firstPhotoUri, headers: headers);
+    if(response.statusCode == 200){
+      var json = jsonDecode(response.body);
+      print(json);
+      String presignedURL = json['image'];
+      print(presignedURL);
+      return presignedURL;
+    } else {
+      print("Error trying to get first photo.");
+      throw Exception("Error trying to get first photo from server.");
+    }
+  }
+
   Future<void> createProfile() async {
     //create a multipart form request (needed because we are using files)
     var request = http.MultipartRequest('POST', profileUri);

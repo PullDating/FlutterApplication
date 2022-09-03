@@ -18,6 +18,7 @@ String _getBaseUrl(){
 final authUri = Uri.parse('${_getBaseUrl()}/auth');
 final nextMatchesUri = Uri.parse('${_getBaseUrl()}/nextMatches');
 final profileUri = Uri.parse('${_getBaseUrl()}/profile');
+final firstPhotoUri = Uri.parse('${_getBaseUrl()}/profile/primaryphoto');
 final profilePhotoLimitsUri = Uri.parse('${_getBaseUrl()}/profile/photoLimits');
 final loginUri = Uri.parse('${_getBaseUrl()}/auth/login');
 final filterUri = Uri.parse('${_getBaseUrl()}/filter');

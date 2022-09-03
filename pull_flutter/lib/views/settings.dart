@@ -60,8 +60,10 @@ class _PullSettingsPageState extends ConsumerState<SettingsPage> {
                 style: Theme.of(context).textTheme.headline5,
               ),
               onTap: () {
-                launchUrl(Uri.parse(
-                    'https://github.com/PullDating/FlutterApplication'));
+                launchUrl(
+                    Uri.parse('https://github.com/PullDating/FlutterApplication'),
+                  mode: LaunchMode.inAppWebView,
+                );
               },
             ),
             ListTile(

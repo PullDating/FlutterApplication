@@ -36,16 +36,6 @@ class _PullHomePageState extends ConsumerState<PullHomePage>
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            tooltip: 'Settings',
-            color: Colors.deepPurple,
-            onPressed: () {
-              context.push('/settings');
-            },
-          ),
-        ],
       ),
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 400),
