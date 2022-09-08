@@ -65,8 +65,18 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   List<String> genderOptionNames = ["Man","Woman","Non-Binary"];
   List<String> genderValues = ["man","woman","non-binary"];
 
+  ///the uuid of the user in question, not really needed for this one.
+  late String uuid;
+
   //get the information from the database, and write it to profile.
   Future<void> _initialize() async {
+
+    String? uuidtemp = ref.watch(UUIDProvider);
+    if(uuidtemp != null){
+      uuid = uuidtemp!;
+    } else {
+      uuid = 'testtesttest';
+    }
 
     //TODO save the initial reorder, add, and delete maps for later api use.
 
@@ -506,6 +516,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                               child: PullMatchCard(
                                 fromFile: true,
                                 match: Match(
+                                  distanceInMeters: 0,
+                                  uuid: uuid,
                                   //TODO get the age from the birthDate
                                   //int upperAge = ((DateTime.now().difference(minBirthDate).inDays)/365.26).truncate();
                                   //int lowerAge = ((DateTime.now().difference(maxBirthDate).inDays)/365.26).truncate();

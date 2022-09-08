@@ -13,6 +13,8 @@ part 'match.g.dart';
 @Collection()
 class Match with _$Match {
   const factory Match({
+      required String uuid,
+      required int distanceInMeters,
       required int id,
       required String displayName,
       required int age,

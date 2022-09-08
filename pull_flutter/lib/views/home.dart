@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pull_common/pull_common.dart';
 import 'package:pull_flutter/views/tabs/card_swipe_tab.dart';
 import 'package:pull_flutter/views/tabs/chats_tab.dart';
 import 'package:pull_flutter/views/tabs/profile_tab.dart';
@@ -25,9 +26,24 @@ class _PullHomePageState extends ConsumerState<PullHomePage>
     'profile': ProfileTab()
   };
 
+  TestGetMatches() async {
+    try{
+      PullRepository repo = PullRepository(ref.read);
+      await repo.getPeople(ref, 1);
+    }catch (e){
+      print("There was an error somewhere in the get people");
+      print(e);
+      return;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
+    // get people to show the user on the swiping screen
+    TestGetMatches();
+
   }
 
   @override

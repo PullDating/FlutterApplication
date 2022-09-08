@@ -267,6 +267,37 @@ class PullRepository {
   }
 
 
+  //this function calls the get people endpoint to get the list of uuids and distances of the users
+  //and then it calls the get profile function below to get the profile for each of them.
+  Future<List<Match>> getPeople(WidgetRef ref, int number) async {
+    Map<String,String> headers = {};
+    headers.addAll(_authHeader);
+    headers.addAll(_uuid);
+    headers.addAll({"number" : number.toString()});
+
+    http.Response response = await http.get(peopleUri, headers: headers);
+
+    if(response.statusCode == 200){
+      print('valid response code');
+      print(jsonDecode(response.body));
+      var res = jsonDecode(response.body);
+      List<dynamic> result = res['returnList'];
+      print(result);
+      List<Match> returnList = [];
+      for(int i = 0; i < result.length; i++){
+        print(result[i]);
+        var res = jsonDecode(result[i]);
+
+      }
+
+
+      return returnList;
+    } else {
+      print("Error trying to get filters.");
+      throw Exception("Error trying to get filters from server");
+    }
+  }
+
   //todo instead of uploading directly to the provider, maybe this should just return the profile and profileImages.
   //sets the profile images provder and the account creation provider with the relevant information
   Future<Tuple2<Profile, ProfileImages>> getProfile(WidgetRef ref) async {
@@ -376,7 +407,6 @@ class PullRepository {
     //create a multipart form request (needed because we are using files)
     var request = http.MultipartRequest('POST', profileUri);
     //get the auth headers.
-    //TODO fix this, right now it only returns "demo token" which is wrong.
     //request.headers.addAll(await _authHeader);
 
     request.headers.addAll(_authHeader);

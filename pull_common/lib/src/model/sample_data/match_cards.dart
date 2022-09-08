@@ -4,6 +4,8 @@ import '../entity/media.dart';
 
 final sampleMatchCards = <Match>[
   Match(
+    distanceInMeters: 1500,
+    uuid: 'testtesttest',
       age: 26,
       id: 0,
       displayName: 'Aya',
@@ -16,6 +18,8 @@ final sampleMatchCards = <Match>[
       bio:
           'Pro: can cook\nCon: will try to get you to do the dishes\n\nPro: loves animals\n\nCon: may steal your pets'),
   Match(
+    distanceInMeters: 2500,
+    uuid: 'testtesttest',
     age: 19,
       id: 1,
       displayName: 'Ryan',
@@ -26,6 +30,8 @@ final sampleMatchCards = <Match>[
       ],
       bio: '6\'0 on a good day. Down for just about anything 😉'),
   Match(
+    distanceInMeters: 3500,
+    uuid: 'testtesttest',
     age: 23,
       id: 2,
       displayName: 'Ingrid',
@@ -37,6 +43,8 @@ final sampleMatchCards = <Match>[
       bio:
           'sushi fiend 🍣🇯🇵\n\njust want someone who\'ll take me to Disneyland tbh'),
   Match(
+    distanceInMeters: 3400,
+    uuid: 'testtesttest',
     age: 56,
       id: 3,
       displayName: 'Jane',
@@ -47,6 +55,8 @@ final sampleMatchCards = <Match>[
       ],
       bio: 'in need of attention'),
   Match(
+    distanceInMeters: 3423,
+    uuid: 'testtesttest',
     age: 99,
       id: 4,
       displayName: 'Ella',
@@ -56,6 +66,8 @@ final sampleMatchCards = <Match>[
         Media(uri: Uri(path: 'assets/images/profile_3.webp')),
       ]),
   Match(
+    distanceInMeters: 5000,
+    uuid: 'testtesttest',
     age: 32,
       id: 5,
       displayName: 'Isabelle',
@@ -65,6 +77,8 @@ final sampleMatchCards = <Match>[
         Media(uri: Uri(path: 'assets/images/profile_4.webp')),
       ]),
   Match(
+    distanceInMeters: 8993,
+    uuid: 'testtesttest',
     age: 21,
       id: 6,
       displayName: 'Chloe',
@@ -74,6 +88,8 @@ final sampleMatchCards = <Match>[
         Media(uri: Uri(path: 'assets/images/profile_2.webp')),
       ]),
   Match(
+    distanceInMeters: 5469,
+    uuid: 'testtesttest',
     age: 32,
       id: 7,
       displayName: 'Daniel',
@@ -83,6 +99,8 @@ final sampleMatchCards = <Match>[
         Media(uri: Uri(path: 'assets/images/profile_3.webp')),
       ]),
   Match(
+    distanceInMeters: 3423,
+    uuid: 'testtesttest',
     age: 41,
       id: 8,
       displayName: 'Sara',
@@ -93,6 +111,8 @@ final sampleMatchCards = <Match>[
         Media(uri: Uri(path: 'assets/images/profile_5.webp')),
       ]),
   Match(
+    distanceInMeters: 3500,
+    uuid: 'testtesttest',
     age: 37,
       id: 9,
       displayName: 'Ashley',

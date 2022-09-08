@@ -20,6 +20,8 @@ Match _$MatchFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Match {
+  String get uuid => throw _privateConstructorUsedError;
+  int get distanceInMeters => throw _privateConstructorUsedError;
   int get id => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   int get age => throw _privateConstructorUsedError;
@@ -41,7 +43,9 @@ abstract class $MatchCopyWith<$Res> {
   factory $MatchCopyWith(Match value, $Res Function(Match) then) =
       _$MatchCopyWithImpl<$Res>;
   $Res call(
-      {int id,
+      {String uuid,
+      int distanceInMeters,
+      int id,
       String displayName,
       int age,
       String? bodyType,
@@ -62,6 +66,8 @@ class _$MatchCopyWithImpl<$Res> implements $MatchCopyWith<$Res> {
 
   @override
   $Res call({
+    Object? uuid = freezed,
+    Object? distanceInMeters = freezed,
     Object? id = freezed,
     Object? displayName = freezed,
     Object? age = freezed,
@@ -73,6 +79,14 @@ class _$MatchCopyWithImpl<$Res> implements $MatchCopyWith<$Res> {
     Object? interests = freezed,
   }) {
     return _then(_value.copyWith(
+      uuid: uuid == freezed
+          ? _value.uuid
+          : uuid // ignore: cast_nullable_to_non_nullable
+              as String,
+      distanceInMeters: distanceInMeters == freezed
+          ? _value.distanceInMeters
+          : distanceInMeters // ignore: cast_nullable_to_non_nullable
+              as int,
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -119,7 +133,9 @@ abstract class _$$_MatchCopyWith<$Res> implements $MatchCopyWith<$Res> {
       __$$_MatchCopyWithImpl<$Res>;
   @override
   $Res call(
-      {int id,
+      {String uuid,
+      int distanceInMeters,
+      int id,
       String displayName,
       int age,
       String? bodyType,
@@ -141,6 +157,8 @@ class __$$_MatchCopyWithImpl<$Res> extends _$MatchCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? uuid = freezed,
+    Object? distanceInMeters = freezed,
     Object? id = freezed,
     Object? displayName = freezed,
     Object? age = freezed,
@@ -152,6 +170,14 @@ class __$$_MatchCopyWithImpl<$Res> extends _$MatchCopyWithImpl<$Res>
     Object? interests = freezed,
   }) {
     return _then(_$_Match(
+      uuid: uuid == freezed
+          ? _value.uuid
+          : uuid // ignore: cast_nullable_to_non_nullable
+              as String,
+      distanceInMeters: distanceInMeters == freezed
+          ? _value.distanceInMeters
+          : distanceInMeters // ignore: cast_nullable_to_non_nullable
+              as int,
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -196,7 +222,9 @@ class __$$_MatchCopyWithImpl<$Res> extends _$MatchCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_Match implements _Match {
   const _$_Match(
-      {required this.id,
+      {required this.uuid,
+      required this.distanceInMeters,
+      required this.id,
       required this.displayName,
       required this.age,
       this.bodyType,
@@ -211,6 +239,10 @@ class _$_Match implements _Match {
   factory _$_Match.fromJson(Map<String, dynamic> json) =>
       _$$_MatchFromJson(json);
 
+  @override
+  final String uuid;
+  @override
+  final int distanceInMeters;
   @override
   final int id;
   @override
@@ -245,7 +277,7 @@ class _$_Match implements _Match {
 
   @override
   String toString() {
-    return 'Match(id: $id, displayName: $displayName, age: $age, bodyType: $bodyType, bio: $bio, media: $media, pronouns: $pronouns, gender: $gender, interests: $interests)';
+    return 'Match(uuid: $uuid, distanceInMeters: $distanceInMeters, id: $id, displayName: $displayName, age: $age, bodyType: $bodyType, bio: $bio, media: $media, pronouns: $pronouns, gender: $gender, interests: $interests)';
   }
 
   @override
@@ -253,6 +285,9 @@ class _$_Match implements _Match {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_Match &&
+            const DeepCollectionEquality().equals(other.uuid, uuid) &&
+            const DeepCollectionEquality()
+                .equals(other.distanceInMeters, distanceInMeters) &&
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality()
                 .equals(other.displayName, displayName) &&
@@ -270,6 +305,8 @@ class _$_Match implements _Match {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(uuid),
+      const DeepCollectionEquality().hash(distanceInMeters),
       const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(displayName),
       const DeepCollectionEquality().hash(age),
@@ -295,7 +332,9 @@ class _$_Match implements _Match {
 
 abstract class _Match implements Match {
   const factory _Match(
-      {required final int id,
+      {required final String uuid,
+      required final int distanceInMeters,
+      required final int id,
       required final String displayName,
       required final int age,
       final String? bodyType,
@@ -307,6 +346,10 @@ abstract class _Match implements Match {
 
   factory _Match.fromJson(Map<String, dynamic> json) = _$_Match.fromJson;
 
+  @override
+  String get uuid;
+  @override
+  int get distanceInMeters;
   @override
   int get id;
   @override

@@ -12,6 +12,7 @@ class PullMatchCard extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  ///the match that is going to be displayed on the card.
   final Match match;
   //true if it is from a file on the device, false if not (network probably)
   final bool fromFile;
@@ -84,7 +85,7 @@ class PullMatchCard extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            "${match.age}",
+                                            "${match.age}, ${(match.distanceInMeters/1000).round()}km",
                                             style: TextStyle(
                                               fontSize: 22
                                             ),

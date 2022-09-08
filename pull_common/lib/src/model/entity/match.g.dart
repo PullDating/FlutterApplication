@@ -7,6 +7,8 @@ part of 'match.dart';
 // **************************************************************************
 
 _$_Match _$$_MatchFromJson(Map<String, dynamic> json) => _$_Match(
+      uuid: json['uuid'] as String,
+      distanceInMeters: json['distanceInMeters'] as int,
       id: json['id'] as int,
       displayName: json['displayName'] as String,
       age: json['age'] as int,
@@ -25,6 +27,8 @@ _$_Match _$$_MatchFromJson(Map<String, dynamic> json) => _$_Match(
     );
 
 Map<String, dynamic> _$$_MatchToJson(_$_Match instance) => <String, dynamic>{
+      'uuid': instance.uuid,
+      'distanceInMeters': instance.distanceInMeters,
       'id': instance.id,
       'displayName': instance.displayName,
       'age': instance.age,
