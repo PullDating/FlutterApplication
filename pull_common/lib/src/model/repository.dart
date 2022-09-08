@@ -284,12 +284,43 @@ class PullRepository {
       List<dynamic> result = res['returnList'];
       print(result);
       List<Match> returnList = [];
-      for(int i = 0; i < result.length; i++){
+      DateTime now = DateTime.now();
+
+
+      for (int i = 0; i < result.length; i++) {
         print(result[i]);
-        var res = jsonDecode(result[i]);
+        var res = result[i];
+        Tuple2<Profile, ProfileImages> profile = await getProfile(
+            ref, res['uuid']);
 
+        int age;
+        try {
+          age = now
+              .difference(profile.item1.birthdate!)
+              .inDays ~/ 365;
+        } catch (e) {
+          print(e);
+          throw("age cast failed");
+        }
+
+        int distance;
+        try {
+          distance = (res['distance'] as double).toInt();
+        } catch(e){
+          print(e);
+          throw("distance cast failed");
+        }
+        returnList.add(Match(
+          uuid: res['uuid'],
+          displayName: profile.item1.name!,
+          age: age,
+          distanceInMeters: distance,
+          bodyType: profile.item1.bodytype,
+          bio: profile.item1.biography!,
+          media: getMediaFromProfileImages(profile.item2),
+          gender: profile.item1.gender,
+        ));
       }
-
 
       return returnList;
     } else {
@@ -300,10 +331,13 @@ class PullRepository {
 
   //todo instead of uploading directly to the provider, maybe this should just return the profile and profileImages.
   //sets the profile images provder and the account creation provider with the relevant information
-  Future<Tuple2<Profile, ProfileImages>> getProfile(WidgetRef ref) async {
+  Future<Tuple2<Profile, ProfileImages>> getProfile(WidgetRef ref, String? targetUUID) async {
     Map<String,String> headers = {};
     headers.addAll(_authHeader);
     headers.addAll(_uuid);
+    if(targetUUID != null){
+      headers.addAll({"target" : targetUUID});
+    }
     http.Response response = await http.get(profileUri, headers: headers);
 
     if(response.statusCode == 200){

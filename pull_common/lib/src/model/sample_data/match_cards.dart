@@ -7,7 +7,6 @@ final sampleMatchCards = <Match>[
     distanceInMeters: 1500,
     uuid: 'testtesttest',
       age: 26,
-      id: 0,
       displayName: 'Aya',
       media: [
         Media(uri: Uri(path: 'assets/images/profile_1.webp')),
@@ -21,7 +20,6 @@ final sampleMatchCards = <Match>[
     distanceInMeters: 2500,
     uuid: 'testtesttest',
     age: 19,
-      id: 1,
       displayName: 'Ryan',
       media: [
         Media(uri: Uri(path: 'assets/images/profile_2.webp')),
@@ -33,7 +31,6 @@ final sampleMatchCards = <Match>[
     distanceInMeters: 3500,
     uuid: 'testtesttest',
     age: 23,
-      id: 2,
       displayName: 'Ingrid',
       media: [
         Media(uri: Uri(path: 'assets/images/profile_3.webp')),
@@ -46,7 +43,6 @@ final sampleMatchCards = <Match>[
     distanceInMeters: 3400,
     uuid: 'testtesttest',
     age: 56,
-      id: 3,
       displayName: 'Jane',
       media: [
         Media(uri: Uri(path: 'assets/images/profile_4.webp')),
@@ -58,7 +54,6 @@ final sampleMatchCards = <Match>[
     distanceInMeters: 3423,
     uuid: 'testtesttest',
     age: 99,
-      id: 4,
       displayName: 'Ella',
       media: [
         Media(uri: Uri(path: 'assets/images/profile_5.webp')),
@@ -69,7 +64,6 @@ final sampleMatchCards = <Match>[
     distanceInMeters: 5000,
     uuid: 'testtesttest',
     age: 32,
-      id: 5,
       displayName: 'Isabelle',
       media: [
         Media(uri: Uri(path: 'assets/images/profile_6.webp')),
@@ -80,7 +74,6 @@ final sampleMatchCards = <Match>[
     distanceInMeters: 8993,
     uuid: 'testtesttest',
     age: 21,
-      id: 6,
       displayName: 'Chloe',
       media: [
         Media(uri: Uri(path: 'assets/images/profile_7.webp')),
@@ -91,7 +84,6 @@ final sampleMatchCards = <Match>[
     distanceInMeters: 5469,
     uuid: 'testtesttest',
     age: 32,
-      id: 7,
       displayName: 'Daniel',
       media: [
         Media(uri: Uri(path: 'assets/images/profile_9.webp')),
@@ -102,7 +94,6 @@ final sampleMatchCards = <Match>[
     distanceInMeters: 3423,
     uuid: 'testtesttest',
     age: 41,
-      id: 8,
       displayName: 'Sara',
       media: [
         Media(uri: Uri(path: 'assets/images/profile_10.webp')),
@@ -114,7 +105,6 @@ final sampleMatchCards = <Match>[
     distanceInMeters: 3500,
     uuid: 'testtesttest',
     age: 37,
-      id: 9,
       displayName: 'Ashley',
       media: [
         Media(uri: Uri(path: 'assets/images/profile_11.webp')),

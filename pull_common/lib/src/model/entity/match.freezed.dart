@@ -22,7 +22,6 @@ Match _$MatchFromJson(Map<String, dynamic> json) {
 mixin _$Match {
   String get uuid => throw _privateConstructorUsedError;
   int get distanceInMeters => throw _privateConstructorUsedError;
-  int get id => throw _privateConstructorUsedError;
   String get displayName => throw _privateConstructorUsedError;
   int get age => throw _privateConstructorUsedError;
   String? get bodyType => throw _privateConstructorUsedError;
@@ -45,7 +44,6 @@ abstract class $MatchCopyWith<$Res> {
   $Res call(
       {String uuid,
       int distanceInMeters,
-      int id,
       String displayName,
       int age,
       String? bodyType,
@@ -68,7 +66,6 @@ class _$MatchCopyWithImpl<$Res> implements $MatchCopyWith<$Res> {
   $Res call({
     Object? uuid = freezed,
     Object? distanceInMeters = freezed,
-    Object? id = freezed,
     Object? displayName = freezed,
     Object? age = freezed,
     Object? bodyType = freezed,
@@ -86,10 +83,6 @@ class _$MatchCopyWithImpl<$Res> implements $MatchCopyWith<$Res> {
       distanceInMeters: distanceInMeters == freezed
           ? _value.distanceInMeters
           : distanceInMeters // ignore: cast_nullable_to_non_nullable
-              as int,
-      id: id == freezed
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
               as int,
       displayName: displayName == freezed
           ? _value.displayName
@@ -135,7 +128,6 @@ abstract class _$$_MatchCopyWith<$Res> implements $MatchCopyWith<$Res> {
   $Res call(
       {String uuid,
       int distanceInMeters,
-      int id,
       String displayName,
       int age,
       String? bodyType,
@@ -159,7 +151,6 @@ class __$$_MatchCopyWithImpl<$Res> extends _$MatchCopyWithImpl<$Res>
   $Res call({
     Object? uuid = freezed,
     Object? distanceInMeters = freezed,
-    Object? id = freezed,
     Object? displayName = freezed,
     Object? age = freezed,
     Object? bodyType = freezed,
@@ -177,10 +168,6 @@ class __$$_MatchCopyWithImpl<$Res> extends _$MatchCopyWithImpl<$Res>
       distanceInMeters: distanceInMeters == freezed
           ? _value.distanceInMeters
           : distanceInMeters // ignore: cast_nullable_to_non_nullable
-              as int,
-      id: id == freezed
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
               as int,
       displayName: displayName == freezed
           ? _value.displayName
@@ -224,7 +211,6 @@ class _$_Match implements _Match {
   const _$_Match(
       {required this.uuid,
       required this.distanceInMeters,
-      required this.id,
       required this.displayName,
       required this.age,
       this.bodyType,
@@ -243,8 +229,6 @@ class _$_Match implements _Match {
   final String uuid;
   @override
   final int distanceInMeters;
-  @override
-  final int id;
   @override
   final String displayName;
   @override
@@ -277,7 +261,7 @@ class _$_Match implements _Match {
 
   @override
   String toString() {
-    return 'Match(uuid: $uuid, distanceInMeters: $distanceInMeters, id: $id, displayName: $displayName, age: $age, bodyType: $bodyType, bio: $bio, media: $media, pronouns: $pronouns, gender: $gender, interests: $interests)';
+    return 'Match(uuid: $uuid, distanceInMeters: $distanceInMeters, displayName: $displayName, age: $age, bodyType: $bodyType, bio: $bio, media: $media, pronouns: $pronouns, gender: $gender, interests: $interests)';
   }
 
   @override
@@ -288,7 +272,6 @@ class _$_Match implements _Match {
             const DeepCollectionEquality().equals(other.uuid, uuid) &&
             const DeepCollectionEquality()
                 .equals(other.distanceInMeters, distanceInMeters) &&
-            const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality()
                 .equals(other.displayName, displayName) &&
             const DeepCollectionEquality().equals(other.age, age) &&
@@ -307,7 +290,6 @@ class _$_Match implements _Match {
       runtimeType,
       const DeepCollectionEquality().hash(uuid),
       const DeepCollectionEquality().hash(distanceInMeters),
-      const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(displayName),
       const DeepCollectionEquality().hash(age),
       const DeepCollectionEquality().hash(bodyType),
@@ -334,7 +316,6 @@ abstract class _Match implements Match {
   const factory _Match(
       {required final String uuid,
       required final int distanceInMeters,
-      required final int id,
       required final String displayName,
       required final int age,
       final String? bodyType,
@@ -350,8 +331,6 @@ abstract class _Match implements Match {
   String get uuid;
   @override
   int get distanceInMeters;
-  @override
-  int get id;
   @override
   String get displayName;
   @override

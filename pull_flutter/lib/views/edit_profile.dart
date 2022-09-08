@@ -84,7 +84,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
 
     try {
       PullRepository repo = PullRepository(ref.read);
-      Tuple2<Profile,ProfileImages> profileGet = await repo.getProfile(ref);
+      Tuple2<Profile,ProfileImages> profileGet = await repo.getProfile(ref,null);
       print("get profile done, attempting to set the profile and ProfileImages");
       setState((){
         print("calling set state on edit page.");
@@ -332,9 +332,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
     });
   }
 
-  List<Media> _getMedia(){
+  List<Media> _getMediaFromProfileImages(ProfileImages profileImages){
     //for each item in the list of images, find the path and add to a list of uris
-
     List<Media> values = [];
     try {
       for (int i = 0; i < profileImages.images.length; i++) {
@@ -522,12 +521,11 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                                   //int upperAge = ((DateTime.now().difference(minBirthDate).inDays)/365.26).truncate();
                                   //int lowerAge = ((DateTime.now().difference(maxBirthDate).inDays)/365.26).truncate();
                                   age: ((DateTime.now().difference(profile.birthdate!).inDays)/365.26).truncate(),
-                                  id: 0,
                                   displayName: profile.name!,
                                   bio: profile.biography!,
                                   bodyType: profile.bodytype,
                                   pronouns: "He/Him",
-                                  media: _getMedia(),
+                                  media: getMediaFromProfileImages(profileImages),
                                   gender: profile.gender!,
                                   interests: ["I have no interested","I'm boring"]
                                 ),
