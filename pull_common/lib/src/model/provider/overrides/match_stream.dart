@@ -7,7 +7,7 @@ import 'package:pull_common/src/model/provider/match_stream.dart';
 import 'package:pull_common/src/model/sample_data/match_cards.dart';
 
 final matchStreamRefreshOverride =
-    matchStreamRefreshProvider.overrideWithProvider(Provider((ref) => () {
+    matchStreamRefreshProvider.overrideWithProvider(Provider((ref) => () async {
           final activeRefreshNotifier =
               ref.read(activeRefreshProvider.notifier);
           if (activeRefreshNotifier.state) {
@@ -23,7 +23,6 @@ final matchStreamRefreshOverride =
             sampleData.add(sampleMatchCards[r]);
           }
           () async {
-            await Future.delayed(const Duration(milliseconds: 1000));
             ref.read(activeRefreshProvider.notifier).state = false;
             matchStreamController.add(sampleData);
           }();

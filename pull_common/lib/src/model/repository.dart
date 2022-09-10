@@ -91,10 +91,10 @@ class PullRepository {
   }
 
   /// List the next potential matches in the card stack
-  void nextMatches() async {
+  void nextMatches(ref) async {
     final pageSize = _read(matchPageSizeProvider);
-    final matchList = ((await _get(nextMatchesUri.replace(query: 'page_size=$pageSize')))['results'] as List).map((e) => Match.fromJson(e));
-
+    //final matchList = ((await _get(nextMatchesUri.replace(query: 'page_size=$pageSize')))['results'] as List).map((e) => Match.fromJson(e));
+    final matchList = await getPeople(pageSize);
     //final matchList = (json.decode(await _get(nextMatchesUri.replace(query: 'page_size=$pageSize'))) as List).map((e) => Match.fromJson(e));
 
     _read(activeRefreshProvider.notifier).state = false;
@@ -242,7 +242,9 @@ class PullRepository {
    }
    */
   //then it parses it to return a list of files.
-  Future<List<File>> _filesFromImagePaths(Map<String,dynamic> imagePath) async {
+
+  ///if it is a profile for a different uuid than the person using the app, set targetUUID (changes file names.)
+  Future<List<File>> _filesFromImagePaths(Map<String,dynamic> imagePath, String? targetUUID) async {
     print("got into filesFromImagePaths");
     //print("image Path" + imagePath.toString());
     imagePath.remove('bucket');
@@ -254,7 +256,8 @@ class PullRepository {
       print("looking at a presigned url...");
       //for each numbered element, add it to the list.
       try{
-        await _fileFromImageUrl(imagePath[element]!,'profileImage${element}').then((newfile) => {
+        String filenameextension = (targetUUID == null) ? 'profileImage:${element}' : 'UUID:${targetUUID}:${element}';
+        await _fileFromImageUrl(imagePath[element]!,filenameextension).then((newfile) => {
           print('adding element: ${element}'),
           files.add(newfile),
         });
@@ -269,7 +272,7 @@ class PullRepository {
 
   //this function calls the get people endpoint to get the list of uuids and distances of the users
   //and then it calls the get profile function below to get the profile for each of them.
-  Future<List<Match>> getPeople(WidgetRef ref, int number) async {
+  Future<List<Match>> getPeople(int number) async {
     Map<String,String> headers = {};
     headers.addAll(_authHeader);
     headers.addAll(_uuid);
@@ -290,8 +293,7 @@ class PullRepository {
       for (int i = 0; i < result.length; i++) {
         print(result[i]);
         var res = result[i];
-        Tuple2<Profile, ProfileImages> profile = await getProfile(
-            ref, res['uuid']);
+        Tuple2<Profile, ProfileImages> profile = await getProfile(res['uuid']);
 
         int age;
         try {
@@ -310,16 +312,25 @@ class PullRepository {
           print(e);
           throw("distance cast failed");
         }
-        returnList.add(Match(
-          uuid: res['uuid'],
-          displayName: profile.item1.name!,
-          age: age,
-          distanceInMeters: distance,
-          bodyType: profile.item1.bodytype,
-          bio: profile.item1.biography!,
-          media: getMediaFromProfileImages(profile.item2),
-          gender: profile.item1.gender,
-        ));
+
+        print("Profile Images from get people");
+        print(profile.item2.images[0]);
+
+        try {
+          returnList.add(Match(
+            uuid: res['uuid'],
+            displayName: profile.item1.name!,
+            age: age,
+            distanceInMeters: distance,
+            bodyType: profile.item1.bodytype,
+            bio: profile.item1.biography!,
+            media: getMediaFromProfileImages(profile.item2),
+            gender: profile.item1.gender,
+          ));
+        } catch (e) {
+          print(e);
+          throw Exception("Could not construct match properly in get People API call.");
+        }
       }
 
       return returnList;
@@ -331,10 +342,11 @@ class PullRepository {
 
   //todo instead of uploading directly to the provider, maybe this should just return the profile and profileImages.
   //sets the profile images provder and the account creation provider with the relevant information
-  Future<Tuple2<Profile, ProfileImages>> getProfile(WidgetRef ref, String? targetUUID) async {
+  Future<Tuple2<Profile, ProfileImages>> getProfile( String? targetUUID) async {
     Map<String,String> headers = {};
     headers.addAll(_authHeader);
     headers.addAll(_uuid);
+    print("uuid: ${_uuid}");
     if(targetUUID != null){
       headers.addAll({"target" : targetUUID});
     }
@@ -375,22 +387,30 @@ class PullRepository {
       //update the min an max values
 
       try{
-        await getPhotoLimits(ref);
+        await getPhotoLimits();
       }catch (e) {
         print("error getting photo limits: ${e.toString()}");
         throw Exception("Couldn't get the photo limits");
       }
 
+      print("ImagePaths:");
+      print(json['imagePath']);
+
       try {
-        List<File?> images = await _filesFromImagePaths(json['imagePath']);
+        List<File?> images;
+        if(targetUUID == null) {
+          images = await _filesFromImagePaths(json['imagePath'], null);
+        } else {
+          images = await _filesFromImagePaths(json['imagePath'], targetUUID);
+        }
         print("images.length ${images.length}");
-        if(images.length < ref.read(ProfilePhotosProvider.notifier).getMin() || images.length > ref.read(ProfilePhotosProvider.notifier).getMax()){
+        if(images.length < _read(ProfilePhotosProvider.notifier).getMin() || images.length > _read(ProfilePhotosProvider.notifier).getMax()){
           throw Exception('The server returned an invalid number of images. You may need to update the min and max profile photos first');
         }
 
         ProfileImages profileImages = ProfileImages(
-          min: ref.read(ProfilePhotosProvider.notifier).getMin(),
-          max: ref.read(ProfilePhotosProvider).max,
+          min: _read(ProfilePhotosProvider.notifier).getMin(),
+          max: _read(ProfilePhotosProvider).max,
           images: images,
           numFilled: images.length,
           mandatoryFilled: true,
@@ -640,7 +660,7 @@ class PullRepository {
 
   }
 
-  Future<void> getPhotoLimits(WidgetRef ref) async {
+  Future<void> getPhotoLimits() async {
     print("got into getPhotoLimits");
     var url = profilePhotoLimitsUri;
     var decoded;
@@ -649,9 +669,9 @@ class PullRepository {
       print("Success");
       decoded = json.decode(response.body);
       print("attemping to set state with new photo limits");
-      ref.read(ProfilePhotosProvider.notifier).setMax(decoded['maxProfilePhotos']);
-      ref.read(ProfilePhotosProvider.notifier).setMin(decoded['minProfilePhotos']);
-      ref.read(ProfilePhotosProvider.notifier).setImages(List<File?>.filled(ref.read(ProfilePhotosProvider.notifier).getMax(), null));
+      _read(ProfilePhotosProvider.notifier).setMax(decoded['maxProfilePhotos']);
+      _read(ProfilePhotosProvider.notifier).setMin(decoded['minProfilePhotos']);
+      _read(ProfilePhotosProvider.notifier).setImages(List<File?>.filled(_read(ProfilePhotosProvider.notifier).getMax(), null));
     } else {
       throw Exception("The status code on getting photos limits was not 200");
     }

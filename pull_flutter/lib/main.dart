@@ -13,7 +13,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   Firebase.initializeApp().then((value) {
     runApp(ProviderScope(
-      overrides: [matchStreamRefreshOverride],
+      //overrides: [matchStreamRefreshOverride],
       child: PullApp(),
     ));
   });

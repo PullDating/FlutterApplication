@@ -26,23 +26,11 @@ class _PullHomePageState extends ConsumerState<PullHomePage>
     'profile': ProfileTab()
   };
 
-  TestGetMatches() async {
-    try{
-      PullRepository repo = PullRepository(ref.read);
-      await repo.getPeople(ref, 1);
-    }catch (e){
-      print("There was an error somewhere in the get people");
-      print(e);
-      return;
-    }
-  }
+
 
   @override
   void initState() {
     super.initState();
-
-    // get people to show the user on the swiping screen
-    TestGetMatches();
 
   }
 

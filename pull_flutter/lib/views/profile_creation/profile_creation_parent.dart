@@ -132,7 +132,7 @@ class _ProfileCreationParentState extends ConsumerState<ProfileCreationParent>
   void getPhotoLimits() async {
     try {
       PullRepository repo = PullRepository(ref.read);
-      await repo.getPhotoLimits(ref);
+      await repo.getPhotoLimits();
     } on TimeoutException catch (e) {
       print('Timeout');
       Fluttertoast.showToast(

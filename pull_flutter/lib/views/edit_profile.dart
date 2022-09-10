@@ -51,8 +51,10 @@ class _EditProfileState extends ConsumerState<EditProfile> {
 
   @override
   void initState() {
-    _initialize();
     super.initState();
+
+    _initialize();
+
   }
 
   List<bool> datingGoalChecked = [true, false, false, false, false, false];
@@ -66,17 +68,16 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   List<String> genderValues = ["man","woman","non-binary"];
 
   ///the uuid of the user in question, not really needed for this one.
-  late String uuid;
+  late String? uuid;
 
   //get the information from the database, and write it to profile.
   Future<void> _initialize() async {
-
-    String? uuidtemp = ref.watch(UUIDProvider);
-    if(uuidtemp != null){
-      uuid = uuidtemp!;
-    } else {
-      uuid = 'testtesttest';
+    uuid = ref.read(UUIDProvider);
+    print('starting initialize');
+    if(uuid == null){
+      throw Exception("uuid returned null");
     }
+    print("done getting uuid: ${uuid}");
 
     //TODO save the initial reorder, add, and delete maps for later api use.
 
@@ -84,7 +85,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
 
     try {
       PullRepository repo = PullRepository(ref.read);
-      Tuple2<Profile,ProfileImages> profileGet = await repo.getProfile(ref,null);
+      Tuple2<Profile,ProfileImages> profileGet = await repo.getProfile(null);
       print("get profile done, attempting to set the profile and ProfileImages");
       setState((){
         print("calling set state on edit page.");
@@ -369,6 +370,9 @@ class _EditProfileState extends ConsumerState<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     final availableHeight = MediaQuery.of(context).size.height -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom -
@@ -516,7 +520,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                                 fromFile: true,
                                 match: Match(
                                   distanceInMeters: 0,
-                                  uuid: uuid,
+                                  uuid: uuid!,
                                   //TODO get the age from the birthDate
                                   //int upperAge = ((DateTime.now().difference(minBirthDate).inDays)/365.26).truncate();
                                   //int lowerAge = ((DateTime.now().difference(maxBirthDate).inDays)/365.26).truncate();

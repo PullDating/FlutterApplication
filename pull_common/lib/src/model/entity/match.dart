@@ -15,6 +15,7 @@ List<Media> getMediaFromProfileImages(ProfileImages profileImages){
   List<Media> values = [];
   try {
     for (int i = 0; i < profileImages.images.length; i++) {
+      print(profileImages.images[i]!.path);
       values.add(Media(
         //pass in the path to the file
           uri: Uri.file(profileImages.images[i]!.path)

@@ -54,6 +54,7 @@ class MatchCardsTheme extends ThemeExtension<MatchCardsTheme> {
 class MatchCards extends ConsumerStatefulWidget {
   const MatchCards({required this.cardBuilder, super.key});
 
+  ///builds the match card for display, defined up a level.
   final CardBuilder cardBuilder;
 
   @override
@@ -61,8 +62,11 @@ class MatchCards extends ConsumerStatefulWidget {
 }
 
 class _MatchCardsState extends ConsumerState<MatchCards> {
+  ///controls the swipable stack
   late final SwipableStackController _controller;
+  ///unsure what it does atm
   late final List<Match?> matches;
+  ///number of matches they attempt to get from the api at a given time.
   late final int pageSize;
 
   /// [MatchCards] uses a circular buffer to store the list of suggested matches. [bufferIndex] keeps track of our
@@ -89,22 +93,22 @@ class _MatchCardsState extends ConsumerState<MatchCards> {
     /// Listen for new match suggestions and update the list
     ref.listenOnce<AsyncValue<Iterable<Match>>>(matchStreamProvider,
         (previous, next) {
-      next.whenData((value) {
-        if (!mounted) {
-          return;
-        }
-        setState(() {
-          expectedCard = bufferIndex = (lastSwipeIndex + 3) % matches.length;
-          for (final m in value) {
-            matches[bufferIndex++] = m;
-            bufferIndex = bufferIndex % matches.length;
-          }
-          for (var i = 0; i < pageSize - 3; i++) {
-            matches[bufferIndex++] = null;
-            bufferIndex = bufferIndex % matches.length;
-          }
-        });
-      });
+          next.whenData((value) {
+            if (!mounted) {
+              return;
+            }
+            setState(() {
+              expectedCard = bufferIndex = (lastSwipeIndex + 3) % matches.length;
+              for (final m in value) {
+                matches[bufferIndex++] = m;
+                bufferIndex = bufferIndex % matches.length;
+              }
+              for (var i = 0; i < pageSize - 3; i++) {
+                matches[bufferIndex++] = null;
+                bufferIndex = bufferIndex % matches.length;
+              }
+            });
+          });
     });
 
     ref.read(matchStreamRefreshProvider)();
